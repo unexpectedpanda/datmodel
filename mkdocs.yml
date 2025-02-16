@@ -1,0 +1,64 @@
+site_name: Data model 2025
+site_dir: ../unexpectedpanda.github.io/datmodel/
+site_url: https://unexpectedpanda.github.io/datmodel/
+theme:
+  name: material
+  language: en
+  features:
+    - content.code.annotate
+    - content.tabs.link
+    - header.autohide
+    - navigation.sections
+    - toc.follow
+  palette:
+    scheme: slate
+    primary: blue grey
+extra_css:
+  - stylesheets/extra.css
+markdown_extensions:
+  - attr_list
+  - md_in_html
+  - mkdcomments # Installed from https://github.com/ryneeverett/python-markdown-comments
+  - pymdownx.blocks.admonition
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tilde
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.blocks.tab:
+      alternate_style: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - tables
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/unexpectedpanda/datmodel
+  generator: false
+repo_url: https://github.com/unexpectedpanda/datmodel
+nav:
+  - 'Home': index.md
+  - goals.md
+  - custodianship.md
+  - files.md
+  - schema.md
+  - complete_example.md
+  - DAT file structures:
+    - structure.md
+    - dat_info.md
+    - collection.md
+    - releases.md
+plugins:
+  - search
+  - macros # https://mkdocs-macros-plugin.readthedocs.io/en/latest/#installation
