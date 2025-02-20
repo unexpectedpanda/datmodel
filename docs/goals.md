@@ -7,8 +7,17 @@ hide:
 
 ## Goals
 
-* A data format that provides enough metadata for enhanced functionality in the client
-  software that processes it.
+* A data format that provides additional metadata for enhanced functionality in the client
+  software that processes it. This functionality includes:
+
+    * Improved filtering and 1G1R processing.
+
+    * Grouping multiple discs together that belong to the same release.
+
+    * Linking common discs between different releases.
+
+    * Grouping updates and addons (including DLC) with the releases they can be validly
+      applied to.
 
 * A shift away from ROM nomenclature towards general file management language.
 
@@ -16,26 +25,26 @@ hide:
 
     * More rigid enforcement of standards, to make data comparison easier.
 
-    * Expansion and changes to standards to take into account world changes, technology
-      changes, changes to how titles are distributed, and more accurate definitions.
+    * Updates to standards due to world and technology changes, and a need for higher
+      accuracy.
 
-* After the new DAT standard is complete, publish its schema in a public repository,
-  alongside an updated version of this documentation.
+* A completed schema published in a public repository, alongside an updated version of
+  this documentation to account for changes during the development process.
 
 ## Non-goals
 
-* This proposal doesn't cover MAME, which continues to be a special case due to its unique
-  needs.
+* This proposal doesn't cover MAME, which continues to run its own race.
 
-* This proposal doesn't seek to alter file naming standards put in place by DAT groups,
-  but it does standardize and validate fields that they might have set as free text, or
-  have not considered, which in turn might impact naming decisions.
+* This proposal doesn't seek to alter file naming standards put in place by DAT groups.
+  However, its validation might be looser or more restrictive than a given naming standard
+  depending on the particular field. For example, the ancient
+  [No-Intro guidelines](https://datomatic.no-intro.org/stuff/The%20Official%20No-Intro%20Convention%20(20071030).pdf)
+  insist on 7-bit ASCII in file names, while this DAT schema allows for the now ubiquitous
+  UTF-8.
 
-* Metadata that can't be used to manage files isn't included in the standard. Managing
-  this metadata is up to the individuals or groups that release DAT files. They might
-  choose, for example, to export an expanded DAT format that includes all of their
-  additional fields for the sake of open data, however these expanded fields aren't
-  covered by the schema.
+* Metadata that can't be used to manage or filter files, for example primary volume
+  descriptors, isn't included in the standard. Managing this sort of metadata is up to the
+  individuals or groups that release DAT files to store and distribute how they choose.
 
 * It's tempting to define a standard that can enable client software to handle complex
   nested containers, and container conversion. For example:
@@ -62,5 +71,13 @@ hide:
 
 ## Risks
 
-* The necessary complexity required to enable new functionality might prevent client
-  software authors and database maintainers into adopting the new format.
+* The complexity of the new format requires significant work in terms of the following:
+
+    * Building appropriate interfaces to input data, paired with appropriate validation to
+      ensure the output matches the schema.
+
+    * Writing code to generate, parse, and make use of the data in the DAT files.
+
+    Due to the organic nature of how the existing standard arose over time, it's likely
+    that inertia in retaining the old format will be difficult to overcome.
+

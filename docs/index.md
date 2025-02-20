@@ -18,7 +18,7 @@ metadata, so that ROM managers can implement extended functionality.
 
 * **Status**: WIP
 
-* **Last updated**: 16 February, 2025
+* **Last updated**: 2025-02-17
 
 * **Contributors**: unexpectedpanda
 
