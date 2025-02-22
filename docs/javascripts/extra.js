@@ -6,16 +6,14 @@ function filterList(element) {
     * event listener that's placed on input elements with the appropriate class.
     *
     * To create a filterable list in your HTML, an `input` element must be present with
-    * the class `filter`. It must be followed by a `div` with the class `filter`, which
-    * contains the list to filter. For example:
+    * the class `filter`. It must be followed by a `ul` with the class `filter`, which
+    * contains the list items to filter. For example:
     *
     * <input type="text" class="filter" placeholder="Filter the list">
-    * <div class="filter">
-    *   <ul>
-    *     <li>List item</li>
-    *     <li>List item</li>
-    *   </ul>
-    * </div>
+    * <ul class="filter">
+    *   <li>List item</li>
+    *   <li>List item</li>
+    * </ul>
     *
     * @param {string} element - The `input` element used to filter the list content.
     */
@@ -24,7 +22,7 @@ function filterList(element) {
     inputElement = document.querySelector('#' + element.id);
     inputContent = inputElement.value.toLowerCase();
 
-    listItemsToFilter = document.querySelectorAll('div.filter ul');
+    listItemsToFilter = document.querySelectorAll('ul.filter');
 
     for (i = 0; i < listItemsToFilter.length; i++) {
         items = listItemsToFilter[i].querySelectorAll('li');

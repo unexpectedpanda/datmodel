@@ -82,4 +82,89 @@ a.terminology {
 	padding-left: 0.5em;
 	padding-right: 0.5em;
 	margin-top: 1em;
+	margin-bottom: 0.5em;
+}
+
+/* Checkboxes */
+label.filter input[type="checkbox"] {
+	margin: 0.5em 0.5em 1.5em 0.5em;
+}
+
+label.filter {
+	color: #777;
+}
+
+/* Filter lists */
+ul.filter {
+	max-height: 21em;
+	min-height: 1em;
+	overflow: hidden;
+	overflow-y: auto;
+}
+
+/* Code definitions */
+div.definition-list ul li p:first-child {
+	margin: 1em 0;
+}
+
+div.definition-list ul li p {
+	margin-bottom: 1em;
+}
+
+div.definition-list ul li p,
+div.definition-list ul li pre,
+div.definition-list ul li details,
+div.definition-list ul li div.tabbed-set,
+div.definition-list ul li div.admonition,
+div.definition-list ul li input {
+	margin-left: 1em;
+}
+
+div.definition-list ul li div.admonition {
+	padding: 0;
+}
+
+div.definition-list ul li div.admonition p {
+	padding: 0 1em;
+}
+
+div.definition-list ul li div.admonition p.admonition-title {
+	padding: 10px 0 12px 48px;
+	margin: 0;
+}
+
+ul.md-nav__list code.toc-code {
+	margin-left: 1em;
+	padding: 8px 6px;
+}
+
+code.toc-code {
+	background-color: #6a5fb1;
+	padding: 6px 10px;
+	margin-right: 0.5em;
+}
+
+code.toc-def {
+	background-color: #706e81;
+	padding: 6px 8px;
+	font-size: 0.65em;
+	margin-right: 0.25em;
+}
+
+code.toc-req {
+	background-color: #8b690c;
+	padding: 6px 8px;
+	font-size: 0.65em;
+}
+
+li.md-nav__item a.md-nav__link:hover {
+	color: #ffffff;
+}
+
+code.toc-code:hover {
+	color: #ffffff;
+}
+
+a.md-nav__link--active code.toc-code {
+	color: #ffff00;
 }

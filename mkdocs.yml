@@ -24,7 +24,7 @@ markdown_extensions:
   - pymdownx.blocks.admonition
   - pymdownx.caret
   - pymdownx.critic
-  - pymdownx.details
+  - pymdownx.blocks.details
   - pymdownx.inlinehilite
   - pymdownx.keys
   - pymdownx.mark
@@ -64,3 +64,5 @@ nav:
 plugins:
   - search
   - macros # https://mkdocs-macros-plugin.readthedocs.io/en/latest/#installation
+hooks:
+  - customAnchors.py

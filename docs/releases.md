@@ -18,7 +18,7 @@ can seem quite straightforward:
     "regions": ["Japan"],
     "languages": {
       "audio": ["Ja", "En"],
-      "interface": [["En"]],
+      "interface": ["En"],
       "subtitles": ["En"]
     },
     "type": "Game",
@@ -44,23 +44,28 @@ can seem quite straightforward:
 ]
 ```
 
-* **`name`** (string): _Required_. The name of the title, in UTF-8. This is used for the
-  name of the archive or folder. Names can't end with a period or space, or use the
-  following invalid characters:
+## Definitions
 
-    ```
+<div class="definition-list" markdown>
+* **`name`{:#name .toc-code}** `string`{:.toc-def} `required`{:.toc-req}
+
+    The name of the title, in UTF-8. This is used for the name of the archive or folder.
+    Names can't end with a period or space, or use the following invalid characters:
+
+    ``` {.text .copy}
     :<>"|?*
     ```
 
-    These invalid characters are found with the following regular expression:
+    /// details | Expand for developer details
+    Invalid path characters are found with the following regular expression:
 
-    ```
+    ``` {.text .copy}
     ^[^:<>\"|?*].*[^. :<>\"|?*]$
     ```
 
     Non-UTF-8 characters are found with the following regular expressions:
 
-    ```
+    ``` {.text .copy}
     [\xC0-\xC1]
     [\xF5-\xFF]
     \xE0[\x80-\x9F]
@@ -74,11 +79,14 @@ can seem quite straightforward:
     (?<=[\xF0-\xF4])[\x80-\xBF](?![\x80-\xBF]{2})
     (?<=[\xF0-\xF4][\x80-\xBF])[\x80-\xBF](?![\x80-\xBF])
     ```
+    ///
 
-* **`build`** (enum): _Required_. When in the
-  [software release life cycle](https://en.wikipedia.org/wiki/Software_release_life_cycle)
-  the title was released. Must be one of the following values, in order of maturity
-  and specificity:
+* **`build`{:#build .toc-code}** `enum`{:.toc-def} `required`{:.toc-req}
+
+    When in the
+    [software release life cycle](https://en.wikipedia.org/wiki/Software_release_life_cycle)
+    the title was released. Must be one of the following values, in order of maturity and
+    specificity:
 
     * `Production`: What reaches store shelves or internet distribution systems. This
       includes release to manufacturing (RTM) releases.
@@ -102,11 +110,19 @@ can seem quite straightforward:
       development stage, but isn't the production version. Wherever possible, don't use
       this.
 
-* **`is_demo`** (bool): _Required_. Whether the title is a demo.
+* **`is_demo`{:#is_demo .toc-code}** `bool`{:.toc-def} `required`{:.toc-req}
 
-* **`regions`** (enum array): _Required_. Which regions the title was released in. This is
-    not intended to match the regional naming standards of DAT groups, as these differ.
-    File names can remain unaltered to follow those regional naming standards.
+    Whether the title is a demo.
+
+* **`was_published`{:#was_published .toc-code}** `bool`{:.toc-def} `required`{:.toc-req}
+
+    Whether the title was published. Unreleased titles should be set to `false`.
+
+* **`regions`{:#regions .toc-code}** `enum array`{:.toc-def} `required`{:.toc-req}
+
+    Which regions the title was released in. This is not intended to match the regional
+    naming standards of DAT groups, as these differ. File names can remain unaltered to
+    follow those regional naming standards.
 
     If you don't know where a release is from, use `Unknown` as the only item in the
     array.
@@ -138,8 +154,6 @@ can seem quite straightforward:
     The valid regions are as follows:
 
     /// tab | Individual regions
-    <div class="grid" markdown>
-    <div>
 
     * `Afghanistan`
 
@@ -375,9 +389,6 @@ can seem quite straightforward:
 
     * `Libya`
 
-    </div>
-    <div>
-
     * `Liechtenstein`
 
     * `Lithuania`
@@ -611,10 +622,6 @@ can seem quite straightforward:
     * `Zambia`
 
     * `Zimbabwe`
-
-    </div>
-    </div>
-
     ///
     /// tab | Grouped regions
     * `Global`
@@ -638,270 +645,78 @@ can seem quite straightforward:
     * `South America`
     ///
 
-* **`languages`** (object): _Required_. The supported languages for audio, the title's
-  interface, and its subtitles. Languages are listed in
-  [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) format, with
-  appended two letter country codes where relevant. Some spoken or signed languages use
-  [ISO 639-3](https://en.wikipedia.org/wiki/List_of_ISO_639-3_codes) codes.
+    /// warning | Regions in graphical user interfaces
+    These region codes are intended to keep the character count of the `regions` array,
+    and therefore the file size, down. When building graphical user interfaces, opt to use
+    full region names to keep it more accessible to users.
+    ///
 
-    Languages are split up into audio, interface, and subtitles to handle odd
-    language-selection scenarios.
+* **`languages`{:#languages .toc-code}** `object`{:.toc-def} `required`{:.toc-req}
+
+    The supported languages for audio, the title's interface, and its subtitles.
+
+    Languages are split up into `audio`, `interface`, and `subtitles` to handle odd
+    language scenarios. For example, `Metal Gear Solid Integral (Japan)` on PlayStation
+    has English audio, selectable English or Japanese subtitles, and a mix of English
+    _and_ Japanese for the interface&mdash;where Japanese is used for weapon and item
+    descriptions, and English for everything else. It's a weird mix, but it's definitely
+    intended for Japanese audiences, so is represented as follows:
+
+    ```json
+    "languages": {
+      "audio": ["En"],
+      "interface": ["Ja"],
+      "subtitles": ["En", "Ja"]
+    }
+    ```
+
+    `Ghost in the Shell (France)` on PlayStation has cutscenes where the audio is in French,
+    but the interface is in English, and there are no subtitles. This is represented as
+    follows:
+
+    ```json
+    "languages": {
+      "audio": ["Fr"],
+      "interface": ["En"],
+      "subtitles": [null]
+    }
+    ```
 
     If there are no audio, interface, or subtitle languages, add a singular `null` item to
     the relevant arrays.
 
-    The valid languages are as follows:
+    Certain combinations of language types tell us useful things. For example, a Japanese
+    game with the following properties is completely playable by English speakers:
 
-    <input type="text" id="language-filter" class="filter input" placeholder="Filter the list" title="Filter the list">
+    ```json
+    "languages": {
+      "audio": [null],
+      "interface": ["En"],
+      "subtitles": [null]
+    }
+    ```
 
-    <div class="grid filter" markdown>
-      <div>
-        <ul>
-          <li><code>ab</code> - Abkhazain</li>
-          <li><code>aa</code> - Afar</li>
-          <li><code>af</code> - Afrikaans</li>
-          <li><code>ak</code> - Akan</li>
-          <li><code>sq</code> - Albanian</li>
-          <li><code>am</code> - Amharic</li>
-          <li><code>ase</code> - American Sign Language</li>
-          <li><code>ar</code> - Arabic</li>
-          <li><code>ar-DZ</code> - Arabic (Algeria)</li>
-          <li><code>ar-BH</code> - Arabic (Bahrain)</li>
-          <li><code>ar-EG</code> - Arabic (Egypt)</li>
-          <li><code>ar-IQ</code> - Arabic (Iraq)</li>
-          <li><code>ar-JO</code> - Arabic (Jordan)</li>
-          <li><code>ar-KW</code> - Arabic (Kuwait)</li>
-          <li><code>ar-LB</code> - Arabic (Lebanon)</li>
-          <li><code>ar-LY</code> - Arabic (Libya)</li>
-          <li><code>ar-MA</code> - Arabic (Morocco)</li>
-          <li><code>ar-OM</code> - Arabic (Oman)</li>
-          <li><code>ar-QA</code> - Arabic (Qatar)</li>
-          <li><code>ar-SA</code> - Arabic (Saudi Arabia)</li>
-          <li><code>ar-SY</code>- Arabic (Syria)</li>
-          <li><code>ar-TN</code> - Arabic (Tunisia)</li>
-          <li><code>ar-AE</code> - Arabic (UAE)</li>
-          <li><code>ar-YE</code> - Arabic (Yemen)</li>
-          <li><code>an</code>- Aragonese</li>
-          <li><code>hy</code> - Armenian</li>
-          <li><code>as</code> - Assamese</li>
-          <li><code>asf</code> - Auslan, Australian Sign Language</li>
-          <li><code>av</code> - Avaric</li>
-          <li><code>ae</code> - Avestan</li>
-          <li><code>ay</code> - Aymara</li>
-          <li><code>az</code> - Azerbaijani</li>
-          <li><code>bm</code> - Bambara</li>
-          <li><code>ba</code> - Bashkir</li>
-          <li><code>eu</code> - Basque</li>
-          <li><code>be</code> - Belarusian</li>
-          <li><code>bn</code> - Bengali</li>
-          <li><code>bi</code> - Bislama</li>
-          <li><code>bs</code> - Bosnian</li>
-          <li><code>br</code> - Breton</li>
-          <li><code>bg</code> - Bulgarian</li>
-          <li><code>my</code> - Burmese</li>
-          <li><code>ca</code> - Catalan</li>
-          <li><code>ch</code> - Chamorro</li>
-          <li><code>ce</code> - Chechen</li>
-          <li><code>ny</code> - Chichewa</li>
-          <li><code>yue</code> - Chinese (Cantonese)</li>
-          <li><code>cmn</code> - Chinese (Mandarin)</li>
-          <li><code>zh-Hans</code> - Chinese (Simplified)</li>
-          <li><code>zh-Hant</code> - Chinese (Traditional)</code></li>
-          <li><code>cv</code> - Chuvash</li>
-          <li><code>kw</code> - Cornish</li>
-          <li><code>co</code> - Corsican</li>
-          <li><code>cr</code> - Cree</li>
-          <li><code>hr</code> - Croatian</li>
-          <li><code>cs</code> - Czech</li>
-          <li><code>da</code> - Danish</li>
-          <li><code>dv</code> - Divehi</li>
-          <li><code>nl</code> - Dutch, Flemish</li>
-          <li><code>dz</code> - Dzongkha</li>
-          <li><code>en</code> - English</li>
-          <li><code>en-AU</code> - English (Australia)</li>
-          <li><code>en-BZ</code> - English (Belize)</li>
-          <li><code>en-CA</code> - English (Canada)</li>
-          <li><code>en-IE</code> - English (Ireland)</li>
-          <li><code>en-JM</code> - English (Jamaica)</li>
-          <li><code>en-NZ</code> - English (New Zealand)</li>
-          <li><code>en-ZA</code> - English (South Africa)</li>
-          <li><code>en-TT</code> - English (Trinidad)</li>
-          <li><code>en-GB</code> - English (United Kingdom)</li>
-          <li><code>en-US</code> - English (United States)</li>
-          <li><code>eo</code> - Esperanto</li>
-          <li><code>et</code> - Estonian</code></li>
-          <li><code>ee</code> - Ewe</li>
-          <li><code>fo</code> - Faroese</li>
-          <li><code>fj</code> - Fijian</li>
-          <li><code>fi</code> - Finnish</li>
-          <li><code>fr</code> - French</li>
-          <li><code>fr-BE</code> - French (Belgium)</li>
-          <li><code>fr-CA</code> - French (Canada)</li>
-          <li><code>fr-LU</code> - French (Luxembourg)</li>
-          <li><code>fr-ch</code> - French (Switzerland)</li>
-          <li><code>fy</code> - Frisian (Western)</li>
-          <li><code>ff</code> - Fulah</li>
-          <li><code>gd</code> - Gaelic (Scotland)</li>
-          <li><code>gl</code> - Galician</li>
-          <li><code>lg</code> - Ganda</li>
-          <li><code>ka</code> - Georgian</li>
-          <li><code>de</code> - German</li>
-          <li><code>de-AT</code> - German (Austria)</li>
-          <li><code>de-LI</code> - German (Liechtenstein)</li>
-          <li><code>de-LU</code> - German (Luxembourg)</li>
-          <li><code>de-CH</code> - German (Switzerland)</li>
-          <li><code>el</code> - Greek</li>
-          <li><code>kl</code> - Kalaallisut</li>
-          <li><code>gn</code> - Guarani</li>
-          <li><code>gu</code> - Gujarati</li>
-          <li><code>hn</code> - Haitian</li>
-          <li><code>ha</code> - Hausa</li>
-          <li><code>he</code> - Hebrew</li>
-          <li><code>hz</code> - Herero</li>
-          <li><code>hi</code> - Hindi</li>
-          <li><code>ho</code> - Hiri Motu</li>
-          <li><code>hu</code> - Hungarian</li>
-          <li><code>is</code> - Icelandic</li>
-          <li><code>ig</code> - Igbo</li>
-          <li><code>id</code> - Indonesian</li>
-          <li><code>iu</code> - Inukitut</li>
-          <li><code>ik</code> - Inupiaq</li>
-          <li><code>ga</code> - Irish</li>
-          <li><code>it</code> - Italian</li>
-          <li><code>it-CH</code> - Italian (Switzerland)</li>
-          <li><code>ja</code> - Japanese</li>
-          <li><code>jv</code> - Javanese</li>
-          <li><code>kn</code> - Kannada</li>
-          <li><code>kr</code> - Kanuri</li>
-          <li><code>ks</code> - Kashmiri</li>
-          <li><code>kk</code> - Kazakh</li>
-          <li><code>km</code> - Khmer (Central)</li>
-          <li><code>ki</code> - Kikuyu</li>
-        </ul>
-      </div>
-      <div>
-        <ul class="filter-languages">
-          <li><code>rw</code> - Kinyarwanda</li>
-          <li><code>ky</code> - Kyrgyz</li>
-          <li><code>kv</code> - Komi</li>
-          <li><code>kg</code> - Kongo</li>
-          <li><code>ko</code> - Korean</li>
-          <li><code>kj</code> - Kuanyama</li>
-          <li><code>ku</code> - Kurdish</li>
-          <li><code>lo</code> - Lao</li>
-          <li><code>la</code> - Latin</li>
-          <li><code>lv</code> - Latvian</li>
-          <li><code>li</code> - Limburgan</li>
-          <li><code>ln</code> - Lingala</li>
-          <li><code>lt</code> - Lithuanian</li>
-          <li><code>lu</code> - Luba-Katanga</li>
-          <li><code>lb</code> - Luxembourgish</li>
-          <li><code>mk</code> - Macedonian</li>
-          <li><code>mg</code> - Malagasy</li>
-          <li><code>ms</code> - Malay</li>
-          <li><code>ml</code> - Malayalam</li>
-          <li><code>mt</code> - Maltese</li>
-          <li><code>gv</code> - Manx</li>
-          <li><code>mi</code> - Maori</li>
-          <li><code>mr</code> - Marathi</li>
-          <li><code>mh</code> - Marshallese</li>
-          <li><code>mn</code> - Mongolian</li>
-          <li><code>na</code> - Nauru</li>
-          <li><code>nv</code> - Navajo</li>
-          <li><code>nd</code> - Ndebele (North)</li>
-          <li><code>nr</code> - Ndebele (South)</li>
-          <li><code>ng</code> - Ndonga</li>
-          <li><code>ne</code> - Nepali</li>
-          <li><code>no</code> - Norwegian</li>
-          <li><code>nb</code> - Norwegian (Bokmål)</li>
-          <li><code>nn</code> - Norwegian (Nynorsk)</li>
-          <li><code>oc</code> - Occitan</li>
-          <li><code>oj</code> - Ojibwa</li>
-          <li><code>or</code> - Oriya</li>
-          <li><code>om</code> - Oromo</li>
-          <li><code>os</code> - Ossetian</li>
-          <li><code>pi</code> - Pali</li>
-          <li><code>ps</code> - Pashto</li>
-          <li><code>fa</code> - Persian, Farsi</li>
-          <li><code>pl</code> - Polish</li>
-          <li><code>pt</code> - Portuguese</li>
-          <li><code>pt-BR</code> - Portuguese (Brazil)</li>
-          <li><code>pa</code> - Punjabi</li>
-          <li><code>qu</code> - Quechua</li>
-          <li><code>ro</code> - Romanian</li>
-          <li><code>rm</code> - Romansh</li>
-          <li><code>rn</code>- Rundi</li>
-          <li><code>ru</code> - Russian</li>
-          <li><code>se</code> - Sami (Northern)</li>
-          <li><code>sm</code> - Samoan</li>
-          <li><code>sg</code> - Sango</li>
-          <li><code>sa</code> - Sanskrit</li>
-          <li><code>sc</code> - Sardinian</li>
-          <li><code>sr</code> - Serbian</li>
-          <li><code>sn</code> - Shona</li>
-          <li><code>sd</code> - Sindhi</li>
-          <li><code>si</code> - Sinhala</li>
-          <li><code>sk</code> - Slovak</li>
-          <li><code>sl</code> - Slovenian</li>
-          <li><code>so</code> - Somali</li>
-          <li><code>st</code> - Sotho (Southern)</li>
-          <li><code>es</code> - Spanish</li>
-          <li><code>es-AR</code> - Spanish (Argentina)</li>
-          <li><code>es-BO</code> - Spanish (Bolivia)</li>
-          <li><code>es-CL</code> - Spanish (Chile)</li>
-          <li><code>es-CO</code> - Spanish (Colombia)</li>
-          <li><code>es-CR</code> - Spanish (Costa Rica)</li>
-          <li><code>es-DO</code> - Spanish (Dominican Republic)</li>
-          <li><code>es-EC</code> - Spanish (Ecuador)</li>
-          <li><code>es-SV</code> - Spanish (El Salvador)</li>
-          <li><code>es-GT</code> - Spanish (Guatemala)</li>
-          <li><code>es-HN</code> - Spanish (Honduras)</li>
-          <li><code>es-XL</code> - Spanish (Latin America)</li>
-          <li><code>es-MX</code> - Spanish (Mexico)</li>
-          <li><code>es-NI</code> - Spanish (Nicaragua)</li>
-          <li><code>es-PA</code> - Spanish (Panama)</li>
-          <li><code>es-PY</code> - Spanish (Paraguay)</li>
-          <li><code>es-PE</code> - Spanish (Peru)</li>
-          <li><code>es-PR</code> - Spanish (Puerto Rico)</li>
-          <li><code>es-UY</code> - Spanish (Uruguay)</li>
-          <li><code>es-VE</code> - Spanish (Venezuela)</li>
-          <li><code>su</code> - Sundanese</li>
-          <li><code>sw</code> - Swahili</li>
-          <li><code>ss</code> - Swati</li>
-          <li><code>sv</code> - Swedish</li>
-          <li><code>sv-FI</code> - Swedish (Finland)</code></li>
-          <li><code>tl</code> - Tagalog</li>
-          <li><code>ty</code> - Tahitian</li>
-          <li><code>tg</code> - Tajik</li>
-          <li><code>ta</code> - Tamil</li>
-          <li><code>tt</code> - Tatar</li>
-          <li><code>te</code> - Telugu</li>
-          <li><code>th</code> - Thai</li>
-          <li><code>bo</code> - Tibetan</li>
-          <li><code>ti</code> - Tigrinya</li>
-          <li><code>to</code> - Tonga</li>
-          <li><code>tn</code> - Tswana</li>
-          <li><code>tr</code> - Turkish</li>
-          <li><code>tk</code> - Turkmen</li>
-          <li><code>tw</code> - Twi</li>
-          <li><code>ug</code> - Uighur</li>
-          <li><code>uk</code> - Ukrainian</li>
-          <li><code>ur</code> - Urdu</li>
-          <li><code>uz</code> - Uzbek</li>
-          <li><code>ve</code> - Venda</li>
-          <li><code>vi</code> - Vietnamese</li>
-          <li><code>wa</code> - Walloon</li>
-          <li><code>cy</code> - Welsh</li>
-          <li><code>wo</code> - Wolof</li>
-          <li><code>xh</code> - Xhosa</li>
-          <li><code>ii</code> - Yi (Sichuan)</li>
-          <li><code>yi</code> - Yiddish</li>
-          <li><code>yo</code> - Yoruba</li>
-          <li><code>za</code> - Zhuang</li>
-          <li><code>zu</code> - Zulu</li>
-        </ul>
-      </div>
-    </div>
+    Valid language codes are listed in the
+    [IANA language subtag registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry).
+    You can search for a language subtag at
+    [BCP47 language subtag lookup](https://r12a.github.io/app-subtags/).
+
+    There are well over 9,000 valid languages, so for page performance they're not listed
+    here. It's also not sensible to include them in the schema validation, so validation
+    needs to be done by the code generating the DAT file.
+
+    When choosing a language code, follow the guidelines laid out in the following pages:
+
+    * [Language tags in HTML and XML](https://www.w3.org/International/articles/language-tags/)
+    * [Choosing a language tag](https://www.w3.org/International/questions/qa-choosing-language-tags)
+    * [Simplified vs. Traditional Chinese, and the Spoken Dialects](https://web.archive.org/web/20250216094012/https://localization.blog/2022/10/10/simplified-vs-traditional-chinese-and-the-spoken-dialects/) (Chinese language codes differ for spoken vs written)
+
+    /// warning | Languages in graphical user interfaces
+    These language codes are intended to keep the character count of the `languages`
+    arrays, and therefore the file size, down. When building graphical user interfaces,
+    opt to use full language names to keep it more accessible to users.
+    ///
+</div>
 
 
 ---
@@ -913,7 +728,7 @@ can seem quite straightforward:
 
     * **`crc32`** (string):
 
-### Interpreting releases data
+## Interpreting releases data
 
 Observe the following rules in the releases array:
 

@@ -88,7 +88,7 @@ You can test validating against this schema with
             "minProperties": 1,
             "contains": {
               "type": "object",
-              "required": ["name", "regions", "languages", "release_date", "build" ,"is_demo", "sets"],
+              "required": ["name", "regions", "languages", "release_date", "build" ,"is_demo", "was_published", "sets"],
               "additionalProperties": false,
               "properties": {
                 "name": {
@@ -154,6 +154,9 @@ You can test validating against this schema with
                   ]
                 },
                 "is_demo": {
+                  "type": "boolean"
+                },
+                "was_published": {
                   "type": "boolean"
                 },
                 "serial": {
