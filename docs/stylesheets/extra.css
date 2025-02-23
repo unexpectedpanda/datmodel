@@ -32,6 +32,11 @@ html {
 	font-weight: 700;
 }
 
+/* Code snippets */
+article.md-typeset p code {
+	background-color: #3b3840;
+}
+
 /* Line highlights in code blocks */
 .codehighlight {
 	display: inline-flex;
@@ -76,7 +81,7 @@ a.terminology {
 
 /* Input boxes */
 .input {
-	width: 100%;
+	width: 98%;
 	height: 2em;
 	font-size: 1em;
 	padding-left: 0.5em;
@@ -103,12 +108,31 @@ ul.filter {
 }
 
 /* Code definitions */
-div.definition-list ul li p:first-child {
+div.definition-list > ul {
+	list-style-type: none;
+}
+
+div.definition-list > ul > li {
+	margin-left: 0!important;
+	padding-left: 0;
+}
+
+div.definition-list > ul li p:first-child {
 	margin: 1em 0;
 }
 
+div.definition-list > ul > li { /* Space between definition cards */
+	margin-bottom: 1.5em;
+}
+
+div.definition-list > ul > li { /* Definition card itself */
+	background-color: rgba(255, 255, 255, 0.015);
+	padding: 0.75em 1em;
+	border: 2px solid rgba(0, 0, 0, 0.3);
+}
+
 div.definition-list ul li p {
-	margin-bottom: 1em;
+	margin-bottom: 0.75em;
 }
 
 div.definition-list ul li p,
@@ -116,8 +140,15 @@ div.definition-list ul li pre,
 div.definition-list ul li details,
 div.definition-list ul li div.tabbed-set,
 div.definition-list ul li div.admonition,
-div.definition-list ul li input {
+div.definition-list ul li input,
+div.definition-list ul li h4 {
 	margin-left: 1em;
+	margin-right: 1em;
+}
+
+div.definition-list ul li h4 {
+	margin-top: 1.5em;
+	font-size: 1.1em;
 }
 
 div.definition-list ul li div.admonition {
@@ -133,38 +164,42 @@ div.definition-list ul li div.admonition p.admonition-title {
 	margin: 0;
 }
 
-ul.md-nav__list code.toc-code {
-	margin-left: 1em;
-	padding: 8px 6px;
+code.toc-code, article.md-typeset code.toc-code {
+	background-color: #544b8a;
+	padding: 6px 20px;
+	margin-right: 0.75em;
 }
 
-code.toc-code {
-	background-color: #6a5fb1;
-	padding: 6px 10px;
-	margin-right: 0.5em;
-}
-
-code.toc-def {
-	background-color: #706e81;
+article.md-typeset code.toc-def {
+	border: solid 2px #706e81;
+	background-color: unset;
 	padding: 6px 8px;
 	font-size: 0.65em;
 	margin-right: 0.25em;
 }
 
-code.toc-req {
-	background-color: #8b690c;
+article.md-typeset code.toc-req {
+	border: solid 2px #8b690c;
+	background-color: unset;
 	padding: 6px 8px;
 	font-size: 0.65em;
+}
+
+/* Code definitions, TOC Only */
+
+ul.md-nav__list code.toc-code {
+	margin-left: 1em;
+	padding: 8px 6px;
 }
 
 li.md-nav__item a.md-nav__link:hover {
 	color: #ffffff;
 }
 
-code.toc-code:hover {
+li.md-nav__item code.toc-code:hover {
 	color: #ffffff;
 }
 
 a.md-nav__link--active code.toc-code {
-	color: #ffff00;
+	color: #ffffff;
 }

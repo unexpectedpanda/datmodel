@@ -19,6 +19,7 @@ extra_javascript:
   - javascripts/extra.js
 markdown_extensions:
   - attr_list
+  - def_list
   - md_in_html
   - mkdcomments # Installed from https://github.com/ryneeverett/python-markdown-comments
   - pymdownx.blocks.admonition

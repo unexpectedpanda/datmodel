@@ -37,10 +37,10 @@ hide:
 
 * This proposal doesn't seek to alter file naming standards put in place by DAT groups.
   However, its validation might be looser or more restrictive than a given naming standard
-  depending on the particular field. For example, the ancient
-  [No-Intro guidelines](https://datomatic.no-intro.org/stuff/The%20Official%20No-Intro%20Convention%20(20071030).pdf)
-  insist on 7-bit ASCII in file names, while this DAT schema allows for the now ubiquitous
-  UTF-8.
+  depending on the particular field. For example, the ancient [No-Intro
+  guidelines](https://datomatic.no-intro.org/stuff/The%20Official%20No-Intro%20Convention%20(20071030).pdf)
+  insist on 7&#8209;bit ASCII in file names, while this DAT schema allows for the now
+  ubiquitous UTF&#8209;8.
 
 * Metadata that can't be used to manage or filter files, for example primary volume
   descriptors, isn't included in the standard. Managing this sort of metadata is up to the
