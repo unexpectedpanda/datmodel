@@ -59,6 +59,7 @@ nav:
   - complete_example.md
   - DAT file structures:
     - structure.md
+    - top_level.md
     - dat_info.md
     - collection.md
     - releases.md

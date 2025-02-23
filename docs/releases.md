@@ -5,41 +5,73 @@ hide:
 
 # `releases`
 
-The releases array can get quite complex depending on your needs. When only required
-properties are included, though, it's reasonably straightforward:
+The `releases` array contains objects that describe the details about each release that is
+associated with a group.
 
 ``` {.json .copy}
 "releases": [
   {
-    "name": "Some Video Game (Japan)",
+    "name": "Some Video Game (USA)",
     "build": "Production",
-    "is_demo": false,
     "published": true,
+    "type": "Game",
+    "release_date": "1993-10-12",
     "regions": ["JP"],
     "languages": {
       "audio": ["Ja", "En"],
       "interface": ["En"],
       "subtitles": ["En"]
     },
-    "type": "Game",
-    "release_date": "1993-10-12",
-    "sets": {
-      "files": [
-        {
-          "container": "auto",
-          "files": [
-            {
-              "name" : "file.asd",
-              "size": 98,
-              "digests": {
-                "xxh3_128": "1a2bf3bb0a4cd3aa94bf08b1c269423e",
-                "blake3": "c32da642c108dd42bc169dbe4094b96d4f638d2c7388fb18132429347955c7ec"
-              }
+    "sets": [
+      {
+        "set": "bin",
+        "container": "auto",
+        "files": [
+          {
+            "name": "Some Video Game (USA) (Track 1).bin",
+            "size": 10000,
+            "digests": {
+              "crc32": "29edd0e3",
+              "xxh3_128": "1a2bf3bb0a4cd3aa94bf08b1c269423e",
+              "blake3": "c32da642c108dd42bc169dbe4094b96d4f638d2c7388fb18132429347955c7ec"
             }
-          ]
-        }
-      ]
-    }
+          },
+          {
+            "name": "Some Video Game (USA) (Track 2).bin",
+            "size": 1000,
+            "digests": {
+              "crc32": "872f5343",
+              "xxh3_128": "b993a0619f896a101e786850967b3d90",
+              "blake3": "74277af46089c2b15aea5b193bdecdd58a2992e47b00956c678a6c070225cb18"
+            }
+          },
+          {
+            "name": "Some Video Game (USA).cue",
+            "size": 100,
+            "digests": {
+              "crc32": "987150b7",
+              "xxh3_128": "b7bb3254808cfc06d899854a1b58bab0",
+              "blake3": "fcbc02c56a9a5157255febeac2009a988ccd08863ff648d290fe973dffe7f88c"
+            }
+          }
+        ]
+      },
+      {
+        "set": "chd",
+        "container": null,
+        "files": [
+          {
+            "name": "Some Video Game (USA).chd",
+            "size": 7000,
+            "digests": {
+              "sha1_internal": "589d406e0894e2cdf334a98599972d3cc65f7031",
+              "xxh3_128": "1a2bf3bb0a4cd3aa94bf08b1c269423e",
+              "blake3": "c32da642c108dd42bc169dbe4094b96d4f638d2c7388fb18132429347955c7ec"
+            }
+          }
+        ]
+      }
+    ]
   }
 ]
 ```
@@ -52,7 +84,7 @@ properties are included, though, it's reasonably straightforward:
     The name of the title, in UTF-8. This is used for the name of the archive or folder.
     Names can't end with a period or space, or use the following invalid path characters:
 
-    ``` {.text .copy}
+    ```
     :<>"|?*
     ```
 
@@ -110,21 +142,81 @@ properties are included, though, it's reasonably straightforward:
       development stage, but isn't the production version. Wherever possible, don't use
       this.
 
-* **`is_demo`{ #is_demo .toc-code }** `bool`{ .toc-def } `required`{ .toc-req }
-
-    Whether the title is a demo.
-
-* **`was_published`{ #was_published .toc-code }** `bool`{ .toc-def } `required`{ .toc-req }
+* **`published`{ #published .toc-code }** `bool`{ .toc-def } `required`{ .toc-req }
 
     Whether the title was published. Unpublished titles that didn't have an official
     release should be set to `false`.
 
+* **`type`{ #type .toc-code }** `enum`{ .toc-def } `required`{ .toc-req }
+
+    The type of release. Must be one of the following:
+
+    * `Application`
+
+    * `Audio`
+
+    * `BIOS`
+
+    * `Coverdisc`
+
+    * `Device`
+
+    * `Firmware`
+
+    * `Game`
+
+    * `Magazine`
+
+    * `Multimedia`
+
+    * `Video`
+
+    These can be paired with a [`subtype`](#subtype).
+
+* **`release_date`{ #release_date .toc-code }** `pattern string`{ .toc-def } `required`{ .toc-req }
+
+    The date the title was released. Must be an
+    [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) extended format date, without the
+    time zone. Valid formats include the following:
+
+    * `YYYY-MM-DD hh:mm:ss`
+    * `YYYY-MM-DD hh:mm`
+    * `YYYY-MM-DD`
+    * `YYYY-MM`
+    * `YYYY`
+
+    Leave the field empty for an unknown date:
+
+    ```json
+    "release_date": ""
+    ```
+
+    /// details | Expand for developer details
+    Valid dates are found with the following regular expressions:
+
+    ``` {.text .copy}
+    ^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9]:?){1,2}(?<!:)$
+    ^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9])$
+    ^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01]))$
+    ^[1-9][0-9]{3,3}-(?:0[1-9]|1[0-2])$
+    ^[1-9][0-9]{3,3}$
+    ^$
+    ```
+
+    There's a lower year bound of 1000, and an upper year bound of 9999. The regular
+    expressions also constrain month and date pairs appropriately, although it's possible
+    to have February 29 on a non-leap year. It's assumed that systems generating the DAT
+    file will generate valid dates to avoid this. The schema validation just enforces the
+    format to enable easier programmatic comparisons when determining if one release is
+    newer than another.
+    ///
+
 * **`regions`{ #regions .toc-code }** `enum array`{ .toc-def } `required`{ .toc-req }
 
     Which regions the title was released in. Valid individual region codes are two
-    characters, and are described in
+    characters long, and are described in
     [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). Grouped
-    regions are three characters, and defined entirely by this standard.
+    regions are three characters long, and defined entirely by this standard.
 
     The following general rules apply:
 
@@ -431,13 +523,13 @@ properties are included, though, it's reasonably straightforward:
 
     * `MDE` - Middle East
 
-    * `NOA` - North America
+    * `NAM` - North America
 
     * `NOR` - Nordics
 
     * `OCE` - Oceania
 
-    * `SOA` - South America
+    * `SAM` - South America
     ///
 
     /// warning | Regions in graphical user interfaces
@@ -452,7 +544,7 @@ properties are included, though, it's reasonably straightforward:
     there are no audio, interface, or subtitle languages, add a singular `null` item to
     the relevant arrays:
 
-    ```json
+    ``` {.json .copy}
     "languages": {
       "audio": [null],
       "interface": ["En"],
@@ -464,7 +556,7 @@ properties are included, though, it's reasonably straightforward:
     leave the arrays empty. **This isn't recommended**. A sincere effort to catalog
     supported languages should be made &mdash; more data helps us all.
 
-    ```json
+    ``` {.json .copy}
     "languages": {
       "audio": [],
       "interface": [],
@@ -502,7 +594,7 @@ properties are included, though, it's reasonably straightforward:
     In all circumstances, consider the intended audience of the medium when selecting
     language codes. For example, if a video is largely in English and is intended for
     English-speaking audiences, but has a short scene in which people speak Japanese, you
-    set the `audio` as `En`, _not_ `En` and `Ja`.
+    set the `audio` as `["En"]`, _not_ `["En", "Ja"]`.
 
     <h4>Examples</h4>
 
@@ -552,9 +644,59 @@ properties are included, though, it's reasonably straightforward:
     arrays, and therefore the file size, down. When building graphical user interfaces,
     opt to use full language names to keep it more accessible to users.
     ///
+
+* **`sets`{ #sets .toc-code }** `object array`{ .toc-def } `required`{ .toc-req }
+
+    Different file sets within the release. This can represent the same release in
+    multiple formats. For example, a CD image in ISO, CHD, and RVZ formats. Or a ROM
+    in encrypted and decrypted formats.
+
+    The sets array looks something like the following:
+
+    ``` {.json .copy}
+    "sets": [
+      {
+        "set": "bin",
+        "files": [
+
+        ]
+      }
+    ]
+    ```
+
+
 </div>
 
+## Optional parameters
 
+<div class="definition-list" markdown>
+* **`subtype`{ #subtype .toc-code }** `enum`{ .toc-def } `optional`{ .toc-opt }
+
+    The subtype of the release. Must be paired with a valid [`type`](#type).
+
+    * `Add-on` - Valid with the `Game` and `Application` types.
+
+    * `Audio` - Valid with the `Game` and `Application` types.
+
+    * `Demo` - Valid with the `Game` and `Application` types.
+
+    * `Manual` - Valid with the `Device`, `Game`, and `Application` types.
+
+    * `Update` - Valid with the `Game`, and `Application` types.
+
+    * `Video` - Valid with the `Game` and `Application` types.
+
+    For example:
+
+    ``` {.json .copy}
+    "type": "Game",
+    "subtype": "Add-on"
+    ```
+</div>
+
+## `sets`
+
+## `files`
 ---
 
 * **`size`** (integer): _Required_. The size of the file, in bytes.
@@ -605,7 +747,6 @@ At its most complex with all the optional data though, it can seem daunting:
     "name": "Some Video Game (Japan)",
     "db_id": "123456789",
     "build": "Production",
-    "is_demo": false,
     "serial": null,
     "source": ["3.5\" floppy"],
     "local_names": {

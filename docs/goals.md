@@ -57,17 +57,18 @@ hide:
 
     This capability is particularly appealing to those who seek to maximise available disk
     space, minimize file duplication, and enable virtual file systems that can
-    transparently construct final containers when required. It's a nifty idea.
+    transparently construct final containers when required.
 
     However, image file formats often have origin-specific configurations despite
     identical file extensions, compressed containers can be non-deterministic, and even
     deterministic containers can change their output between version and setting changes.
-    It requires a huge amount of data to be recorded and handled.
+    There's also a dearth of cross-language libraries available for developers to
+    integrate into their own DAT management software, whether that be parsing or
+    creating DAT files.
 
-    Adding this functionality is too much burden on those creating the DAT files, and the
-    developers who need to support them. This functionality is therefore considered out of
-    scope, and is more appropriately left to an external party who reverse-engineers the
-    expansion of the final containers detailed in DAT files.
+    This functionality is therefore considered out of scope, and is more appropriately
+    left to an external party who reverse-engineers the extraction of containers listed
+    in a DAT file into their own, more detailed DAT files.
 
 ## Risks
 
@@ -80,4 +81,3 @@ hide:
 
     Due to the organic nature of how the existing standard arose over time, it's likely
     that inertia in retaining the old format will be difficult to overcome.
-

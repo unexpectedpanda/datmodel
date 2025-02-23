@@ -6,10 +6,9 @@ hide:
 # Schema
 
 You can test validating against this schema with
-[JSON Schema Lint](https://jsonschemalint.com/#!/version/draft-07/markup/json), with the
-`$schema` and `$id` lines removed.
+[JSON Schema Validator](https://www.jsonschemavalidator.net/).
 
-```json
+``` {.json .copy}
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id":"https://www.github.com/unexpectedpanda/datmodel",
@@ -20,10 +19,6 @@ You can test validating against this schema with
   "required": ["dat_info", "collection"],
   "additionalProperties": false,
   "properties": {
-    "$schema": {
-      "description": "A public link to this JSON schema.",
-      "$ref": "#/$defs/nonEmptyString"
-    },
     "dat_info": {
       "description": "Content that describes the DAT file and its origin.",
       "type": "object",
@@ -79,7 +74,7 @@ You can test validating against this schema with
         "additionalProperties": false,
         "properties": {
           "group": {
-            "description": "The name for the group that contains related titles, in UTF-8. For example, the 'Doom' group might contain 'Doom (USA)', 'Doom (Europe)', and 'Doom (Japan)', along with their various different versions.",
+            "description": "The name for the group that contains related titles, in UTF-8. For example, the 'Some Video Game ' group might contain 'Some Video Game (USA)', 'Some Video Game (USA) (v1.1)', 'Some Video Game  (Europe)', and 'Some Video Game  (Japan)'.",
             "$ref": "#/$defs/nonEmptyString"
           },
           "releases": {
@@ -88,8 +83,45 @@ You can test validating against this schema with
             "minProperties": 1,
             "contains": {
               "type": "object",
-              "required": ["name", "regions", "languages", "release_date", "build" ,"is_demo", "was_published", "sets"],
+              "required": ["name", "regions", "languages", "release_date", "build", "published", "sets"],
+              "dependentRequired": {
+                "subtype": ["type"]
+              },
               "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "subtype": {
+                        "pattern": "^(?:Add-on|Audio|Demo|Update|Video)$"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "type": {
+                        "pattern": "^(?:Application|Game)$"
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "subtype": {
+                        "const": "Manual"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "type": {
+                        "pattern": "^(?:Application|Device|Game)$"
+                      }
+                    }
+                  }
+                }
+              ],
               "properties": {
                 "name": {
                   "description": "The name of the title, in UTF-8. This is used for the name of the archive or folder. Path separators are valid (both forward and back slashes). Names can't end with a period or space.",
@@ -153,10 +185,7 @@ You can test validating against this schema with
                     "Review"
                   ]
                 },
-                "is_demo": {
-                  "type": "boolean"
-                },
-                "was_published": {
+                "published": {
                   "type": "boolean"
                 },
                 "serial": {
@@ -183,29 +212,56 @@ You can test validating against this schema with
                 "languages": {
                   "description": "The languages the title supports.",
                   "type": "object",
-                  "required": ["audio", "subtitles"],
+                  "required": ["audio", "interface", "subtitles"],
                   "additionalProperties": false,
                   "properties": {
                     "audio": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/$defs/stringnull"
+                        "type": "string"
+                      }
+                    },
+                    "interface": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
                       }
                     },
                     "subtitles": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/$defs/stringnull"
+                        "type": "string"
                       }
                     }
                   }
                 },
                 "type": {
-                  "$ref": "#/$defs/nonEmptyString"
+                  "enum": [
+                    "Application",
+                    "Audio",
+                    "BIOS",
+                    "Coverdisc",
+                    "Device",
+                    "Prototype",
+                    "Firmware",
+                    "Game",
+                    "Magazine",
+                    "Multimedia",
+                    "Video"
+                  ]
+                },
+                "subtype": {
+                  "enum": [
+                    "Add-on",
+                    "Audio",
+                    "Demo",
+                    "Manual",
+                    "Update",
+                    "Video"
+                  ]
                 },
                 "release_date": {
-                  "description": "The date the title was released, in extended ISO 8601 format, without the time zone. Acceptable formats are YYYY-MM-DD hh:mm:ss, YYYY-MM-DD hh:mm, YYYY-MM-DD, YYYY-MM, YYYY, and null for an unknown date.",
-                  "$ref": "#/$defs/nonEmptyString",
+                  "description": "The date the title was released, in extended ISO 8601 format, without the time zone. Valid formats are YYYY-MM-DD hh:mm:ss, YYYY-MM-DD hh:mm, YYYY-MM-DD, YYYY-MM, YYYY, and null for an unknown date.",
                   "anyOf" : [
                     {
                       "description": "YYYY-MM-DD hh:mm:ss",
@@ -228,41 +284,40 @@ You can test validating against this schema with
                       "pattern": "^[1-9][0-9]{3,3}$"
                     },
                     {
-                      "type": "null"
+                      "description": "Empty string",
+                      "pattern": "^$"
                     }
                   ]
                 },
                 "sets": {
-                  "type": "object",
+                  "type": "array",
                   "minProperties": 1,
-                  "properties": {
-                    "files": {
-                      "type": "array",
-                      "contains": {
-                        "type": "object",
-                        "properties": {
-                          "container": {
-                            "$ref": "#/$defs/stringnull"
-                          },
-                          "files": {
-                            "description": "The file properties.",
-                            "type": "array",
-                            "minProperties": 1,
-                            "contains": {
-                              "type": "object",
-                              "required": ["name", "size", "digests"],
-                              "additionalProperties": false,
-                              "properties": {
-                                "name": {
-                                  "type": "string"
-                                },
-                                "size": {
-                                  "type": "integer"
-                                },
-                                "digests": {
-                                  "type": "object"
-                                }
-                              }
+                  "contains": {
+                    "type": "object",
+                    "required": ["set", "container", "files"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "set": {
+                        "$ref": "#/$defs/stringnull"
+                      },
+                      "container": {
+                        "$ref": "#/$defs/stringnull"
+                      },
+                      "files": {
+                        "type": "array",
+                        "contains": {
+                          "type": "object",
+                          "required": ["name", "size", "digests"],
+                          "additionalProperties": false,
+                          "properties": {
+                            "name": {
+                              "$ref": "#/$defs/stringnull"
+                            },
+                            "size": {
+                              "type": "integer"
+                            },
+                            "digests": {
+                              "$ref": "#/$defs/digests"
                             }
                           }
                         }
@@ -270,38 +325,6 @@ You can test validating against this schema with
                     }
                   }
                 }
-              },
-              "if": {
-                "properties": {
-                  "regions": {
-                    "anyOf": [
-                      {
-                        "const": ["Africa"]
-                      },
-                      {
-                        "const": ["Asia"]
-                      },
-                      {
-                        "const": ["Europe"]
-                      },
-                      {
-                        "const": ["Latin America"]
-                      },
-                      {
-                        "const": ["Middle East"]
-                      },
-                      {
-                        "const": ["Nordics"]
-                      },
-                      {
-                        "const": ["Oceania"]
-                      }
-                    ]
-                  }
-                }
-              },
-              "then": {
-                "required": ["subregions"]
               }
             }
           }
@@ -337,496 +360,305 @@ You can test validating against this schema with
         }
       ]
     },
-    "languages": {
-      "enum": [
-        "Abkhazain",
-        "Afar",
-        "Afrikaans",
-        "Akan",
-        "Albanian",
-        "Amharic",
-        "Arabic",
-        "Arabic (Algeria)",
-        "Arabic (Bahrain)",
-        "Arabic (Egypt)",
-        "Arabic (Iraq)",
-        "Arabic (Jordan)",
-        "Arabic (Kuwait)",
-        "Arabic (Lebanon)",
-        "Arabic (Libya)",
-        "Arabic (Morocco)",
-        "Arabic (Oman)",
-        "Arabic (Qatar)",
-        "Arabic (Saudi Arabia)",
-        "Arabic (Syria)",
-        "Arabic (Tunisia)",
-        "Arabic (UAE)",
-        "Arabic (Yemen)",
-        "Aragonese",
-        "Armenian",
-        "Assamese",
-        "Avaric",
-        "Aymara",
-        "Azerbaijani",
-        "Bambara",
-        "Bashkir",
-        "Basque",
-        "Belarusian",
-        "Bengali",
-        "Bislama",
-        "Bosnian",
-        "Breton",
-        "Bulgarian",
-        "Burmese",
-        "Catalan",
-        "Chamorro",
-        "Chechen",
-        "Chichewa",
-        "Chinese (Cantonese)"
-        "Chinese (Mandarin)",
-        "Chinese (Simplified)",
-        "Chinese (Traditional)",
-        "Chuvash",
-        "Cornish",
-        "Corsican",
-        "Cree",
-        "Croatian",
-        "Czech",
-        "Danish",
-        "Divehi",
-        "Dutch",
-        "Dzongkha",
-        "English",
-        "English (Australia)",
-        "English (Belize)",
-        "English (Canada)",
-        "English (Ireland)",
-        "English (Jamaica)",
-        "English (New Zealand)",
-        "English (South Africa)",
-        "English (Trinidad)",
-        "English (United States)"
-        "Estonian",
-        "Ewe",
-        "Faroese",
-        "Fijian",
-        "Finnish",
-        "French",
-        "French (Belgium)",
-        "French (Canada)",
-        "French (Luxembourg)",
-        "French (Standard)",
-        "French (Switzerland)",
-        "Frisian",
-        "Fulah",
-        "Gaelic (Scotland)",
-        "Galician",
-        "Ganda",
-        "Georgian",
-        "German",
-        "German (Austria)",
-        "German (Liechtenstein)",
-        "German (Luxembourg)",
-        "German (Switzerland)",
-        "Greek",
-        "kalaallisut",
-        "Guarani",
-        "Gujarati",
-        "Haitian",
-        "Hausa",
-        "Hebrew",
-        "Herero",
-        "Hindi",
-        "Hiri Motu",
-        "Hungarian",
-        "Icelandic",
-        "Igbo",
-        "Indonesian",
-        "Inukitut",
-        "Inupiaq",
-        "Irish",
-        "Italian",
-        "Italian (Switzerland)",
-        "Japanese",
-        "Javanese",
-        "Kannada",
-        "Kanuri",
-        "Kashmiri",
-        "Kazakh",
-        "Khmer",
-        "Kikuyu",
-        "Kinyarwanda",
-        "Kyrgyz",
-        "Komi",
-        "Kongo",
-        "Korean",
-        "Kuanyama",
-        "Kurdish",
-        "Lao",
-        "Latvian",
-        "Limburgan",
-        "Lingala",
-        "Lithuanian",
-        "Luba-Katanga",
-        "Luxembourgish",
-        "Macedonian",
-        "Malagasy",
-        "Malay",
-        "Malayalam",
-        "Maltese",
-        "Manx",
-        "Maori",
-        "Marathi",
-        "Marshallese",
-        "Mongolian",
-        "Nauru",
-        "Navajo",
-        "Ndebele (North)",
-        "Ndebele (South)",
-        "Ndonga",
-        "Nepali",
-        "Norwegian",
-        "Norwegian (Bokmål)",
-        "Norwegian (Nynorsk)",
-        "Occitan",
-        "Ojibwa",
-        "Oriya",
-        "Oromo",
-        "Ossetian",
-        "Pashto",
-        "Persian",
-        "Polish",
-        "Portuguese"
-        "Portuguese (Brazil)",
-        "Portuguese (Portugal)",
-        "Punjabi",
-        "Quechua",
-        "Romanian",
-        "Romanian (Romania)",
-        "Romanian (Republic of Moldova)",
-        "Romansh",
-        "Rundi",
-        "Russian",
-        "Russian (Republic of Moldova)",
-        "Sami (Northern)",
-        "Samoan",
-        "Sango",
-        "Sardinian",
-        "Serbian",
-        "Shona",
-        "Sindhi",
-        "Sinhala",
-        "Slovak",
-        "Slovenian",
-        "Somali",
-        "Sotho (Southern)",
-        "Spanish",
-        "Spanish (Argentina)",
-        "Spanish (Bolivia)",
-        "Spanish (Chile)",
-        "Spanish (Colombia)",
-        "Spanish (Costa Rica)",
-        "Spanish (Dominican Republic)",
-        "Spanish (Ecuador)",
-        "Spanish (El Salvador)",
-        "Spanish (Guatemala)",
-        "Spanish (Honduras)",
-        "Spanish (Latin America)",
-        "Spanish (Mexico)",
-        "Spanish (Nicaragua)",
-        "Spanish (Panama)",
-        "Spanish (Paraguay)",
-        "Spanish (Peru)",
-        "Spanish (Puerto Rico)",
-        "Spanish (Uruguay)",
-        "Spanish (Venezuela)",
-        "Sundanese",
-        "Swahili",
-        "Swati",
-        "Swedish",
-        "Swedish (Finland)",
-        "Swedish (Sweden)",
-        "Tagalog",
-        "Tahitian",
-        "Tajik",
-        "Tamil",
-        "Tatar",
-        "Telugu",
-        "Thai",
-        "Tibetan",
-        "Tigrinya",
-        "Tonga",
-        "Tswana",
-        "Turkish",
-        "Turkmen",
-        "Twi",
-        "Uighur",
-        "Ukrainian",
-        "Urdu",
-        "Uzbek",
-        "Venda",
-        "Vietnamese",
-        "Walloon",
-        "Welsh",
-        "Wolof",
-        "Xhosa",
-        "Yi (Sichuan)",
-        "Yiddish",
-        "Yoruba",
-        "Zhuang",
-        "Zulu"
-      ]
+    "digests": {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "crc32": {
+          "type": "string",
+          "pattern": "^[a-fA-F0-9]{8,8}$"
+        },
+        "md5": {
+          "type": "string",
+          "pattern": "^[a-fA-F0-9]{32,32}$"
+        },
+        "sha1": {
+          "type": "string",
+          "pattern": "^[a-fA-F0-9]{40,40}$"
+        },
+        "sha1_internal": {
+          "type": "string",
+          "pattern": "^[a-fA-F0-9]{40,40}$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-fA-F0-9]{64,64}$"
+        },
+        "xxh3_128": {
+          "type": "string",
+          "pattern": "^[a-fA-F0-9]{32,32}$"
+        },
+        "blake3": {
+          "type": "string",
+          "pattern": "^[a-fA-F0-9]{64,64}$"
+        }
+      }
     },
     "regionsGroup": {
       "enum": [
-        "Global",
-        "Africa",
-        "Asia",
-        "Europe",
-        "Latin America",
-        "Middle East",
-        "North America",
-        "Nordics",
-        "Oceania",
-        "South America"
+        "GLO",
+        "AFR",
+        "ASI",
+        "EUR",
+        "LAM",
+        "MDE",
+        "NAM",
+        "NOR",
+        "OCE",
+        "SAM"
       ]
     },
     "regionsIndividual": {
       "enum": [
-        "Afghanistan",
-        "Albania",
-        "Algeria",
-        "American Samoa",
-        "Andorra",
-        "Angola",
-        "Anguilla",
-        "Antigua and Barbuda",
-        "Argentina",
-        "Armenia",
-        "Aruba",
-        "Australia",
-        "Austria",
-        "Azerbaijan",
-        "Bahamas",
-        "Bahrain",
-        "Bangladesh",
-        "Barbados",
-        "Belarus",
-        "Belgium",
-        "Belize",
-        "Benin",
-        "Bermuda",
-        "Bhutan",
-        "Bolivia",
-        "Bosnia and Herzegovina",
-        "Botswana",
-        "Brazil",
-        "British Virgin Islands",
-        "Brunei",
-        "Bulgaria",
-        "Burkina Faso",
-        "Burundi",
-        "Cabo Verde",
-        "Cambodia",
-        "Cameroon",
-        "Canada",
-        "Caribbean Netherlands",
-        "Cayman Islands",
-        "Central African Republic",
-        "Chad",
-        "Chile"
-        "China",
-        "Colombia",
-        "Comoros",
-        "Congo",
-        "Cook Islands",
-        "Costa Rica",
-        "Croatia",
-        "Cuba",
-        "Curaçao",
-        "Cyprus",
-        "Czechia",
-        "Côte d'Ivoire",
-        "Denmark",
-        "Djibouti",
-        "Dominica",
-        "Dominican Republic",
-        "DR Congo",
-        "Ecuador",
-        "Egypt",
-        "El Salvador",
-        "Equatorial Guinea",
-        "Eritrea",
-        "Estonia",
-        "Eswatini",
-        "Ethiopia",
-        "Faeroe Islands",
-        "Falkland Islands",
-        "Fiji",
-        "Finland",
-        "France",
-        "French Guiana",
-        "French Polynesia",
-        "Gabon",
-        "Gambia",
-        "Georgia",
-        "Germany",
-        "Ghana",
-        "Gibraltar",
-        "Greece",
-        "Greenland",
-        "Grenada",
-        "Guadeloupe",
-        "Guam",
-        "Guatemala",
-        "Guinea",
-        "Guinea-Bissau",
-        "Guyana",
-        "Haiti",
-        "Holy-See",
-        "Honduras",
-        "Hong Kong",
-        "Hungary",
-        "Iceland",
-        "India",
-        "Indonesia",
-        "Iran",
-        "Iraq",
-        "Ireland",
-        "Isle of Man",
-        "Israel",
-        "Italy",
-        "Jamaica",
-        "Japan",
-        "Jordan",
-        "Kazakhstan",
-        "Kenya",
-        "Kiribati",
-        "Kuwait",
-        "Kyrgyzstan",
-        "Laos",
-        "Latvia",
-        "Lebanon",
-        "Lesotho",
-        "Liberia",
-        "Libya",
-        "Liechtenstein",
-        "Lithuania",
-        "Luxembourg",
-        "Macao",
-        "Madagascar",
-        "Malawai",
-        "Malaysia",
-        "Maldives",
-        "Mali",
-        "Malta",
-        "Marshall Islands",
-        "Martinique",
-        "Mauritania",
-        "Mauritius",
-        "Macedonia",
-        "Mayotte",
-        "Mexico",
-        "Micronesia",
-        "Moldova",
-        "Monaco",
-        "Mongolia",
-        "Montenegro",
-        "Montserrat",
-        "Morocco",
-        "Mozambique",
-        "Myanmar",
-        "Namibia",
-        "Nauru",
-        "Nepal",
-        "Netherlands",
-        "New Caledonia",
-        "New Zealand",
-        "Nicaragua",
-        "Niue",
-        "Niger",
-        "Nigeria",
-        "North Korea",
-        "North Macedonia",
-        "Northern Mariana Islands",
-        "Norway",
-        "Oman",
-        "Pakistan",
-        "Palau",
-        "Panama",
-        "Papua New Guinea".
-        "Paraguay",
-        "Peru",
-        "Philippines",
-        "Poland",
-        "Portugal",
-        "Puerto Rico",
-        "Qatar",
-        "Réunion",
-        "Romania",
-        "Russia",
-        "Rwanda",
-        "Saint Barthelemy",
-        "Saint Helena",
-        "Saint Kitts & Nevis",
-        "Saint Lucia",
-        "Saint Pierre & Miquelon",
-        "Samoa",
-        "San Marino",
-        "Sao Tome & Principe",
-        "Saudi Arabia",
-        "Senegal",
-        "Serbia",
-        "Seychelles",
-        "Sierra Leone",
-        "Singapore",
-        "Sint Maarten",
-        "Slovakia",
-        "Slovenia",
-        "Solomon Islands",
-        "South Africa",
-        "South Korea",
-        "South Sudan",
-        "Spain",
-        "Sri Lanka",
-        "St. Vincent & Grenadines",
-        "State of Palestine",
-        "Sudan",
-        "Suriname",
-        "Sweden",
-        "Switzerland",
-        "Syria",
-        "Taiwan",
-        "Tajikstan",
-        "Tanzania",
-        "Thailand",
-        "Timor-Leste"
-        "Togo",
-        "Tokelau",
-        "Tonga",
-        "Trinidad and Tobago"
-        "Tunisia",
-        "Türkiye",
-        "Turks and Caicos",
-        "Turkmenistan",
-        "Tuvalu",
-        "U.S. Virgin Islands",
-        "Uganda",
-        "Ukraine",
-        "United Arab Emirates",
-        "United Kingdom",
-        "United States"
-        "Unknown",
-        "Uruguay",
-        "Uzbekistan",
-        "Vanuatu",
-        "Venezuela",
-        "Vietnam",
-        "Wallis & Futuna",
-        "Western Sahara",
-        "Yemen",
-        "Zambia",
-        "Zimbabwe"
+        "AD",
+        "AE",
+        "AF",
+        "AG",
+        "AI",
+        "AL",
+        "AM",
+        "AO",
+        "AQ",
+        "AR",
+        "AS",
+        "AT",
+        "AU",
+        "AW",
+        "AX",
+        "AZ",
+        "BA",
+        "BB",
+        "BD",
+        "BE",
+        "BF",
+        "BG",
+        "BH",
+        "BI",
+        "BJ",
+        "BL",
+        "BM",
+        "BN",
+        "BO",
+        "BQ",
+        "BR",
+        "BS",
+        "BT",
+        "BV",
+        "BW",
+        "BY",
+        "BZ",
+        "CA",
+        "CC",
+        "CD",
+        "CF",
+        "CG",
+        "CH",
+        "CI",
+        "CK",
+        "CL",
+        "CM",
+        "CN",
+        "CO",
+        "CR",
+        "CU",
+        "CV",
+        "CW",
+        "CX",
+        "CY",
+        "CZ",
+        "DE",
+        "DJ",
+        "DK",
+        "DM",
+        "DO",
+        "DZ",
+        "EC",
+        "EE",
+        "EG",
+        "EH",
+        "ER",
+        "ES",
+        "ET",
+        "FI",
+        "FJ",
+        "FK",
+        "FM",
+        "FO",
+        "FR",
+        "GA",
+        "GB",
+        "GD",
+        "GE",
+        "GF",
+        "GG",
+        "GH",
+        "GI",
+        "GL",
+        "GM",
+        "GN",
+        "GP",
+        "GQ",
+        "GR",
+        "GS",
+        "GT",
+        "GU",
+        "GW",
+        "GY",
+        "HK",
+        "HM",
+        "HN",
+        "HR",
+        "HT",
+        "HU",
+        "ID",
+        "IE",
+        "IL",
+        "IM",
+        "IN",
+        "IO",
+        "IQ",
+        "IR",
+        "IS",
+        "IT",
+        "JE",
+        "JM",
+        "JO",
+        "JP",
+        "KE",
+        "KG",
+        "KH",
+        "KI",
+        "KM",
+        "KN",
+        "KP",
+        "KR",
+        "KW",
+        "KY",
+        "KZ",
+        "LA",
+        "LB",
+        "LC",
+        "LI",
+        "LK",
+        "LR",
+        "LS",
+        "LT",
+        "LU",
+        "LV",
+        "LY",
+        "MA",
+        "MC",
+        "MD",
+        "ME",
+        "MF",
+        "MG",
+        "MH",
+        "MK",
+        "ML",
+        "MM",
+        "MN",
+        "MO",
+        "MP",
+        "MQ",
+        "MR",
+        "MS",
+        "MT",
+        "MU",
+        "MV",
+        "MW",
+        "MX",
+        "MY",
+        "MZ",
+        "NA",
+        "NC",
+        "NE",
+        "NF",
+        "NG",
+        "NI",
+        "NL",
+        "NO",
+        "NP",
+        "NR",
+        "NU",
+        "NZ",
+        "OM",
+        "PA",
+        "PE",
+        "PF",
+        "PG",
+        "PH",
+        "PK",
+        "PL",
+        "PM",
+        "PN",
+        "PR",
+        "PS",
+        "PT",
+        "PW",
+        "PY",
+        "QA",
+        "RE",
+        "RO",
+        "RS",
+        "RU",
+        "RW",
+        "SA",
+        "SB",
+        "SC",
+        "SD",
+        "SE",
+        "SG",
+        "SH",
+        "SI",
+        "SJ",
+        "SK",
+        "SL",
+        "SM",
+        "SN",
+        "SO",
+        "SR",
+        "SS",
+        "ST",
+        "SV",
+        "SX",
+        "SY",
+        "SZ",
+        "TC",
+        "TD",
+        "TF",
+        "TG",
+        "TH",
+        "TJ",
+        "TK",
+        "TL",
+        "TM",
+        "TN",
+        "TO",
+        "TR",
+        "TT",
+        "TV",
+        "TW",
+        "TZ",
+        "UA",
+        "UG",
+        "UM",
+        "US",
+        "UY",
+        "UZ",
+        "VA",
+        "VC",
+        "VE",
+        "VG",
+        "VI",
+        "VN",
+        "VU",
+        "WF",
+        "WS",
+        "YE",
+        "YT",
+        "ZA",
+        "ZM",
+        "ZW"
       ]
     }
   }

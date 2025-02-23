@@ -32,9 +32,15 @@ html {
 	font-weight: 700;
 }
 
+/* Copy icon in code blocks */
+div.highlight pre code {
+	margin-right: 3em;
+}
+
 /* Code snippets */
 article.md-typeset p code {
 	background-color: #3b3840;
+	white-space: nowrap;
 }
 
 /* Line highlights in code blocks */
@@ -151,6 +157,10 @@ div.definition-list ul li h4 {
 	font-size: 1.1em;
 }
 
+div.definition-list ul li ul {
+	margin-left: 2.0em!important;
+}
+
 div.definition-list ul li div.admonition {
 	padding: 0;
 }
@@ -170,6 +180,7 @@ code.toc-code, article.md-typeset code.toc-code {
 	margin-right: 0.75em;
 }
 
+/* Code definition badges */
 article.md-typeset code.toc-def {
 	border: solid 2px #706e81;
 	background-color: unset;
@@ -180,6 +191,13 @@ article.md-typeset code.toc-def {
 
 article.md-typeset code.toc-req {
 	border: solid 2px #8b690c;
+	background-color: unset;
+	padding: 6px 8px;
+	font-size: 0.65em;
+}
+
+article.md-typeset code.toc-opt {
+	border: solid 2px #0c8b3f;
 	background-color: unset;
 	padding: 6px 8px;
 	font-size: 0.65em;

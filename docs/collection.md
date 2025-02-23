@@ -7,13 +7,19 @@ hide:
 
 The `collection` array lists all the titles in the DAT file. Related releases are grouped
 together in a single object by naming a `group` and listing its `releases`. For example,
-the group `Doom` might contain the releases `Doom (USA)`, `Doom (Europe)`, and `Doom
-(Japan)`, along with their different versions. This helps with 1G1R calculations, and
-replaces the antiquated parent/clone relationship in LogiqX DAT files.
+the group `Some Video Game` might contain the following releases:
+
+* `Some Video Game (USA)`
+* `Some Video Game (USA) (v1.1)`
+* `Some Video Game (Europe)`
+* `Some Video Game (Japan)`
+
+Grouping in this way helps with 1G1R calculations, and replaces the parent/clone
+relationships found in LogiqX DAT files.
 
 At its most basic, the collection array looks something like the following example:
 
-```json
+``` {.json .copy}
 "collection": [
   {
     "group": "Some Video Game",
@@ -26,9 +32,15 @@ At its most basic, the collection array looks something like the following examp
 ]
 ```
 
-The `collection` array contains one or more objects with the following elements:
+## Definitions
 
-* **`group`** (str): _Required_. The name of the group of related titles.
+<div class="definition-list" markdown>
+* **`group`{ #group .toc-code }** `string`{ .toc-def } `required`{ .toc-req }
 
-* [**`releases`**](releases.md) (array): _Required_. Contains objects that describe the
-  details about each title that is associated with the group.
+    The name of the group of related releases.
+
+* **`releases`{ #releases .toc-code }** `object array`{ .toc-def } `required`{ .toc-req }.
+
+    Contains objects that describe the details about each release that is associated with
+    a group. [Read more about the releases array](releases.md).
+</div>
