@@ -55,9 +55,11 @@ nav:
   - goals.md
   - custodianship.md
   - files.md
-  - schema.md
   - complete_example.md
-  - DAT file structures:
+  - dir2dat.md
+  - conversion.md
+  - DAT file:
+    - schema.md
     - structure.md
     - top_level.md
     - dat_info.md

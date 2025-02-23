@@ -18,9 +18,9 @@ associated with a group.
     "release_date": "1993-10-12",
     "regions": ["JP"],
     "languages": {
-      "audio": ["Ja", "En"],
-      "interface": ["En"],
-      "subtitles": ["En"]
+      "audio": ["ja", "en"],
+      "interface": ["en"],
+      "subtitles": ["en"]
     },
     "sets": [
       {
@@ -156,6 +156,8 @@ associated with a group.
     * `Audio`
 
     * `BIOS`
+
+    * `Chip`
 
     * `Coverdisc`
 
@@ -547,7 +549,7 @@ associated with a group.
     ``` {.json .copy}
     "languages": {
       "audio": [null],
-      "interface": ["En"],
+      "interface": ["en"],
       "subtitles": [null]
     }
     ```
@@ -572,8 +574,8 @@ associated with a group.
     [BCP47 language subtag lookup](https://r12a.github.io/app-subtags/). Here are some
     example codes:
 
-    * `En` - English
-    * `En-US` - English (United States of America)
+    * `en` - English
+    * `en-US` - English (United States of America)
     * `zh-Hant` - Chinese (Traditional) [written]
     * `cmn` - Chinese (Mandarin) [spoken]
 
@@ -594,7 +596,7 @@ associated with a group.
     In all circumstances, consider the intended audience of the medium when selecting
     language codes. For example, if a video is largely in English and is intended for
     English-speaking audiences, but has a short scene in which people speak Japanese, you
-    set the `audio` as `["En"]`, _not_ `["En", "Ja"]`.
+    set the `audio` as `["en"]`, _not_ `["en", "ja"]`.
 
     <h4>Examples</h4>
 
@@ -606,9 +608,9 @@ associated with a group.
 
     ``` {.json .copy}
     "languages": {
-      "audio": ["En"],
-      "interface": ["Ja"],
-      "subtitles": ["En", "Ja"]
+      "audio": ["en"],
+      "interface": ["ja"],
+      "subtitles": ["en", "ja"]
     }
     ```
 
@@ -618,8 +620,8 @@ associated with a group.
 
     ``` {.json .copy}
     "languages": {
-      "audio": ["Fr"],
-      "interface": ["En"],
+      "audio": ["fr"],
+      "interface": ["en"],
       "subtitles": [null]
     }
     ```
@@ -631,7 +633,7 @@ associated with a group.
     ``` {.json .copy}
     "languages": {
       "audio": [null],
-      "interface": ["En"],
+      "interface": ["en"],
       "subtitles": [null]
     }
     ```
@@ -706,37 +708,6 @@ associated with a group.
 
     * **`crc32`** (string):
 
-## Interpreting releases data
-
-Observe the following rules in the releases array:
-
-* Unless otherwise specified, empty values are permitted for keys. This means that the
-  property exists for the release, but the value is _unknown_.
-
-* Omitted optional keys means the the property is _irrelevant_ to the release.
-
-* To indicate that a title doesn't support a property, use `null` as the value.
-
-For example, the following code sample describes a title where the audio and subtitle
-languages aren't known:
-
-```json
-"languages": {
-  "audio": [],
-  "subtitles": []
-}
-```
-
-In the following code sample, it's known that there are no audio languages and no
-subtitles:
-
-```json
-"languages": {
-  "audio": [null],
-  "subtitles": [null]
-}
-```
-
 ---
 
 At its most complex with all the optional data though, it can seem daunting:
@@ -750,12 +721,12 @@ At its most complex with all the optional data though, it can seem daunting:
     "serial": null,
     "source": ["3.5\" floppy"],
     "local_names": {
-      "japanese": "別のビデオゲーム"
+      "ja": "別のビデオゲーム"
     },
     "regions": ["Japan"],
     "languages": {
-      "audio": ["Ja", "En"],
-      "subtitles": ["En"]
+      "audio": ["ja", "en"],
+      "subtitles": ["en"]
     },
     "developer": "Some Developer",
     "publisher": "Some Publisher",
@@ -862,7 +833,7 @@ At its most complex with all the optional data though, it can seem daunting:
           "regions": ["USA"],
           "languages": {
             "audio": [],
-            "subtitles": ["En"]
+            "subtitles": ["en"]
           },
           "developer": "iD Software",
           "publisher": "GT Interactive",

@@ -3,7 +3,7 @@ hide:
   - footer
 ---
 
-# Overview
+# Structure
 
 The following sections include examples of DAT file structures. They are presented
 piecemeal to help ease understanding. For a complete example of a valid DAT file, see
