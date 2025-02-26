@@ -23,54 +23,7 @@ associated with a group.
       "subtitles": ["en"]
     },
     "sets": [
-      {
-        "set": "bin",
-        "container": "auto",
-        "files": [
-          {
-            "name": "Some Video Game (USA) (Track 1).bin",
-            "size": 10000,
-            "digests": {
-              "crc32": "29edd0e3",
-              "xxh3_128": "1a2bf3bb0a4cd3aa94bf08b1c269423e",
-              "blake3": "c32da642c108dd42bc169dbe4094b96d4f638d2c7388fb18132429347955c7ec"
-            }
-          },
-          {
-            "name": "Some Video Game (USA) (Track 2).bin",
-            "size": 1000,
-            "digests": {
-              "crc32": "872f5343",
-              "xxh3_128": "b993a0619f896a101e786850967b3d90",
-              "blake3": "74277af46089c2b15aea5b193bdecdd58a2992e47b00956c678a6c070225cb18"
-            }
-          },
-          {
-            "name": "Some Video Game (USA).cue",
-            "size": 100,
-            "digests": {
-              "crc32": "987150b7",
-              "xxh3_128": "b7bb3254808cfc06d899854a1b58bab0",
-              "blake3": "fcbc02c56a9a5157255febeac2009a988ccd08863ff648d290fe973dffe7f88c"
-            }
-          }
-        ]
-      },
-      {
-        "set": "chd",
-        "container": null,
-        "files": [
-          {
-            "name": "Some Video Game (USA).chd",
-            "size": 7000,
-            "digests": {
-              "sha1_internal": "589d406e0894e2cdf334a98599972d3cc65f7031",
-              "xxh3_128": "1a2bf3bb0a4cd3aa94bf08b1c269423e",
-              "blake3": "c32da642c108dd42bc169dbe4094b96d4f638d2c7388fb18132429347955c7ec"
-            }
-          }
-        ]
-      }
+      ...
     ]
   }
 ]
@@ -649,23 +602,9 @@ associated with a group.
 
 * **`sets`{ #sets .toc-code }** `object array`{ .toc-def } `required`{ .toc-req }
 
-    Different file sets within the release. This can represent the same release in
-    multiple formats. For example, a CD image in ISO, CHD, and RVZ formats. Or a ROM
-    in encrypted and decrypted formats.
+    Defines the different file sets within the release.
 
-    The sets array looks something like the following:
-
-    ``` {.json .copy}
-    "sets": [
-      {
-        "set": "bin",
-        "files": [
-
-        ]
-      }
-    ]
-    ```
-
+    For a more detailed explanation of how the `sets` array works, see [`sets`](sets.md).
 
 </div>
 
@@ -696,9 +635,6 @@ associated with a group.
     ```
 </div>
 
-## `sets`
-
-## `files`
 ---
 
 * **`size`** (integer): _Required_. The size of the file, in bytes.

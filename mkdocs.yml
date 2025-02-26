@@ -65,6 +65,7 @@ nav:
     - dat_info.md
     - collection.md
     - releases.md
+    - sets.md
 plugins:
   - search
   - macros # https://mkdocs-macros-plugin.readthedocs.io/en/latest/#installation

@@ -29,5 +29,5 @@ A DAT file at the top level looks like the following example:
 * **`collection`{ #collection .toc-code }** `array`{ .toc-def } `required`{ .toc-req }
 
     Lists all the titles in the DAT file.
-    [Read more about the `collection` array](collection.md)
+    [Read more about the `collection` array](collection.md).
 </div>
