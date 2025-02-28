@@ -614,6 +614,11 @@ associated with a group.
 ## Optional parameters
 
 <div class="definition-list" markdown>
+
+* **`developer`{ #developer .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
+
+    The developer of the title.
+
 * **`id`{ #id .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
     A unique ID for the release. Usually a database ID to ease lookups for DAT file
@@ -647,6 +652,123 @@ associated with a group.
     `local_names` array. This is because client applications have no idea what language
     the release name is in, and so can't safely select it as the English name if
     someone sets that as a preference.
+
+* **`peripherals`{ #peripherals .toc-code }** `enum array`{ .toc-def } `optional`{ .toc-opt }
+
+    Contains inputs used to control the title, or devices that show output from the title.
+
+    Names are as generic as possible, with a focus on mentioning if specialist devices are
+    required for an ideal emulation experience.
+
+    For example, trying to play _Guitar Hero_ with a standard controller is asking for a
+    bad time, so it would be set to the following:
+
+    ``` {.json .copy}
+    "peripherals": [
+      "Guitar"
+    ]
+    ```
+
+    But playing almost any GameCube game with almost any controller through an emulator is
+    perfectly fine, so they would generally be set to the following:
+
+    ``` {.json .copy}
+    "peripherals": [
+      "Controller"
+    ]
+    ```
+
+    For scenarios where titles are optimized for multiple inputs (for example, a racing
+    game might be great with both controllers _and_ a steering wheel), add both:
+
+    ``` {.json .copy}
+    "peripherals": [
+      "Controller",
+      "Pedals",
+      "Steering Wheel (Lock-to-lock)/Paddle"
+    ]
+    ```
+
+    Valid values are the following:
+
+    * `Controller`
+
+    * `Controller with Touchpad`
+
+    * `Controller with Trackball`
+
+    * `Analog Joystick`
+
+    * `Dance Pad`
+
+    * `Digital Joystick`
+
+    * `Digital Twin Sticks`
+
+    * `Drums`
+
+    * `EyeToy`
+
+    * `Flight Stick`
+
+    * `Guitar`
+
+    * `HOTAS`
+
+    * `Keyboard`
+
+    * `Light Gun`
+
+    * `Magnavox Odyssey Controller`
+
+    * `Microphone`
+
+    * `Microsoft Kinect`
+
+    * `Microsoft Xbox Live Vision`
+
+    * `Mouse`
+
+    * `Nintendo Joy-Con`
+
+    * `Nintendo Wii Balance Board`
+
+    * `Nintendo Wii Remote`
+
+    * `Nintendo Wii Remote and Nunchuk`
+
+    * `Nintendo Power Glove`
+
+    * `Pedals`
+
+    * `Sega Dreamcast VMU`
+
+    * `Sony EyeToy`
+
+    * `Sony PlayStation Eye`
+
+    * `Sony PlayStation Move`
+
+    * `Sony Sixaxis`
+
+    * `Spinner`
+
+    * `Steering Wheel (Lock-to-lock)/Paddle`
+
+    * `Steering Wheel (360°)`
+
+    * `Touchscreen`
+
+    * `Trackball`
+
+    * `VR Headset`
+
+    * `VR Headset and Controls`
+
+
+* **`publisher`{ #publisher .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
+
+    The publisher of the title.
 
 * **`serial`{ #serial .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 

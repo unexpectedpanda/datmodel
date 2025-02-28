@@ -162,7 +162,7 @@ You can test validating against this schema with
                 },
                 "release_date": {
                   "description": "The date the title was released, in extended ISO 8601 format, without the time zone. Valid formats are YYYY-MM-DD hh:mm:ss, YYYY-MM-DD hh:mm, YYYY-MM-DD, YYYY-MM, YYYY, and null for an unknown date.",
-                  "anyOf" : [
+                  "anyOf": [
                     {
                       "description": "YYYY-MM-DD hh:mm:ss",
                       "pattern": "^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9]:?){1,2}(?<!:)$"
@@ -233,6 +233,9 @@ You can test validating against this schema with
                   "description": "A unique ID for the release. Usually a database ID.",
                   "$ref": "#/$defs/nonEmptyString"
                 },
+                "developer": {
+                  "$ref": "#/$defs/nonEmptyString"
+                },
                 "local_names": {
                   "type": "object",
                   "minProperties": 1,
@@ -241,6 +244,16 @@ You can test validating against this schema with
                       "$ref": "#/$defs/nonEmptyString"
                     }
                   }
+                },
+                "peripherals": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "$ref": "#/$defs/peripherals"
+                  }
+                },
+                "publisher": {
+                  "$ref": "#/$defs/nonEmptyString"
                 },
                 "serial": {
                   "$ref": "#/$defs/stringnull"
@@ -461,6 +474,47 @@ You can test validating against this schema with
         "VHS",
         "Wii Optical Disc",
         "Wii U Optical Disc"
+      ]
+    },
+    "peripherals": {
+      "enum": [
+        "Controller",
+        "Controller with Touchpad",
+        "Controller with Trackball",
+        "Analog Joystick",
+        "Dance Pad",
+        "Digital Joystick",
+        "Digital Twin Sticks",
+        "Drums",
+        "EyeToy",
+        "Flight Stick",
+        "Guitar",
+        "HOTAS",
+        "Keyboard",
+        "Light Gun",
+        "Magnavox Odyssey Controller",
+        "Microphone",
+        "Microsoft Kinect",
+        "Microsoft Xbox Live Vision",
+        "Mouse",
+        "Nintendo Joy-Con",
+        "Nintendo Wii Balance Board",
+        "Nintendo Wii Remote",
+        "Nintendo Wii Remote and Nunchuk",
+        "Nintendo Power Glove",
+        "Pedals",
+        "Sega Dreamcast VMU",
+        "Sony EyeToy",
+        "Sony PlayStation Eye",
+        "Sony PlayStation Move",
+        "Sony Sixaxis",
+        "Spinner",
+        "Steering Wheel (Lock-to-lock)/Paddle",
+        "Steering Wheel (360°)",
+        "Touchscreen",
+        "Trackball",
+        "VR Headset",
+        "VR Headset and Controls"
       ]
     },
     "regionsGroup": {
