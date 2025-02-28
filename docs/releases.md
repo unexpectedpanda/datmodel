@@ -32,20 +32,24 @@ associated with a group.
 ## Definitions
 
 <div class="definition-list" markdown>
-* **`name`{ #name .toc-code }** `string`{ .toc-def } `required`{ .toc-req }
+* **`name`{ #name .toc-code }** `pattern string`{ .toc-def } `required`{ .toc-req }
 
-    The name of the title, in UTF-8. This is used for the name of the archive or folder.
-    Names can't end with a period or space, or use the following invalid path characters:
+    The name of the title, in UTF-8. This is used for the name of the archive or folder,
+    if the [`container`](sets.md#set) isn't set to `null`. Names can't end with a period
+    or space, start with a path separator, or use the following invalid path characters:
 
     ```
-    :<>"|?*
+    :<>"|?*\
     ```
+
+    Path separators are represented Linux-style, with `/` instead of `\`. Don't use
+    absolute paths, paths are relative to a path the user sets.
 
     /// details | Expand for developer details
     Invalid path characters are found with the following regular expression:
 
     ``` {.text .copy}
-    ^[^:<>\"|?*].*[^. :<>\"|?*]$
+    ^[^:<>\"\\|?*].*[^. :<>\"\\|?*]$
     ```
 
     Non-UTF-8 characters are found with the following regular expressions:
@@ -603,14 +607,104 @@ associated with a group.
 * **`sets`{ #sets .toc-code }** `object array`{ .toc-def } `required`{ .toc-req }
 
     Defines the different file sets within the release.
-
-    For a more detailed explanation of how the `sets` array works, see [`sets`](sets.md).
+    [Read more about the `sets` array](sets.md).
 
 </div>
 
 ## Optional parameters
 
 <div class="definition-list" markdown>
+* **`id`{ #id .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
+
+    A unique ID for the release. Usually a database ID to ease lookups for DAT file
+    maintainers.
+
+* **`local_names`{ #local_names .toc-code }** `object`{ .toc-def } `optional`{ .toc-opt }
+
+    Local names given to the title, defined by language. Often titles are recorded in
+    databases using their romanized form to aid with searching for the title. Here's where
+    their titles can be kept in their original form. Client applications that manage DAT
+    files can use this data to rename files using local names.
+
+    Keys should follow the language codes found in the
+    [IANA language subtag registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry).
+    See [`languages`](#languages) for more details about selecting a language code.
+
+    The following is an example of the `local_names` array:
+
+    ``` {.json .copy}
+    "local_names": {
+      "en": "Altered Beast",
+      "ja": "獣王記"
+    }
+    ```
+
+    Only use the title's name &mdash; don't include additional information like naming
+    system tags.
+
+    If a title can show more than one name depending on the region, and the release
+    [`name`](#name) is in English, you should still include the English name in the
+    `local_names` array. This is because client applications have no idea what language
+    the release name is in, and so can't safely select it as the English name if
+    someone sets that as a preference.
+
+* **`serial`{ #serial .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
+
+    An manufacturer identifier for the release. Might be a cartridge serial, disc ring
+    code, or otherwise.
+
+* **`source`{ #source .toc-code }** `enum array`{ .toc-def } `optional`{ .toc-opt }
+
+    The release's origin. Valid sources are:
+
+    * `3.5\" floppy disk`
+
+    * `5.25\" floppy disk`
+
+    * `BD-ROM`
+
+    * `BD-ROM (Ultra HD)`
+
+    * `Cassette tape`
+
+    * `CD-ROM`
+
+    * `Device`
+
+    * `Digital`
+
+    * `DVD-ROM`
+
+    * `Famicom Disk`
+
+    * `GameCube Game Disc`
+
+    * `Game Card`
+
+    * `GD-ROM`
+
+    * `Hard Drive`
+
+    * `HD-DVD`
+
+    * `HuCard`
+
+    * `LaserDisc`
+
+    * `Memory Card`
+
+    * `ROM Card`
+
+    * `ROM Cartridge`
+
+    * `UMD`
+
+    * `VHS`
+
+    * `Wii Optical Disc`
+
+    * `Wii U Optical Disc`
+
 * **`subtype`{ #subtype .toc-code }** `enum`{ .toc-def } `optional`{ .toc-opt }
 
     The subtype of the release. Must be paired with a valid [`type`](#type).
@@ -635,14 +729,6 @@ associated with a group.
     ```
 </div>
 
----
-
-* **`size`** (integer): _Required_. The size of the file, in bytes.
-
-* **`digests`** (string): _Required_. This object contains the digests of different hash functions. It must have at
-  least one digest. The following hash functions are accepted:
-
-    * **`crc32`** (string):
 
 ---
 

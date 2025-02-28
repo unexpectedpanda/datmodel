@@ -38,9 +38,9 @@ div.highlight pre code {
 }
 
 /* Code snippets */
-article.md-typeset p code {
+article.md-typeset p code, article.md-typeset li code {
 	background-color: #3b3840;
-	white-space: nowrap;
+	/* white-space: nowrap; */
 }
 
 /* Line highlights in code blocks */
@@ -204,7 +204,6 @@ article.md-typeset code.toc-opt {
 }
 
 /* Code definitions, TOC Only */
-
 ul.md-nav__list code.toc-code {
 	margin-left: 1em;
 	padding: 8px 6px;

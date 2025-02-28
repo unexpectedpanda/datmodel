@@ -54,7 +54,7 @@ nav:
   - 'Home': index.md
   - goals.md
   - custodianship.md
-  - files.md
+  - file-format.md
   - complete_example.md
   - dir2dat.md
   - conversion.md
@@ -66,6 +66,7 @@ nav:
     - collection.md
     - releases.md
     - sets.md
+    - files.md
 plugins:
   - search
   - macros # https://mkdocs-macros-plugin.readthedocs.io/en/latest/#installation

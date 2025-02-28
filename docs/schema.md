@@ -89,6 +89,7 @@ You can test validating against this schema with
               "additionalProperties": false,
               "allOf": [
                 {
+                  "description": "The rules that manage what types that subtypes require",
                   "if": {
                     "properties": {
                       "subtype": {
@@ -123,55 +124,11 @@ You can test validating against this schema with
               ],
               "properties": {
                 "name": {
-                  "description": "The name of the title, in UTF-8. This is used for the name of the archive or folder. Path separators are valid (both forward and back slashes). Names can't end with a period or space.",
-                  "$ref": "#/$defs/nonEmptyString",
-                  "pattern": "^[^:<>\"|?*].*[^. :<>\"|?*]$",
-                  "not": {
-                    "description": "Regular expressions to exclude non-UTF-8 characters.",
-                    "anyOf": [
-                      {
-                        "pattern": "[\\xC0-\\xC1]"
-                      },
-                      {
-                        "pattern": "[\\xF5-\\xFF]"
-                      },
-                      {
-                        "pattern": "\\xE0[\\x80-\\x9F]"
-                      },
-                      {
-                        "pattern": "\\xF0[\\x80-\\x8F]"
-                      },
-                      {
-                        "pattern": "[\\xC2-\\xDF](?![\\x80-\\xBF])"
-                      },
-                      {
-                        "pattern": "[\\xE0-\\xEF](?![\\x80-\\xBF]{2})"
-                      },
-                      {
-                        "pattern": "[\\xF0-\\xF4](?![\\x80-\\xBF]{3})"
-                      },
-                      {
-                        "pattern": "(?<=[\\x00-\\x7F\\xF5-\\xFF])[\\x80-\\xBF]"
-                      },
-                      {
-                        "pattern": "(?<![\\xC2-\\xDF]|[\\xE0-\\xEF]|[\\xE0-\\xEF][\\x80-\\xBF]|[\\xF0-\\xF4]|[\\xF0-\\xF4][\\x80-\\xBF]|[\\xF0-\\xF4][\\x80-\\xBF]{2})[\\x80-\\xBF]"
-                      },
-                      {
-                        "pattern": "(?<=[\\xE0-\\xEF])[\\x80-\\xBF](?![\\x80-\\xBF])"
-                      },
-                      {
-                        "pattern": "(?<=[\\xF0-\\xF4])[\\x80-\\xBF](?![\\x80-\\xBF]{2})"
-                      },
-                      {
-                        "pattern": "(?<=[\\xF0-\\xF4][\\x80-\\xBF])[\\x80-\\xBF](?![\\x80-\\xBF])"
-                      }
-                    ]
-                  }
-                },
-                "db_id": {
-                  "$ref": "#/$defs/nonEmptyString"
+                  "description": "The name of the title, in UTF-8. This is used for the name of the archive or folder. Must use / for path separators. Names can't end with a period or space.",
+                  "$ref": "#/$defs/stringFile"
                 },
                 "build": {
+                  "description": "",
                   "enum": [
                     "Production",
                     "Preproduction",
@@ -187,53 +144,6 @@ You can test validating against this schema with
                 "published": {
                   "type": "boolean"
                 },
-                "serial": {
-                  "$ref": "#/$defs/stringnull"
-                },
-                "regions": {
-                  "description": "The regions the title was released in.",
-                  "type": "array",
-                  "items": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/$defs/regionsGroup"
-                      },
-                      {
-                        "$ref": "#/$defs/regionsIndividual"
-                      }
-                    ]
-                  }
-                },
-                "subregions": {
-                  "description": "If a group region is used, define the subregions.",
-                  "type": "array"
-                },
-                "languages": {
-                  "description": "The languages the title supports.",
-                  "type": "object",
-                  "required": ["audio", "interface", "subtitles"],
-                  "additionalProperties": false,
-                  "properties": {
-                    "audio": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    "interface": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    "subtitles": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    }
-                  }
-                },
                 "type": {
                   "enum": [
                     "Application",
@@ -247,16 +157,6 @@ You can test validating against this schema with
                     "Game",
                     "Magazine",
                     "Multimedia",
-                    "Video"
-                  ]
-                },
-                "subtype": {
-                  "enum": [
-                    "Add-on",
-                    "Audio",
-                    "Demo",
-                    "Manual",
-                    "Update",
                     "Video"
                   ]
                 },
@@ -289,35 +189,125 @@ You can test validating against this schema with
                     }
                   ]
                 },
+                "regions": {
+                  "description": "The regions the title was released in.",
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/regionsGroup"
+                      },
+                      {
+                        "$ref": "#/$defs/regionsIndividual"
+                      }
+                    ]
+                  }
+                },
+                "languages": {
+                  "description": "The languages the title supports.",
+                  "type": "object",
+                  "required": ["audio", "interface", "subtitles"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "audio": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "interface": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "subtitles": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "id": {
+                  "description": "A unique ID for the release. Usually a database ID.",
+                  "$ref": "#/$defs/nonEmptyString"
+                },
+                "local_names": {
+                  "type": "object",
+                  "minProperties": 1,
+                  "patternProperties": {
+                    "^[a-zA-Z0-9-]+$": {
+                      "$ref": "#/$defs/nonEmptyString"
+                    }
+                  }
+                },
+                "serial": {
+                  "$ref": "#/$defs/stringnull"
+                },
+                "source": {
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "$ref": "#/$defs/media"
+                  }
+                },
+                "subtype": {
+                  "description": "The subtype of the release. Must be paired with a valid type.",
+                  "enum": [
+                    "Add-on",
+                    "Audio",
+                    "Demo",
+                    "Manual",
+                    "Update",
+                    "Video"
+                  ]
+                },
                 "sets": {
                   "type": "array",
                   "minProperties": 1,
                   "contains": {
                     "type": "object",
-                    "required": ["set", "container", "files"],
+                    "required": ["name", "set"],
                     "additionalProperties": false,
                     "properties": {
+                      "name": {
+                        "description": "The name of the file set, in UTF-8. Can be any non-empty string, although generally you should use lowercase container format names. For example: bin, chd, iso. Use a null value for raw files without a container.",
+                        "$ref": "#/$defs/stringnull"
+                      },
                       "set": {
-                        "$ref": "#/$defs/stringnull"
-                      },
-                      "container": {
-                        "$ref": "#/$defs/stringnull"
-                      },
-                      "files": {
                         "type": "array",
+                        "minProperties": 1,
                         "contains": {
                           "type": "object",
-                          "required": ["name", "size", "digests"],
+                          "required": ["container", "files"],
                           "additionalProperties": false,
                           "properties": {
-                            "name": {
+                            "container": {
+                              "description": "The container that the application managing the DAT file should use for the file set. Must be one of the following values: auto, folder, or null.",
                               "$ref": "#/$defs/stringnull"
                             },
-                            "size": {
-                              "type": "integer"
-                            },
-                            "digests": {
-                              "$ref": "#/$defs/digests"
+                            "files": {
+                              "type": "array",
+                              "contains": {
+                                "type": "object",
+                                "required": ["name", "size", "digests"],
+                                "additionalProperties": false,
+                                "properties": {
+                                  "name": {
+                                    "description": "The name of the file, in UTF-8. Must use / for path separators. Names can't end with a period or space.",
+                                    "$ref": "#/$defs/stringnull"
+                                  },
+                                  "size": {
+                                    "description": "The size of the file, in bytes.",
+                                    "type": "integer"
+                                  },
+                                  "digests": {
+                                    "description": "The digests of different hash functions. The following hash functions are preferred: crc32, sha256, xxh3_128, blake3.",
+                                    "$ref": "#/$defs/digests"
+                                  }
+                                }
+                              }
                             }
                           }
                         }
@@ -360,6 +350,57 @@ You can test validating against this schema with
         }
       ]
     },
+    "stringFile": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        {
+          "pattern": "^[^:<>\"\\\\|?*].*[^. :<>\"\\\\|?*]$",
+          "not": {
+            "description": "Regular expressions to exclude non-UTF-8 characters.",
+            "anyOf": [
+              {
+                "pattern": "[\\xC0-\\xC1]"
+              },
+              {
+                "pattern": "[\\xF5-\\xFF]"
+              },
+              {
+                "pattern": "\\xE0[\\x80-\\x9F]"
+              },
+              {
+                "pattern": "\\xF0[\\x80-\\x8F]"
+              },
+              {
+                "pattern": "[\\xC2-\\xDF](?![\\x80-\\xBF])"
+              },
+              {
+                "pattern": "[\\xE0-\\xEF](?![\\x80-\\xBF]{2})"
+              },
+              {
+                "pattern": "[\\xF0-\\xF4](?![\\x80-\\xBF]{3})"
+              },
+              {
+                "pattern": "(?<=[\\x00-\\x7F\\xF5-\\xFF])[\\x80-\\xBF]"
+              },
+              {
+                "pattern": "(?<![\\xC2-\\xDF]|[\\xE0-\\xEF]|[\\xE0-\\xEF][\\x80-\\xBF]|[\\xF0-\\xF4]|[\\xF0-\\xF4][\\x80-\\xBF]|[\\xF0-\\xF4][\\x80-\\xBF]{2})[\\x80-\\xBF]"
+              },
+              {
+                "pattern": "(?<=[\\xE0-\\xEF])[\\x80-\\xBF](?![\\x80-\\xBF])"
+              },
+              {
+                "pattern": "(?<=[\\xF0-\\xF4])[\\x80-\\xBF](?![\\x80-\\xBF]{2})"
+              },
+              {
+                "pattern": "(?<=[\\xF0-\\xF4][\\x80-\\xBF])[\\x80-\\xBF](?![\\x80-\\xBF])"
+              }
+            ]
+          }
+        }
+      ]
+    },
     "digests": {
       "type": "object",
       "minProperties": 1,
@@ -393,6 +434,34 @@ You can test validating against this schema with
           "pattern": "^[a-fA-F0-9]{64,64}$"
         }
       }
+    },
+    "media": {
+      "enum": [
+        "3.5\" floppy disk",
+        "5.25\" floppy disk",
+        "BD-ROM",
+        "BD-ROM (Ultra HD)",
+        "Cassette tape",
+        "CD-ROM",
+        "Device",
+        "Digital",
+        "DVD-ROM",
+        "Famicom Disk",
+        "GameCube Game Disc",
+        "Game Card",
+        "GD-ROM",
+        "Hard Drive",
+        "HD-DVD",
+        "HuCard",
+        "LaserDisc",
+        "Memory Card",
+        "ROM Card",
+        "ROM Cartridge",
+        "UMD",
+        "VHS",
+        "Wii Optical Disc",
+        "Wii U Optical Disc"
+      ]
     },
     "regionsGroup": {
       "enum": [
