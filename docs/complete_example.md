@@ -3,9 +3,9 @@ hide:
   - footer
 ---
 
-# Complete DAT file example
+# Full example
 
-The following example represents a complete, valid DAT file.
+The following example represents a valid DAT file.
 
 It doesn't include all available keys or demonstrate all valid values. For that, see the
 DAT file structures section.

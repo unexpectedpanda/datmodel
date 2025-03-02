@@ -140,6 +140,7 @@ div.definition-list > ul > li { /* Definition card itself */
 	border: 2px solid rgba(0, 0, 0, 0.3);
 }
 
+/* Start margin corrections for definition list indentation */
 div.definition-list ul li p,
 div.definition-list ul li pre,
 div.definition-list ul li details,
@@ -152,8 +153,13 @@ div.definition-list ul li h4 {
 }
 
 div.admonition p.admonition-title {
-	margin: 0!important;
+	margin-top: 0!important;
 }
+
+p.admonition-title {
+	margin: 0 -0.6rem!important;
+}
+/* End margin corrections for definition list  indentation */
 
 div.definition-list ul li h4 {
 	margin-top: 1.5em;
@@ -208,7 +214,6 @@ article.md-typeset code.toc-opt {
 
 /* Code definitions, TOC Only */
 ul.md-nav__list code.toc-code {
-	/* margin-left: 1em; */
 	padding: 8px 6px;
 }
 

@@ -55,20 +55,19 @@ nav:
   - goals.md
   - custodianship.md
   - file-format.md
-  - complete_example.md
-  - dir2dat.md
-  - conversion.md
+  - schema.md
   - DAT file:
-    - schema.md
     - structure.md
-    - top_level.md
-    - dat_info.md
-    - collection.md
-    - releases.md
-    - sets.md
-    - set.md
-    - files.md
+    - ● Top level: top_level.md
+    - ├ dat_info: dat_info.md
+    - └ collection: collection.md
+    -   └ releases: releases.md
+    -    └ sets: sets.md
+    -     └ set: set.md
+    -      └ files: files.md
   - Examples:
+    - complete_example.md
+    - dir2dat.md
     - discs.md
 plugins:
   - search
