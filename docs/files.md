@@ -39,7 +39,7 @@ The `files` array contains objects that describe the files in a file set.
 ]
 ```
 
-## Definitions
+## Required properties
 
 <div class="definition-list" markdown>
 * **`name`{ #name .toc-code }** `pattern string`{ .toc-def } `required`{ .toc-req }
@@ -88,12 +88,13 @@ The `files` array contains objects that describe the files in a file set.
     The digests of different hash functions. The object must contain at least one digest.
     The following hash functions are preferred:
 
-    * **`crc32`** (pattern string): Still useful, as many container formats like ZIP
-      record the CRC32 of their internal files without them needing to be extracted. This
-      should only ever be used for initial validation of a file inside an archive, to see
-      if it's worth extracting. The extracted file should still be tested with a more
-      reliable hashing function to verify that it's the correct file. See the developer
-      details for more information.
+    * **`crc32`** (pattern string): Don't use for verifying untrusted files (not even when
+      combined with file size, see the developer details). However, CRC32 is still useful,
+      as many container formats like ZIP make the CRC32 of their internal files accessible
+      without them needing to be extracted. Because of this, CRC32 can be used for initial
+      validation that a file inside an archive is worth extracting. The extracted file
+      should then be tested with a more reliable hashing function to verify that it's
+      the correct file.
 
         /// details | Expand for developer details
         Valid CRC32 digests are found with the following regular expression:
@@ -106,7 +107,7 @@ The `files` array contains objects that describe the files in a file set.
         is the correct one. Here are four different files from the one archive,
         `segasp.zip`, in MAME:
 
-        ```json hl_lines="2 4 12 14 22 24 32 34"
+        ``` {.json .copy hl_lines="2 4 12 14 22 24 32 34"}
         "name": "fpr-24208a.ic72",
         "size": 2097152,
         "digests": {
@@ -152,7 +153,8 @@ The `files` array contains objects that describe the files in a file set.
 
     * **`sha256`** (pattern string): Can be used for verifying untrusted files. SHA256
       should only be used by client applications if the user's processor supports hardware
-      acceleration of the hashing function, or if no other digests are supplied.
+      acceleration of the hashing function, or if no other digests are supplied for
+      verifying untrusted files.
 
         /// details | Expand for developer details
         Valid SHA256 digests are found with the following regular expression:
@@ -200,7 +202,7 @@ The `files` array contains objects that describe the files in a file set.
     * **`sha1`** (pattern string): Can be used for verifying untrusted files, but prefer
       SHA256 or BLAKE3 where possible. SHA1 should only be used by client applications if
       the user's processor supports hardware acceleration of the hashing function, or if
-      no other digests are supplied.
+      no other digests are supplied for verifying untrusted files.
 
         /// details | Expand for developer details
         Valid SHA1 digests are found with the following regular expression:
@@ -219,5 +221,44 @@ The `files` array contains objects that describe the files in a file set.
         ^[a-fA-F0-9]{40,40}$
         ```
         ///
+
+</div>
+
+## Optional properties
+
+<div class="definition-list" markdown>
+
+* **`date_modified`{ #date_modified .toc-code }** `pattern string`{ .toc-def } `optional`{ .toc-opt }
+
+    The last modified date that should be applied by the client application that's parsing
+    the DAT file and operating on related files.
+
+    Only useful for old DOS titles that used timestamps as part of their copy protection.
+
+    The date format is as follows:
+
+    ```
+    YYYY-MM-DD hh:mm:ss
+    ```
+
+    Because FAT file systems have a time resolution of 2 seconds on last modified dates,
+    you can only use even numbers for the seconds. For example:
+
+    ```
+    1980-01-01 12:35:56
+    1991-12-30 23:13:32
+    1992-11-24 03:12:00
+    ```
+
+    Files with specified `date_modified` fields must not be stored in archives that change
+    or remove the timestamp.
+
+    /// details | Expand for developer details
+    You can find a valid last modified timestamp with the following regular expression:
+
+    ```
+    ^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][02468])(?<!:)$
+    ```
+    ///
 
 </div>

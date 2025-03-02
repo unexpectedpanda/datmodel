@@ -40,7 +40,10 @@ div.highlight pre code {
 /* Code snippets */
 article.md-typeset p code, article.md-typeset li code {
 	background-color: #3b3840;
-	/* white-space: nowrap; */
+}
+
+article.md-typeset p> code, article.md-typeset li > code {
+	white-space: nowrap;
 }
 
 /* Line highlights in code blocks */
@@ -123,8 +126,8 @@ div.definition-list > ul > li {
 	padding-left: 0;
 }
 
-div.definition-list > ul li p:first-child {
-	margin: 1em 0;
+div.definition-list > ul li p {
+	margin: 1em 0!important;
 }
 
 div.definition-list > ul > li { /* Space between definition cards */
@@ -137,10 +140,6 @@ div.definition-list > ul > li { /* Definition card itself */
 	border: 2px solid rgba(0, 0, 0, 0.3);
 }
 
-div.definition-list ul li p {
-	margin-bottom: 0.75em;
-}
-
 div.definition-list ul li p,
 div.definition-list ul li pre,
 div.definition-list ul li details,
@@ -150,6 +149,10 @@ div.definition-list ul li input,
 div.definition-list ul li h4 {
 	margin-left: 1em;
 	margin-right: 1em;
+}
+
+div.admonition p.admonition-title {
+	margin: 0!important;
 }
 
 div.definition-list ul li h4 {
@@ -205,7 +208,7 @@ article.md-typeset code.toc-opt {
 
 /* Code definitions, TOC Only */
 ul.md-nav__list code.toc-code {
-	margin-left: 1em;
+	/* margin-left: 1em; */
 	padding: 8px 6px;
 }
 

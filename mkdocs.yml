@@ -67,8 +67,10 @@ nav:
     - releases.md
     - sets.md
     - files.md
+  - Examples:
+    - discs.md
 plugins:
   - search
   - macros # https://mkdocs-macros-plugin.readthedocs.io/en/latest/#installation
 hooks:
-  - customAnchors.py
+  - customTOC.py

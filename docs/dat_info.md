@@ -8,7 +8,9 @@ hide:
 The `dat_info` object contains information related to the DAT file and the people who
 created it. It functions like a header for the file.
 
-``` {.json .copy}
+In the following example, required properties are highlighted.
+
+```  {.json .copy hl_lines="2 3 4 7"}
 "dat_info": {
   "schema": "https://www.github.com/unexpectedpanda/datmodel",
   "name": "Company - Console",
@@ -26,9 +28,14 @@ Unlike the LogiqX DAT standard, flags for specific ROM managers aren't required.
 metadata to implement that functionality is provided at the `releases` level.
 ///
 
-## Definitions
+## Required properties
 
 <div class="definition-list" markdown>
+
+* **`schema`{ #schema .toc-code }** `string`{ .toc-def } `required`{ .toc-req }
+
+    The link back to the JSON schema that validates the DAT file.
+
 * **`name`{ #name .toc-code }** `string`{ .toc-def } `required`{ .toc-req }
 
     The name of the DAT file. This is usually something that describes the scope of
@@ -40,23 +47,6 @@ metadata to implement that functionality is provided at the `releases` level.
 * **`source`{ #source .toc-code }** `string`{ .toc-def } `required`{ .toc-req }
 
     The origin of the DAT file, whether that be a group or individual.
-
-* **`source_url`{ #source_url .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
-
-    The website of the source. For example, `https://www.example.com`.
-
-* **`version`{ #version .toc-code }** `pattern string`{ .toc-def } `optional`{ .toc-opt }
-
-    The version of the DAT file. For example, `1.1.1`. The version must be a
-    [semantic version](https://semver.org/).
-
-    /// details | Expand for developer details
-    Validated with the following regular expression:
-
-    ``` {.text .copy}
-    ^(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)(?:-((?:0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?:[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
-    ```
-    ///
 
 * **`date`{ #date .toc-code }** `pattern string`{ .toc-def } `required`{ .toc-req }
 
@@ -83,13 +73,37 @@ metadata to implement that functionality is provided at the `releases` level.
     newer than another.
     ///
 
-* **`contributors`{ #contributors .toc-code }** `string array`{ .toc-def } `optional`{ .toc-opt }
+</div>
 
-    When multiple individuals or groups have contributed to the data contained in the DAT
-    file, they are listed here.
+## Optional properties
+
+<div class="definition-list" markdown>
 
 * **`comments`{ #comments .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
     Relevant comments about the DAT file. For example, compression settings used, or other
     things users should know about.
+
+* **`contributors`{ #contributors .toc-code }** `string array`{ .toc-def } `optional`{ .toc-opt }
+
+  When multiple individuals or groups have contributed to the data contained in the DAT
+  file, they are listed here.
+
+* **`source_url`{ #source_url .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
+
+    The website of the source. For example, `https://www.example.com`.
+
+* **`version`{ #version .toc-code }** `pattern string`{ .toc-def } `optional`{ .toc-opt }
+
+    The version of the DAT file. For example, `1.1.1`. The version must be a
+    [semantic version](https://semver.org/).
+
+    /// details | Expand for developer details
+    Validated with the following regular expression:
+
+    ``` {.text .copy}
+    ^(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)\.(?:0|[1-9][0-9]*)(?:-((?:0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?:[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$
+    ```
+    ///
+
 </div>

@@ -5,19 +5,7 @@ hide:
 
 # `collection`
 
-The `collection` array lists all the titles in the DAT file. Related releases are grouped
-together in a single object by naming a `group` and listing its `releases`. For example,
-the group `Some Video Game` might contain the following releases:
-
-* `Some Video Game (USA)`
-* `Some Video Game (USA) (v1.1)`
-* `Some Video Game (Europe)`
-* `Some Video Game (Japan)`
-
-Grouping in this way helps with 1G1R calculations, and replaces the parent/clone
-relationships found in LogiqX DAT files.
-
-At its most basic, the collection array looks something like the following example:
+The `collection` array contains all of the releases in the DAT file.
 
 ``` {.json .copy}
 "collection": [
@@ -32,7 +20,19 @@ At its most basic, the collection array looks something like the following examp
 ]
 ```
 
-## Definitions
+Related releases are grouped together in a single object by naming a `group` and listing
+its `releases`. For example, the group `Some Video Game` might contain the following
+releases:
+
+* `Some Video Game (USA)`
+* `Some Video Game (USA) (v1.1)`
+* `Some Video Game (Europe)`
+* `Some Video Game (Japan)`
+
+Grouping in this way helps with 1G1R calculations, and replaces the parent/clone
+relationships found in LogiqX DAT files.
+
+## Required properties
 
 <div class="definition-list" markdown>
 * **`group`{ #group .toc-code }** `string`{ .toc-def } `required`{ .toc-req }

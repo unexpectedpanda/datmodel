@@ -18,7 +18,7 @@ A DAT file at the top level looks like the following example:
 }
 ```
 
-## Definitions
+## Required properties
 
 <div class="definition-list" markdown>
 * **`dat_info`{ #dat_info .toc-code }** `object`{ .toc-def } `required`{ .toc-req }

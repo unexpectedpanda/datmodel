@@ -13,7 +13,7 @@ You can test validating against this schema with
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id":"https://www.github.com/unexpectedpanda/datmodel",
   "title": "DAT file specification",
-  "description": "2025-02-13 13:23:54",
+  "description": "2025-03-01 10:38",
   "type": "object",
   "required": ["dat_info", "collection"],
   "additionalProperties": false,
@@ -300,6 +300,14 @@ You can test validating against this schema with
                               "description": "The container that the application managing the DAT file should use for the file set. Must be one of the following values: auto, folder, or null.",
                               "$ref": "#/$defs/stringnull"
                             },
+                            "comments": {
+                              "description": "A description of the set.",
+                              "$ref": "#/$defs/nonEmptyString"
+                            },
+                            "retroachievements": {
+                              "description": "Whether retroachievements are support on the title.",
+                              "type": "boolean"
+                            },
                             "files": {
                               "type": "array",
                               "contains": {
@@ -318,6 +326,11 @@ You can test validating against this schema with
                                   "digests": {
                                     "description": "The digests of different hash functions. The following hash functions are preferred: crc32, sha256, xxh3_128, blake3.",
                                     "$ref": "#/$defs/digests"
+                                  },
+                                  "date_modified": {
+                                    "description": "The last modified date that should be applied by the client application that's parsing the DAT file and operating on related files. Because FAT file systems have a time resolution of 2 seconds on last modified dates, you can only use even numbers for the seconds.",
+                                    "type": "string",
+                                    "pattern": "^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][02468])(?<!:)$"
                                   }
                                 }
                               }

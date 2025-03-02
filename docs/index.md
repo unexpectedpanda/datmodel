@@ -11,14 +11,15 @@ preservation groups and client applications to force new behaviors, resulting in
 of existing structures for unintended purposes, violating the standard, or the provision
 of sidecar metadata or services to enrich the DAT files to enable new use cases.
 
-This site proposes a new datafile standard that provides additional structure and
-metadata, so that ROM managers can implement extended functionality.
+This site proposes a new datafile standard that's designed from the beginning to provide
+additional structure and metadata, so that ROM managers can implement extended
+functionality.
 
 ## Proposal details
 
 * **Status**: WIP
 
-* **Last updated**: 2025-02-24
+* **Last updated**: 2025-03-01
 
 * **Contributors**: unexpectedpanda
 

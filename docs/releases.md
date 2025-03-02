@@ -8,20 +8,33 @@ hide:
 The `releases` array contains objects that describe the details about each release that is
 associated with a group.
 
-``` {.json .copy}
+In the following example, required properties are highlighted.
+
+``` {.json .copy hl_lines="3 5-8 11 12-16 25-27" }
 "releases": [
   {
     "name": "Some Video Game (USA)",
+    "id": "123456",
     "build": "Production",
     "published": true,
     "type": "Game",
+    "subtype": "Demo",
     "release_date": "1993-10-12",
+    "serial": "SLUS-000000",
     "regions": ["JP"],
     "languages": {
       "audio": ["ja", "en"],
       "interface": ["en"],
       "subtitles": ["en"]
     },
+    "local_names": [
+      "en": "Some Video Game",
+      "ja": "別のビデオゲーム"
+    ],
+    "developer": "That Game Dev",
+    "publisher": "That Game Publisher",
+    "source": ["3.5\" Floppy Disk"],
+    "peripherals": ["Keyboard", "Mouse"],
     "sets": [
       ...
     ]
@@ -29,14 +42,20 @@ associated with a group.
 ]
 ```
 
-## Definitions
+## Required properties
 
 <div class="definition-list" markdown>
 * **`name`{ #name .toc-code }** `pattern string`{ .toc-def } `required`{ .toc-req }
 
-    The name of the title, in UTF-8. This is used for the name of the archive or folder,
-    if the [`container`](sets.md#set) isn't set to `null`. Names can't end with a period
-    or space, start with a path separator, or use the following invalid path characters:
+    The name of the title, in UTF-8. This is used for the name of the archive or folder of
+    the contained [sets](#sets), under the following conditions:
+
+    * The [`container`](sets.md#set) of the set isn't set to `null`.
+
+    * The [`container_name`](sets.md#container_name) of the set isn't defined.
+
+    Names can't end with a period or space, start with a path separator, or use the
+    following invalid path characters:
 
     ```
     :<>"|?*\
@@ -611,7 +630,7 @@ associated with a group.
 
 </div>
 
-## Optional parameters
+## Optional properties
 
 <div class="definition-list" markdown>
 
@@ -850,164 +869,3 @@ associated with a group.
     "subtype": "Add-on"
     ```
 </div>
-
-
----
-
-At its most complex with all the optional data though, it can seem daunting:
-
-```json
-"releases": [
-  {
-    "name": "Some Video Game (Japan)",
-    "db_id": "123456789",
-    "build": "Production",
-    "serial": null,
-    "source": ["3.5\" floppy"],
-    "local_names": {
-      "ja": "別のビデオゲーム"
-    },
-    "regions": ["Japan"],
-    "languages": {
-      "audio": ["ja", "en"],
-      "subtitles": ["en"]
-    },
-    "developer": "Some Developer",
-    "publisher": "Some Publisher",
-    "type": "Game",
-    "genre": "",
-    "release_date": "1993-10-12",
-    "inputs": ["Keyboard", "Mouse"],
-    "sets": {
-      "chd": [
-        {
-          "container": null,
-          "files": [
-            {
-              "name": "file.chd",
-              "size": 45,
-              "digests": {
-                "crc32": "3b5bd0a9",
-                "md5": "76aab21e473b127684e1ad06208ba168",
-                "sha1": "a413ce3fedd2e0755acd3a82362bac32893df47f",
-                "sha256": "a9cf7f0b767bc07e6c652bbdd5dd5763a1bfb7ba444aa08ffcc95e45fcec8e7f",
-                "xxh3_128": "79b5665946dae6fbb9fee66b2ba2417a",
-                "blake3": "0694036dbd769e2861c9ce504acc000aa57ff3da757d72671466fb8cbac62ead"
-              },
-              "date_created": "2024-03-05 17:53:22.395706",
-              "date_modified": "2024-02-08 09:07:35.636984",
-              "win_attributes": "a",
-              "nix_attributes": "rw-rw-rw-"
-            }
-          ]
-        },
-      ],
-      "files": [
-        {
-          "container": "auto",
-          "files": [
-            {
-              "name" : "file.asd",
-              "size": 98,
-              "digests": {
-                "crc32": "29edd0e3",
-                "md5": "cb26b7c023fe00ea12dcc49202f67eb0",
-                "sha1": "cef9b8c7205552d0d259ac02839707ba03fa1aff",
-                "sha256": "46a6e399b1fb2dc6050f7c9f775d9ccee1101a7b46657ff3d992ec5f2900dee1",
-                "xxh3_128": "1a2bf3bb0a4cd3aa94bf08b1c269423e",
-                "blake3": "c32da642c108dd42bc169dbe4094b96d4f638d2c7388fb18132429347955c7ec"
-              },
-              "date_created": "2024-03-05 17:53:22.395706",
-              "date_modified": "2024-02-08 09:07:35.636984",
-              "win_attributes": "a",
-              "nix_attributes": "rw-rw-rw-"
-            }
-          ]
-        }
-      ]
-    },
-    "updates": [
-      {
-        "name": "Some Video Game - Update 5 (Japan)",
-        "requires": ["Some Video Game - Update 4 (Japan)"]
-      },
-      {
-        "name": "Some Video Game - Update 4 (Japan)"
-      }
-    ],
-    "addons": [
-      {...}
-    ]
-  },
-  {
-    "name": "Some Video Game (Europe)",
-    "db_id": "987654321",
-    ...
-  },
-  {
-    "name": "Some Video Game (USA)",
-    "db_id": "123459876",
-    ...
-  }
-]
-```
-
-## Full DAT file example
-
-```json
-{
-  "dat_info": {
-    "name": "Sony - Playstation",
-    "source": "Redump",
-    "source_url": "http://www.redump.org",
-    "version": "1.1.1",
-    "date": "2025-12-30 13:23:54",
-    "contributors": ["Contributor 1", "Contributor 2", "Contributor 3"]
-  },
-  "collection": [
-    {
-      "group": "Doom",
-      "releases": [
-        {
-          "name": "Doom (USA)",
-          "db_id": "123456789",
-          "build": "Production",
-          "source": ["3.5\" floppy"],
-          "local_names": {},
-          "regions": ["USA"],
-          "languages": {
-            "audio": [],
-            "subtitles": ["en"]
-          },
-          "developer": "iD Software",
-          "publisher": "GT Interactive",
-          "type": "Game",
-          "genre": "",
-          "release_date": "1993-10-12",
-          "inputs": ["Keyboard"],
-          "container": "Auto",
-          "files": [
-            {...}
-          ],
-          "updates": [
-            {...}
-          ],
-          "addons": [
-            {...}
-          ]
-        },
-        {
-          "name": "Doom (Europe)",
-          "db_id": "987654321",
-          ...
-        },
-        {
-          "name": "Doom (Japan)",
-          "db_id": "123459876",
-          ...
-        }
-      ]
-    }
-  ]
-}
-```
