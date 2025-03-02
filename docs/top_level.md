@@ -5,9 +5,11 @@ hide:
 
 # Top level
 
-A DAT file at the top level looks like the following example:
+A DAT file at the top level has minimal properties.
 
-``` {.json .copy}
+In the following example, required properties are highlighted.
+
+``` {.json .copy hl_lines="2-7"}
 {
   "dat_info": {
     ...

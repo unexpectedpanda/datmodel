@@ -8,7 +8,8 @@ hide:
 The `releases` array contains objects that describe the details about each release that is
 associated with a group.
 
-In the following example, required properties are highlighted.
+In the following example, required properties are highlighted. The values are for example
+only.
 
 ``` {.json .copy hl_lines="3 5-8 11 12-16 25-27" }
 "releases": [

@@ -7,7 +7,10 @@ hide:
 
 The `collection` array contains all of the releases in the DAT file.
 
-``` {.json .copy}
+In the following example, required properties are highlighted. The values are for example
+only.
+
+``` {.json .copy hl_lines="3-7"}
 "collection": [
   {
     "group": "Some Video Game",

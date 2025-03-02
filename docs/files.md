@@ -7,7 +7,10 @@ hide:
 
 The `files` array contains objects that describe the files in a file set.
 
-``` {.json .copy}
+In the following example, required properties are highlighted. The values are for example
+only.
+
+``` {.json .copy hl_lines="3-5 13-15 23-25"}
 "files": [
   {
     "name": "Some Video Game (USA) (Track 1).bin",
@@ -16,7 +19,8 @@ The `files` array contains objects that describe the files in a file set.
       "crc32": "29edd0e3",
       "xxh3_128": "1a2bf3bb0a4cd3aa94bf08b1c269423e",
       "blake3": "c32da642c108dd42bc169dbe4094b96d4f638d2c7388fb18132429347955c7ec"
-    }
+    },
+    "date_modified": "1981-12-01 13:44:22"
   },
   {
     "name": "Some Video Game (USA) (Track 2).bin",
@@ -25,7 +29,8 @@ The `files` array contains objects that describe the files in a file set.
       "crc32": "872f5343",
       "xxh3_128": "b993a0619f896a101e786850967b3d90",
       "blake3": "74277af46089c2b15aea5b193bdecdd58a2992e47b00956c678a6c070225cb18"
-    }
+    },
+    "date_modified": "1981-12-01 13:44:22"
   },
   {
     "name": "Some Video Game (USA).cue",
@@ -34,7 +39,8 @@ The `files` array contains objects that describe the files in a file set.
       "crc32": "987150b7",
       "xxh3_128": "b7bb3254808cfc06d899854a1b58bab0",
       "blake3": "fcbc02c56a9a5157255febeac2009a988ccd08863ff648d290fe973dffe7f88c"
-    }
+    },
+    "date_modified": "1981-12-01 13:44:22"
   }
 ]
 ```

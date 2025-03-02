@@ -8,7 +8,8 @@ hide:
 The `dat_info` object contains information related to the DAT file and the people who
 created it. It functions like a header for the file.
 
-In the following example, required properties are highlighted.
+In the following example, required properties are highlighted. The values are for example
+only.
 
 ```  {.json .copy hl_lines="2 3 4 7"}
 "dat_info": {

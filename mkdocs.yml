@@ -66,6 +66,7 @@ nav:
     - collection.md
     - releases.md
     - sets.md
+    - set.md
     - files.md
   - Examples:
     - discs.md
