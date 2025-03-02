@@ -128,7 +128,7 @@ You can test validating against this schema with
                   "$ref": "#/$defs/stringFile"
                 },
                 "build": {
-                  "description": "",
+                  "description": "When in the software release life cycle the title was released.",
                   "enum": [
                     "Production",
                     "Preproduction",
@@ -142,9 +142,11 @@ You can test validating against this schema with
                   ]
                 },
                 "published": {
+                  "description": "Whether the title was published. Unpublished titles that didn't have an official release should be set to false.",
                   "type": "boolean"
                 },
                 "type": {
+                  "description": "The type of release.",
                   "enum": [
                     "Application",
                     "Audio",
@@ -229,14 +231,16 @@ You can test validating against this schema with
                     }
                   }
                 },
+                "developer": {
+                  "description": "The developer of the title.",
+                  "$ref": "#/$defs/nonEmptyString"
+                },
                 "id": {
                   "description": "A unique ID for the release. Usually a database ID.",
                   "$ref": "#/$defs/nonEmptyString"
                 },
-                "developer": {
-                  "$ref": "#/$defs/nonEmptyString"
-                },
                 "local_names": {
+                  "description": "Local names given to the title, defined by language.",
                   "type": "object",
                   "minProperties": 1,
                   "patternProperties": {
@@ -246,6 +250,7 @@ You can test validating against this schema with
                   }
                 },
                 "peripherals": {
+                  "description": "Contains inputs used to control the title, or devices that show output from the title.",
                   "type": "array",
                   "minItems": 1,
                   "items": {
@@ -253,12 +258,15 @@ You can test validating against this schema with
                   }
                 },
                 "publisher": {
+                  "description": "The publisher of the title.",
                   "$ref": "#/$defs/nonEmptyString"
                 },
                 "serial": {
+                  "description": "A manufacturer identifier for the release. Might be a cartridge serial, disc ring code, or otherwise.",
                   "$ref": "#/$defs/stringnull"
                 },
                 "source": {
+                  "description": "The release's origin.",
                   "type": "array",
                   "minItems": 1,
                   "items": {
@@ -277,6 +285,7 @@ You can test validating against this schema with
                   ]
                 },
                 "sets": {
+                  "description": "Defines the different file sets within the release.",
                   "type": "array",
                   "minProperties": 1,
                   "contains": {
@@ -289,6 +298,7 @@ You can test validating against this schema with
                         "$ref": "#/$defs/stringnull"
                       },
                       "set": {
+                        "description": "Describes an individual file set.",
                         "type": "array",
                         "minProperties": 1,
                         "contains": {
@@ -304,11 +314,16 @@ You can test validating against this schema with
                               "description": "A description of the set.",
                               "$ref": "#/$defs/nonEmptyString"
                             },
+                            "id": {
+                              "description": "A unique ID for the set. Usually a database ID.",
+                              "$ref": "#/$defs/nonEmptyString"
+                            },
                             "retroachievements": {
                               "description": "Whether retroachievements are support on the title.",
                               "type": "boolean"
                             },
                             "files": {
+                              "description": "The files in the set and their properties.",
                               "type": "array",
                               "contains": {
                                 "type": "object",

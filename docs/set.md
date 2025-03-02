@@ -10,11 +10,12 @@ The `set` array contains objects that each describe an individual file set.
 In the following example, required properties are highlighted. The values are for example
 only.
 
-``` {.json .copy hl_lines="4 7-9"}
+``` {.json .copy hl_lines="4 8-10"}
 "set": [
   {
     "container_name": "Some Video Game (USA)",
     "container": "auto",
+    "id": "654321",
     "comments": "Something relevant about the set",
     "retroachievements": True,
     "files": [
@@ -28,7 +29,7 @@ only.
 
 <div class="definition-list" markdown>
 
-* **`container`{ #container .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
+* **`container`{ #container .toc-code }** `string`{ .toc-def } `required`{ .toc-req }
 
     The container that the application managing the DAT file should use for the file set.
     Must be one of the following values:
@@ -47,7 +48,7 @@ only.
     {# * `archive`: Store the files in a specific archive type, named after the
       [release name](releases.md#name). #}
 
-* **`files`{ #files .toc-code }** `object array`{ .toc-def } `optional`{ .toc-opt }
+* **`files`{ #files .toc-code }** `object array`{ .toc-def } `required`{ .toc-req }
 
     The files in the set and their properties.
     [Read more about the `files` array](files.md).
@@ -104,6 +105,11 @@ only.
 * **`comments`{ #comments .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
     Comments related to the set.
+
+* **`id`{ #id .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
+
+    A unique ID for the set. Usually a database ID to ease lookups for DAT file
+    maintainers.
 
 * **`retroachievements`{ #retroachievements .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
 

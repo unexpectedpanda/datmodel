@@ -3,7 +3,7 @@ hide:
   - footer
 ---
 
-# Full example
+# Basic example
 
 The following example represents a valid DAT file.
 

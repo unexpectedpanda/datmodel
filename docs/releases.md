@@ -792,7 +792,7 @@ only.
 
 * **`serial`{ #serial .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
-    An manufacturer identifier for the release. Might be a cartridge serial, disc ring
+    A manufacturer identifier for the release. Might be a cartridge serial, disc ring
     code, or otherwise.
 
 * **`source`{ #source .toc-code }** `enum array`{ .toc-def } `optional`{ .toc-opt }
