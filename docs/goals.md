@@ -14,7 +14,8 @@ hide:
       applications like [Retool](https://unexpectedpanda.github.io/retool) to match and
       rank titles.
 
-    * Grouping multiple discs together that belong to the same release.
+    * Grouping multiple discs together that belong to the same release, so that filtering
+      doesn't break sets apart.
 
     * Linking common discs between different releases.
 

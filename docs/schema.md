@@ -13,42 +13,20 @@ You can test validating against this schema with
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id":"https://www.github.com/unexpectedpanda/datmodel",
   "title": "DAT file specification",
-  "description": "2025-03-01 10:38",
+  "description": "2025-03-03 10:38",
   "type": "object",
-  "required": ["dat_info", "collection"],
+  "required": ["datInfo", "collection"],
   "additionalProperties": false,
   "properties": {
-    "dat_info": {
+    "datInfo": {
       "description": "Content that describes the DAT file and its origin.",
       "type": "object",
       "required": ["schema", "name", "source", "date"],
       "additionalProperties": false,
       "properties": {
-        "schema": {
-          "description": "A link to the DAT schema used for the file.",
+        "comments": {
+          "description": "Relevant comments about the DAT file. For example, compression settings used, or other things users should know about.",
           "$ref": "#/$defs/nonEmptyString"
-        },
-        "name": {
-          "description": "The scope of content covered by the DAT file. This might be a platform, curated collection, a theme, or otherwise.",
-          "$ref": "#/$defs/nonEmptyString"
-        },
-        "source": {
-          "description": "The origin of the DAT file, whether that be a group or individual.",
-          "$ref": "#/$defs/nonEmptyString"
-        },
-        "source_url": {
-          "description": "The website of the source.",
-          "$ref": "#/$defs/nonEmptyString"
-        },
-        "version": {
-          "description": "The version of the DAT file, following semantic versioning.",
-          "$ref": "#/$defs/nonEmptyString",
-          "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)(?:-((?:0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+(?:[0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
-        },
-        "date": {
-          "description": "When the DAT file was created, in extended ISO 8601 format, without the time zone. For example: YYYY-MM-DD hh:mm:ss",
-          "$ref": "#/$defs/nonEmptyString",
-          "pattern": "^[2-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9]:?){1,2}(?<!:)$"
         },
         "contributors": {
           "description": "When multiple people have contributed to the data contained in the DAT file, they are listed here.",
@@ -57,9 +35,31 @@ You can test validating against this schema with
             "$ref": "#/$defs/nonEmptyString"
           }
         },
-        "comments": {
-          "description": "Relevant comments about the DAT file. For example, compression settings used, or other things users should know about.",
+        "date": {
+          "description": "When the DAT file was created, in extended ISO 8601 format, without the time zone. For example: YYYY-MM-DD hh:mm:ss",
+          "$ref": "#/$defs/nonEmptyString",
+          "pattern": "^[2-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9]:?){1,2}(?<!:)$"
+        },
+        "name": {
+          "description": "The scope of content covered by the DAT file. This might be a platform, curated collection, a theme, or otherwise.",
           "$ref": "#/$defs/nonEmptyString"
+        },
+        "schema": {
+          "description": "A link to the DAT schema used for the file.",
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source": {
+          "description": "The origin of the DAT file, whether that be a group or individual.",
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "sourceUrl": {
+          "description": "The website of the source.",
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "version": {
+          "description": "The version of the DAT file, following semantic versioning.",
+          "$ref": "#/$defs/nonEmptyString",
+          "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)(?:-((?:0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+(?:[0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$"
         }
       }
     },
@@ -82,7 +82,7 @@ You can test validating against this schema with
             "minProperties": 1,
             "contains": {
               "type": "object",
-              "required": ["name", "regions", "languages", "release_date", "build", "published", "sets"],
+              "required": ["build", "languages", "name", "regions", "releaseOrder", "sets"],
               "dependentRequired": {
                 "subtype": ["type"]
               },
@@ -93,7 +93,7 @@ You can test validating against this schema with
                   "if": {
                     "properties": {
                       "subtype": {
-                        "pattern": "^(?:Add-on|Audio|Demo|Update|Video)$"
+                        "pattern": "^(?:Add-on|Audio|Update|Video)$"
                       }
                     }
                   },
@@ -101,6 +101,22 @@ You can test validating against this schema with
                     "properties": {
                       "type": {
                         "pattern": "^(?:Application|Game)$"
+                      }
+                    }
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "subtype": {
+                        "pattern": "^(?:Children|Educational)$"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "type": {
+                        "pattern": "^(?:Application|Audio|Game|Multimedia|Video)$"
                       }
                     }
                   }
@@ -123,10 +139,6 @@ You can test validating against this schema with
                 }
               ],
               "properties": {
-                "name": {
-                  "description": "The name of the title, in UTF-8. This is used for the name of the archive or folder. Must use / for path separators. Names can't end with a period or space.",
-                  "$ref": "#/$defs/stringFile"
-                },
                 "build": {
                   "description": "When in the software release life cycle the title was released.",
                   "enum": [
@@ -141,69 +153,25 @@ You can test validating against this schema with
                     "Review"
                   ]
                 },
-                "published": {
-                  "description": "Whether the title was published. Unpublished titles that didn't have an official release should be set to false.",
+                "developer": {
+                  "description": "The developer of the title.",
+                  "$ref": "#/$defs/nonEmptyString"
+                },
+                "id": {
+                  "description": "A unique ID for the release. Usually a database ID.",
+                  "$ref": "#/$defs/nonEmptyString"
+                },
+                "isDemo": {
+                  "description": "Whether the title is a demo.",
                   "type": "boolean"
                 },
-                "type": {
-                  "description": "The type of release.",
-                  "enum": [
-                    "Application",
-                    "Audio",
-                    "BIOS",
-                    "Chip",
-                    "Coverdisc",
-                    "Device",
-                    "Prototype",
-                    "Firmware",
-                    "Game",
-                    "Magazine",
-                    "Multimedia",
-                    "Video"
-                  ]
+                "isMIA": {
+                  "description": "Whether the title's digests have been verified by more than one person. If not, set the value to true.",
+                  "type": "boolean"
                 },
-                "release_date": {
-                  "description": "The date the title was released, in extended ISO 8601 format, without the time zone. Valid formats are YYYY-MM-DD hh:mm:ss, YYYY-MM-DD hh:mm, YYYY-MM-DD, YYYY-MM, YYYY, and null for an unknown date.",
-                  "anyOf": [
-                    {
-                      "description": "YYYY-MM-DD hh:mm:ss",
-                      "pattern": "^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9]:?){1,2}(?<!:)$"
-                    },
-                    {
-                      "description": "YYYY-MM-DD hh:mm",
-                      "pattern": "^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9])$"
-                    },
-                    {
-                      "description": "YYYY-MM-DD",
-                      "pattern": "^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01]))$"
-                    },
-                    {
-                      "description": "YYYY-MM",
-                      "pattern": "^[1-9][0-9]{3,3}-(?:0[1-9]|1[0-2])$"
-                    },
-                    {
-                      "description": "YYYY",
-                      "pattern": "^[1-9][0-9]{3,3}$"
-                    },
-                    {
-                      "description": "Empty string",
-                      "pattern": "^$"
-                    }
-                  ]
-                },
-                "regions": {
-                  "description": "The regions the title was released in.",
-                  "type": "array",
-                  "items": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/$defs/regionsGroup"
-                      },
-                      {
-                        "$ref": "#/$defs/regionsIndividual"
-                      }
-                    ]
-                  }
+                "isSuperset": {
+                  "description": "Whether the title contains more content than the original release, or for some reason is superior to another version. For example, game of the year editions, a regional variant with uncensored content, or a DVD version of a title previously released on multiple CDs.",
+                  "type": "boolean"
                 },
                 "languages": {
                   "description": "The languages the title supports.",
@@ -231,15 +199,7 @@ You can test validating against this schema with
                     }
                   }
                 },
-                "developer": {
-                  "description": "The developer of the title.",
-                  "$ref": "#/$defs/nonEmptyString"
-                },
-                "id": {
-                  "description": "A unique ID for the release. Usually a database ID.",
-                  "$ref": "#/$defs/nonEmptyString"
-                },
-                "local_names": {
+                "localNames": {
                   "description": "Local names given to the title, defined by language.",
                   "type": "object",
                   "minProperties": 1,
@@ -249,6 +209,10 @@ You can test validating against this schema with
                     }
                   }
                 },
+                "name": {
+                  "description": "The name of the title, in UTF-8. This is used for the name of the archive or folder. Must use / for path separators. Names can't end with a period or space.",
+                  "$ref": "#/$defs/stringFile"
+                },
                 "peripherals": {
                   "description": "Contains inputs used to control the title, or devices that show output from the title.",
                   "type": "array",
@@ -257,32 +221,72 @@ You can test validating against this schema with
                     "$ref": "#/$defs/peripherals"
                   }
                 },
+                "players": {
+                  "decsription": "The number of players the title supports.",
+                  "type": "integer"
+                },
+                "playModes": {
+                  "decsription": "The number of players the title supports.",
+                  "type": "array",
+                  "minitems": 1,
+                  "items": {
+                    "$ref": "#/$defs/playModes"
+                  }
+                },
+                "published": {
+                  "description": "Whether the title was published. Unpublished titles that didn't have an official release should be set to false.",
+                  "type": "boolean"
+                },
                 "publisher": {
                   "description": "The publisher of the title.",
                   "$ref": "#/$defs/nonEmptyString"
                 },
+                "regions": {
+                  "description": "The regions the title was released in.",
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/$defs/regionsGroup"
+                      },
+                      {
+                        "$ref": "#/$defs/regionsIndividual"
+                      }
+                    ]
+                  }
+                },
+                "releaseDate": {
+                  "description": "The date the title was released, in extended ISO 8601 format, without the time zone. Valid formats are YYYY-MM-DD hh:mm:ss, YYYY-MM-DD hh:mm, YYYY-MM-DD, YYYY-MM, YYYY, and null for an unknown date.",
+                  "anyOf": [
+                    {
+                      "description": "YYYY-MM-DD hh:mm:ss",
+                      "pattern": "^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9]:?){1,2}(?<!:)$"
+                    },
+                    {
+                      "description": "YYYY-MM-DD hh:mm",
+                      "pattern": "^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9])$"
+                    },
+                    {
+                      "description": "YYYY-MM-DD",
+                      "pattern": "^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01]))$"
+                    },
+                    {
+                      "description": "YYYY-MM",
+                      "pattern": "^[1-9][0-9]{3,3}-(?:0[1-9]|1[0-2])$"
+                    },
+                    {
+                      "description": "YYYY",
+                      "pattern": "^[1-9][0-9]{3,3}$"
+                    }
+                  ]
+                },
+                "releaseOrder": {
+                  "description": "An integer-based version assigned internally by the DAT maintainer, where 1 is the earliest release of the title, and higher numbers were released later. This helps with 1G1R decisions by removing the need to compare multiple different versioning systems, and can stand in for when release dates are unknown.",
+                  "type": "integer"
+                },
                 "serial": {
                   "description": "A manufacturer identifier for the release. Might be a cartridge serial, disc ring code, or otherwise.",
                   "$ref": "#/$defs/stringnull"
-                },
-                "source": {
-                  "description": "The release's origin.",
-                  "type": "array",
-                  "minItems": 1,
-                  "items": {
-                    "$ref": "#/$defs/media"
-                  }
-                },
-                "subtype": {
-                  "description": "The subtype of the release. Must be paired with a valid type.",
-                  "enum": [
-                    "Add-on",
-                    "Audio",
-                    "Demo",
-                    "Manual",
-                    "Update",
-                    "Video"
-                  ]
                 },
                 "sets": {
                   "description": "Defines the different file sets within the release.",
@@ -303,16 +307,59 @@ You can test validating against this schema with
                         "minProperties": 1,
                         "contains": {
                           "type": "object",
-                          "required": ["container", "files"],
+                          "required": ["files"],
                           "additionalProperties": false,
                           "properties": {
-                            "container": {
-                              "description": "The container that the application managing the DAT file should use for the file set. Must be one of the following values: auto, folder, or null.",
-                              "$ref": "#/$defs/stringnull"
+                            "addOns": {
+                              "description": "The add-ons associated with the set. This includes DLC.",
+                              "type": "array",
+                              "contains": {
+                                "type": "object"
+                              }
                             },
                             "comments": {
                               "description": "A description of the set.",
                               "$ref": "#/$defs/nonEmptyString"
+                            },
+                            "container": {
+                              "description": "The container that the application managing the DAT file should use for the file set. Must be one of the following values: auto, folder, or null.",
+                              "$ref": "#/$defs/stringnull"
+                            },
+                            "name": {
+                              "description": "Overrides the release name key to become the archive or folder name used for the set.",
+                              "$ref": "#/$defs/stringFile"
+                            },
+                            "files": {
+                              "description": "The files in the set and their properties.",
+                              "type": "array",
+                              "contains": {
+                                "type": "object",
+                                "required": ["digests", "name", "size"],
+                                "additionalProperties": false,
+                                "properties": {
+                                  "dateModified": {
+                                    "description": "The last modified date that should be applied by the client application that's parsing the DAT file and operating on related files. Because FAT file systems have a time resolution of 2 seconds on last modified dates, you can only use even numbers for the seconds.",
+                                    "type": "string",
+                                    "pattern": "^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][02468])(?<!:)$"
+                                  },
+                                  "digests": {
+                                    "description": "The digests of different hash functions. The following hash functions are preferred: crc32, sha256, xxh3_128, blake3.",
+                                    "$ref": "#/$defs/digests"
+                                  },
+                                  "header": {
+                                    "description": " The header for a ROM, in hex. Aids with addition of the header to a headerless ROM, or removal from a headered ROM.",
+                                    "$ref": "#/$defs/stringnull"
+                                  },
+                                  "name": {
+                                    "description": "The name of the file, in UTF-8. Must use / for path separators. Names can't end with a period or space.",
+                                    "$ref": "#/$defs/stringnull"
+                                  },
+                                  "size": {
+                                    "description": "The size of the file, in bytes.",
+                                    "type": "integer"
+                                  }
+                                }
+                              }
                             },
                             "id": {
                               "description": "A unique ID for the set. Usually a database ID.",
@@ -322,32 +369,11 @@ You can test validating against this schema with
                               "description": "Whether retroachievements are support on the title.",
                               "type": "boolean"
                             },
-                            "files": {
-                              "description": "The files in the set and their properties.",
+                            "updates": {
+                              "description": "The updates associated with the set.",
                               "type": "array",
                               "contains": {
-                                "type": "object",
-                                "required": ["name", "size", "digests"],
-                                "additionalProperties": false,
-                                "properties": {
-                                  "name": {
-                                    "description": "The name of the file, in UTF-8. Must use / for path separators. Names can't end with a period or space.",
-                                    "$ref": "#/$defs/stringnull"
-                                  },
-                                  "size": {
-                                    "description": "The size of the file, in bytes.",
-                                    "type": "integer"
-                                  },
-                                  "digests": {
-                                    "description": "The digests of different hash functions. The following hash functions are preferred: crc32, sha256, xxh3_128, blake3.",
-                                    "$ref": "#/$defs/digests"
-                                  },
-                                  "date_modified": {
-                                    "description": "The last modified date that should be applied by the client application that's parsing the DAT file and operating on related files. Because FAT file systems have a time resolution of 2 seconds on last modified dates, you can only use even numbers for the seconds.",
-                                    "type": "string",
-                                    "pattern": "^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][02468])(?<!:)$"
-                                  }
-                                }
+                                "type": "object"
                               }
                             }
                           }
@@ -355,6 +381,51 @@ You can test validating against this schema with
                       }
                     }
                   }
+                },
+                "source": {
+                  "description": "The release's origin.",
+                  "type": "array",
+                  "minItems": 1,
+                  "items": {
+                    "$ref": "#/$defs/media"
+                  }
+                },
+                "subtype": {
+                  "description": "The subtype of the release. Must be paired with a valid type.",
+                  "enum": [
+                    "Add-on",
+                    "Audio",
+                    "Children",
+                    "Educational",
+                    "Manual",
+                    "Update",
+                    "Video"
+                  ]
+                },
+                "type": {
+                  "description": "The type of release.",
+                  "enum": [
+                    "Application",
+                    "Audio",
+                    "BIOS",
+                    "Chip",
+                    "Coverdisc",
+                    "Device",
+                    "Prototype",
+                    "Firmware",
+                    "Game",
+                    "Magazine",
+                    "Multimedia",
+                    "Video"
+                  ]
+                },
+                "version": {
+                  "description": "The version as reported by the title or media it came on. For example, Rev 1.",
+                  "$ref": "#/$defs/stringnull"
+                },
+                "videoStandards": {
+                  "description": "The video standard supported by the release. This describes a release's fixed output in both color and resolution, as opposed to any monitor standard that might be receiving the output. Use RGB for any release that supports higher resolutions than SVGA, and allows for flexible resolution output.",
+                  "$ref": "#/$defs/videoStandards"
                 }
               }
             }
@@ -458,7 +529,7 @@ You can test validating against this schema with
           "type": "string",
           "pattern": "^[a-fA-F0-9]{40,40}$"
         },
-        "sha1_internal": {
+        "sha1Internal": {
           "type": "string",
           "pattern": "^[a-fA-F0-9]{40,40}$"
         },
@@ -543,6 +614,20 @@ You can test validating against this schema with
         "Trackball",
         "VR Headset",
         "VR Headset and Controls"
+      ]
+    },
+    "playModes": {
+      "enum": [
+        "Single Player",
+        "Co-op (Split-screen)",
+        "Co-op (Local)",
+        "Co-op (Online)",
+        "Competitive (Split-screen Free-for-all)",
+        "Competitive (Split-screen Team)",
+        "Competitive (Local Free-for-all)",
+        "Competitive (Local Team)",
+        "Competitive (Online Free-for-all)",
+        "Competitive (Online Team)"
       ]
     },
     "regionsGroup": {
@@ -810,6 +895,42 @@ You can test validating against this schema with
         "ZA",
         "ZM",
         "ZW"
+      ]
+    },
+    "videoStandards": {
+      "enum": [
+        "4K Ultra HD",
+        "8K Ultra HD",
+        "AX-VGA",
+        "CGA",
+        "EGA",
+        "EVGA",
+        "HGC",
+        "HDTV (720i)",
+        "HDTV (720p)",
+        "Full HDTV (1080i)",
+        "Full HDTV (1080p)",
+        "JEGA",
+        "MCGA",
+        "MDA",
+        "MPAL",
+        "NTSC",
+        "NTSC (DV) (480i)",
+        "NTSC (DV) (480p)",
+        "PAL",
+        "PAL (DV) (576i)",
+        "PAL (DV) (576p)",
+        "PAL 60Hz",
+        "PGC",
+        "Plantronics",
+        "Quadcolor",
+        "RGB",
+        "SECAM",
+        "SVGA",
+        "Tandy",
+        "TIGA",
+        "VGA",
+        "XGA"
       ]
     }
   }

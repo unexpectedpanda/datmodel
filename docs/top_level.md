@@ -11,7 +11,7 @@ In the following example, required properties are highlighted.
 
 ``` {.json .copy hl_lines="2-7"}
 {
-  "dat_info": {
+  "datInfo": {
     ...
   },
   "collection": [
@@ -23,10 +23,10 @@ In the following example, required properties are highlighted.
 ## Required properties
 
 <div class="definition-list" markdown>
-* **`dat_info`{ #dat_info .toc-code }** `object`{ .toc-def } `required`{ .toc-req }
+* **`datInfo`{ #datInfo .toc-code }** `object`{ .toc-def } `required`{ .toc-req }
 
     Contains information related to the DAT file and those who created it. It functions
-    like a header for the file. [Read more about the `dat_info` object](dat_info.md).
+    like a header for the file. [Read more about the `datInfo` object](datInfo.md).
 
 * **`collection`{ #collection .toc-code }** `object array`{ .toc-def } `required`{ .toc-req }
 

@@ -3,20 +3,20 @@ hide:
   - footer
 ---
 
-# `dat_info`
+# `datInfo`
 
-The `dat_info` object contains information related to the DAT file and the people who
+The `datInfo` object contains information related to the DAT file and the people who
 created it. It functions like a header for the file.
 
 In the following example, required properties are highlighted. The values are for example
 only.
 
 ```  {.json .copy hl_lines="2 3 4 7"}
-"dat_info": {
+"datInfo": {
   "schema": "https://www.github.com/unexpectedpanda/datmodel",
   "name": "Company - Console",
   "source": "Release group",
-  "source_url": "https://www.example.com",
+  "sourceUrl": "https://www.example.com",
   "version": "1.1.1",
   "date": "2025-12-30 13:23:54",
   "contributors": ["Contributor 1", "Contributor 2", "Contributor 3"],
@@ -90,7 +90,7 @@ metadata to implement that functionality is provided at the `releases` level.
   When multiple individuals or groups have contributed to the data contained in the DAT
   file, they are listed here.
 
-* **`source_url`{ #source_url .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
+* **`sourceUrl`{ #sourceUrl .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
     The website of the source. For example, `https://www.example.com`.
 

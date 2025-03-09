@@ -1,8 +1,3 @@
----
-hide:
-  - footer
----
-
 # `files`
 
 The `files` array contains objects that describe the files in a file set.
@@ -10,7 +5,7 @@ The `files` array contains objects that describe the files in a file set.
 In the following example, required properties are highlighted. The values are for example
 only.
 
-``` {.json .copy hl_lines="3-5 13-15 23-25"}
+``` {.json .copy hl_lines="3-5"}
 "files": [
   {
     "name": "Some Video Game (USA) (Track 1).bin",
@@ -20,7 +15,8 @@ only.
       "xxh3_128": "1a2bf3bb0a4cd3aa94bf08b1c269423e",
       "blake3": "c32da642c108dd42bc169dbe4094b96d4f638d2c7388fb18132429347955c7ec"
     },
-    "date_modified": "1981-12-01 13:44:22"
+    "dateModified": "1981-12-01 13:44:22",
+    "header": "01 23 45 67 89 AB CD EF FE DC BA 98 76 54 32 10"
   },
   {
     "name": "Some Video Game (USA) (Track 2).bin",
@@ -30,7 +26,8 @@ only.
       "xxh3_128": "b993a0619f896a101e786850967b3d90",
       "blake3": "74277af46089c2b15aea5b193bdecdd58a2992e47b00956c678a6c070225cb18"
     },
-    "date_modified": "1981-12-01 13:44:22"
+    "dateModified": "1981-12-01 13:44:22",
+    "header": "01 23 45 67 89 AB CD EF FE DC BA 98 76 54 32 10"
   },
   {
     "name": "Some Video Game (USA).cue",
@@ -40,7 +37,8 @@ only.
       "xxh3_128": "b7bb3254808cfc06d899854a1b58bab0",
       "blake3": "fcbc02c56a9a5157255febeac2009a988ccd08863ff648d290fe973dffe7f88c"
     },
-    "date_modified": "1981-12-01 13:44:22"
+    "dateModified": "1981-12-01 13:44:22",
+    "header": "01 23 45 67 89 AB CD EF FE DC BA 98 76 54 32 10"
   }
 ]
 ```
@@ -218,7 +216,7 @@ only.
         ```
         ///
 
-    * **`sha1_internal`** (pattern string): The internal SHA-1 used only for CHD files.
+    * **`sha1Internal`** (pattern string): The internal SHA-1 used only for CHD files.
 
         /// details | Expand for developer details
         Valid SHA1 digests are found with the following regular expression:
@@ -234,7 +232,7 @@ only.
 
 <div class="definition-list" markdown>
 
-* **`date_modified`{ #date_modified .toc-code }** `pattern string`{ .toc-def } `optional`{ .toc-opt }
+* **`dateModified`{ #dateModified .toc-code }** `pattern string`{ .toc-def } `optional`{ .toc-opt }
 
     The last modified date that should be applied by the client application that's parsing
     the DAT file and operating on related files.
@@ -256,7 +254,7 @@ only.
     1992-11-24 03:12:00
     ```
 
-    Files with specified `date_modified` fields must not be stored in archives that change
+    Files with specified `dateModified` fields must not be stored in archives that change
     or remove the timestamp.
 
     /// details | Expand for developer details
@@ -266,5 +264,10 @@ only.
     ^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][02468])(?<!:)$
     ```
     ///
+
+* **`header`{ #header .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
+
+    The header for a file, in hex. Aids with addition of a header to a headerless file, or
+    removal from a headered file.
 
 </div>

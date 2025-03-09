@@ -59,16 +59,22 @@ nav:
   - DAT file:
     - structure.md
     - ● Top level: top_level.md
-    - ├ dat_info: dat_info.md
+    - ├ datInfo: datInfo.md
     - └ collection: collection.md
     -   └ releases: releases.md
-    -    └ sets: sets.md
-    -     └ set: set.md
-    -      └ files: files.md
+    -     ├ sets: sets.md
+    -     │ └ set: set.md
+    -     │   └ files: files-set.md
+    -     ├ addOns: addOns.md
+    -     │ └ files: files-addOns.md
+    -     └ updates: updates.md
+    -       └ files: files-updates.md
   - Examples:
     - basic_example.md
     - dir2dat.md
     - discs.md
+  - Developers:
+    - 1g1r.md
 plugins:
   - search
   - macros # https://mkdocs-macros-plugin.readthedocs.io/en/latest/#installation

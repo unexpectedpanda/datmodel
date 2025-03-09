@@ -10,10 +10,10 @@ The `set` array contains objects that each describe an individual file set.
 In the following example, required properties are highlighted. The values are for example
 only.
 
-``` {.json .copy hl_lines="4 8-10"}
+``` {.json .copy hl_lines="8-10"}
 "set": [
   {
-    "container_name": "Some Video Game (USA)",
+    "name": "Some Video Game (USA)",
     "container": "auto",
     "id": "654321",
     "comments": "Something relevant about the set",
@@ -25,14 +25,29 @@ only.
 ]
 ```
 
-### Required properties
+## Required properties
 
 <div class="definition-list" markdown>
 
-* **`container`{ #container .toc-code }** `string`{ .toc-def } `required`{ .toc-req }
+* **`files`{ #files .toc-code }** `object array`{ .toc-def } `required`{ .toc-req }
 
-    The container that the application managing the DAT file should use for the file set.
-    Must be one of the following values:
+    The files in the set and their properties.
+    [Read more about the `files` array](files-set.md).
+
+</div>
+
+## Optional properties
+
+<div class="definition-list" markdown>
+
+* **`comments`{ #comments .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
+
+    Comments related to the set.
+
+* **`container`{ #container .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
+
+    The container that the DAT manager should use for the file set. Must be one of the
+    following values:
 
     * `auto`: Store the files in whatever container the user chooses in the
       application that's managing the DAT file. For example, a ZIP file, a 7Z file,
@@ -48,24 +63,20 @@ only.
     {# * `archive`: Store the files in a specific archive type, named after the
       [release name](releases.md#name). #}
 
-* **`files`{ #files .toc-code }** `object array`{ .toc-def } `required`{ .toc-req }
+    If this property isn't present, the DAT manager assumes the value is `auto`.
 
-    The files in the set and their properties.
-    [Read more about the `files` array](files.md).
+* **`id`{ #id .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
-</div>
+    A unique ID for the set. Usually a database ID to ease lookups for DAT file
+    maintainers.
 
-### Optional properties
-
-<div class="definition-list" markdown>
-
-* **`container_name`{ #container_name .toc-code }** `pattern string`{ .toc-def } `optional`{ .toc-opt }
+* **`name`{ #name .toc-code }** `pattern string`{ .toc-def } `optional`{ .toc-opt }
 
     Overrides the release [`name`](releases.md#name) key to become the archive or folder
     name used for the set. Generally only used when
     [bundling together multiple discs](discs.md) from the same set to avoid name clashes.
 
-    Can only be used if the `container` isn't set to `null`.
+    Can only be used if the [`container`](#container) isn't set to `null`.
 
     Names can't end with a period or space, start with a path separator, or use the
     following invalid path characters:
@@ -102,15 +113,8 @@ only.
     ```
     ///
 
-* **`comments`{ #comments .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
-
-    Comments related to the set.
-
-* **`id`{ #id .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
-
-    A unique ID for the set. Usually a database ID to ease lookups for DAT file
-    maintainers.
-
 * **`retroachievements`{ #retroachievements .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
 
     Whether or not retroachievements are supported on the title.
+
+</div>

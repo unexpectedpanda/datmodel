@@ -7,7 +7,7 @@ hide:
 
 The following sections include examples of DAT file structures. They are presented
 piecemeal to help ease understanding. For a complete example of a valid DAT file, see
-[Complete DAT file example](complete_example.md).
+[Basic example](basic_example.md).
 
 In code samples, `...` is used where data has been omitted for brevity and ease of
 understanding. This omitted data might contain required information to validate

@@ -11,7 +11,7 @@ associated with a group.
 In the following example, required properties are highlighted. The values are for example
 only.
 
-``` {.json .copy hl_lines="3 5-8 11 12-16 25-27" }
+``` {.json .copy hl_lines="3 5 7 10 16-21 33-35" }
 "releases": [
   {
     "name": "Some Video Game (USA)",
@@ -19,16 +19,21 @@ only.
     "build": "Production",
     "published": true,
     "type": "Game",
-    "subtype": "Demo",
-    "release_date": "1993-10-12",
+    "subtype": "Educational",
+    "releaseDate": "1993-10-12",
+    "releaseOrder": "1",
+    "version": "Rev 1",
     "serial": "SLUS-000000",
-    "regions": ["JP"],
+    "isDemo": False,
+    "isMIA": False,
+    "isSuperset": False,
+    "regions": ["US"],
     "languages": {
-      "audio": ["ja", "en"],
+      "audio": ["en", "ja"],
       "interface": ["en"],
       "subtitles": ["en"]
     },
-    "local_names": [
+    "localNames": [
       "en": "Some Video Game",
       "ja": "別のビデオゲーム"
     ],
@@ -36,7 +41,16 @@ only.
     "publisher": "That Game Publisher",
     "source": ["3.5\" Floppy Disk"],
     "peripherals": ["Keyboard", "Mouse"],
+    "players": 4,
+    "playModes": ["Single Player", "Competitive (Online Free-for-all)"],
+    "videoStandards": ["NTSC"],
     "sets": [
+      ...
+    ],
+    "updates": [
+      ...
+    ],
+    "addOns": [
       ...
     ]
   }
@@ -46,14 +60,15 @@ only.
 ## Required properties
 
 <div class="definition-list" markdown>
+
 * **`name`{ #name .toc-code }** `pattern string`{ .toc-def } `required`{ .toc-req }
 
     The name of the title, in UTF-8. This is used for the name of the archive or folder of
     the contained [sets](#sets), under the following conditions:
 
-    * The [`container`](sets.md#set) of the set isn't set to `null`.
+    * The [`container`](set.md#container) of the set isn't set to `null`.
 
-    * The [`container_name`](sets.md#container_name) of the set isn't defined.
+    * The [`name`](set.md#name) of the set isn't defined.
 
     Names can't end with a period or space, start with a path separator, or use the
     following invalid path characters:
@@ -119,11 +134,6 @@ only.
       development stage, but isn't the production version. Wherever possible, don't use
       this.
 
-* **`published`{ #published .toc-code }** `bool`{ .toc-def } `required`{ .toc-req }
-
-    Whether the title was published. Unpublished titles that didn't have an official
-    release should be set to `false`.
-
 * **`type`{ #type .toc-code }** `enum`{ .toc-def } `required`{ .toc-req }
 
     The type of release. Must be one of the following:
@@ -152,42 +162,52 @@ only.
 
     These can be paired with a [`subtype`](#subtype).
 
-* **`release_date`{ #release_date .toc-code }** `pattern string`{ .toc-def } `required`{ .toc-req }
+* **`releaseOrder`{ #releaseOrder .toc-code }** `integer`{ .toc-def } `required`{ .toc-req }
 
-    The date the title was released. Must be an
-    [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) extended format date, without the
-    time zone. Valid formats include the following:
+    An integer-based version assigned internally by the DAT maintainer, where `1` is the
+    earliest release of the title, and higher numbers were released later. This helps apps
+    make easier 1G1R decisions by removing the need to compare multiple different
+    versioning systems, and can fill the gap when release dates are unknown.
 
-    * `YYYY-MM-DD hh:mm:ss`
-    * `YYYY-MM-DD hh:mm`
-    * `YYYY-MM-DD`
-    * `YYYY-MM`
-    * `YYYY`
+    The following rules apply:
 
-    Leave the field empty for an unknown date:
+    * Each region has its own order.
 
-    ```json
-    "release_date": ""
+    * Don't assign the same number to multiple releases within the one region.
+
+    * Numbering should start from the earliest available release, including preproduction.
+
+    * If you don't know the release order, make your best guess. It's not ideal, but it
+      means a 1G1R selection can actually happen.
+
+    For example:
+
+    ``` { .json .copy }
+    ...
+    "name": "Some Video Game (USA)",
+    "releaseOrder": 1,
+    ...
+    "name": "Some Video Game (USA) (v1.1)",
+    "releaseOrder": 2,
+    ...
+    "name": "Some Video Game (USA) (v1.2)",
+    "releaseOrder": 3,
+    ...
+    "name": "Some Video Game (Europe) (Beta)",
+    "releaseOrder": 1,
+    ...
+    "name": "Some Video Game (Europe)",
+    "releaseOrder": 2,
+    ...
+    "name": "Some Video Game - Game of the Year (Europe)",
+    "releaseOrder": 1,
+    ...
     ```
 
     /// details | Expand for developer details
-    Valid dates are found with the following regular expressions:
-
-    ``` {.text .copy}
-    ^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9]:?){1,2}(?<!:)$
-    ^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9])$
-    ^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01]))$
-    ^[1-9][0-9]{3,3}-(?:0[1-9]|1[0-2])$
-    ^[1-9][0-9]{3,3}$
-    ^$
-    ```
-
-    There's a lower year bound of 1000, and an upper year bound of 9999. The regular
-    expressions also constrain month and date pairs appropriately, although it's possible
-    to have February 29 on a non-leap year. It's assumed that systems generating the DAT
-    file will generate valid dates to avoid this. The schema validation just enforces the
-    format to enable easier programmatic comparisons when determining if one release is
-    newer than another.
+    This is an attempt to mirror how Retool sets up clone lists, while removing the need
+    for a lot of logic that figures out which titles are the oldest or newest. See
+    [Doing 1G1R calculations](1g1r.md).
     ///
 
 * **`regions`{ #regions .toc-code }** `enum array`{ .toc-def } `required`{ .toc-req }
@@ -207,6 +227,8 @@ only.
 
     * If you do know where a release is from, prefer listing individual regions over
       grouped regions where possible for better granularity.
+
+    * Region codes should always be listed in alphabetical order.
 
     For grouped regions, keep the following rules in mind:
 
@@ -552,8 +574,11 @@ only.
     example codes:
 
     * `en` - English
+
     * `en-US` - English (United States of America)
+
     * `zh-Hant` - Chinese (Traditional) [written]
+
     * `cmn` - Chinese (Mandarin) [spoken]
 
     There are well over 9,000 subtags that can be combined in different ways to create a
@@ -564,7 +589,9 @@ only.
     To learn more about language codes, see the following pages:
 
     * [Language tags in HTML and XML](https://www.w3.org/International/articles/language-tags/)
+
     * [Choosing a language tag](https://www.w3.org/International/questions/qa-choosing-language-tags)
+
     * [Simplified vs. Traditional Chinese, and the Spoken Dialects](https://localization.blog/2022/10/10/simplified-vs-traditional-chinese-and-the-spoken-dialects/)
         (Chinese language codes differ for spoken vs written)
 
@@ -574,6 +601,10 @@ only.
     language codes. For example, if a video is largely in English and is intended for
     English-speaking audiences, but has a short scene in which people speak Japanese, you
     set the `audio` as `["en"]`, _not_ `["en", "ja"]`.
+
+    <h4>Order</h4>
+
+    Language codes should always be listed in alphabetical order.
 
     <h4>Examples</h4>
 
@@ -635,6 +666,11 @@ only.
 
 <div class="definition-list" markdown>
 
+* **`addOns`{ #addOns .toc-code }** `object array`{ .toc-def } `optional`{ .toc-opt }
+
+    The add-ons associated with the release. This includes DLC.
+    [Read more about the `addOns` array](addOns.md).
+
 * **`developer`{ #developer .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
     The developer of the title.
@@ -644,7 +680,7 @@ only.
     A unique ID for the release. Usually a database ID to ease lookups for DAT file
     maintainers.
 
-* **`local_names`{ #local_names .toc-code }** `object`{ .toc-def } `optional`{ .toc-opt }
+* **`localNames`{ #localNames .toc-code }** `object`{ .toc-def } `optional`{ .toc-opt }
 
     Local names given to the title, defined by language. Often titles are recorded in
     databases using their romanized form to aid with searching for the title. Here's where
@@ -655,10 +691,10 @@ only.
     [IANA language subtag registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry).
     See [`languages`](#languages) for more details about selecting a language code.
 
-    The following is an example of the `local_names` array:
+    The following is an example of the `localNames` array:
 
     ``` {.json .copy}
-    "local_names": {
+    "localNames": {
       "en": "Altered Beast",
       "ja": "獣王記"
     }
@@ -669,9 +705,31 @@ only.
 
     If a title can show more than one name depending on the region, and the release
     [`name`](#name) is in English, you should still include the English name in the
-    `local_names` array. This is because client applications have no idea what language
+    `localNames` array. This is because client applications have no idea what language
     the release name is in, and so can't safely select it as the English name if
     someone sets that as a preference.
+
+* **`isDemo`{ #isDemo .toc-code }** `boolean`{ .toc-def } `required`{ .toc-req }
+
+    Whether the title is a demo.
+
+    If this property isn't present, the DAT manager assumes the value is `false`.
+
+* **`isMIA`{ #isMIA .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
+
+    Whether the title's digests have been verified by more than one person. If not, set
+    the value to `true`.
+
+    If this property isn't present, the DAT manager assumes the value is `false`.
+
+* **`isSuperset`{ #isSuperset .toc-code }** `boolean`{ .toc-def } `required`{ .toc-req }
+
+    Whether the title contains more content than the original release, or for some reason
+    is superior to another version. For example, game of the year editions, a regional
+    variant with uncensored content, or a DVD version of a title previously released on
+    multiple CDs.
+
+    If this property isn't present, the DAT manager assumes the value is `false`.
 
 * **`peripherals`{ #peripherals .toc-code }** `enum array`{ .toc-def } `optional`{ .toc-opt }
 
@@ -785,10 +843,79 @@ only.
 
     * `VR Headset and Controls`
 
+* **`players`{ #players .toc-code }** `int`{ .toc-def } `optional`{ .toc-opt }
+
+    The number of players the title supports. See also: [play modes](#playModes).
+
+* **`playModes`{ #playModes .toc-code }** `enum array`{ .toc-def } `optional`{ .toc-opt }
+
+    The play modes the title supports. Valid values are the following:
+
+    * `Single player`
+
+    * `Co-op (Split-screen)`
+
+    * `Co-op (Local)`
+
+    * `Co-op (Remote)`
+
+    * `Competitive (Split-screen Free-for-all)`
+
+    * `Competitive (Split-screen Team)`
+
+    * `Competitive (Local Free-for-all)`
+
+    * `Competitive (Local Team)`
+
+    * `Competitive (Remote Free-for-all)`
+
+    * `Competitive (Remote Team)`
+
+* **`published`{ #published .toc-code }** `bool`{ .toc-def } `optional`{ .toc-opt }
+
+    Whether the title was published. Unpublished titles that didn't have an official
+    release should be set to `false`.
+
+    If this property isn't present, the DAT manager assumes the value is `true`.
 
 * **`publisher`{ #publisher .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
     The publisher of the title.
+
+* **`releaseDate`{ #releaseDate .toc-code }** `pattern string`{ .toc-def } `optional`{ .toc-opt }
+
+    The date the title was released. Must be an
+    [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) extended format date, without the
+    time zone. Valid formats include the following:
+
+    * `YYYY-MM-DD hh:mm:ss`
+
+    * `YYYY-MM-DD hh:mm`
+
+    * `YYYY-MM-DD`
+
+    * `YYYY-MM`
+
+    * `YYYY`
+
+    /// details | Expand for developer details
+    Valid dates are found with the following regular expressions:
+
+    ``` {.text .copy}
+    ^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9]:?){1,2}(?<!:)$
+    ^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9])$
+    ^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01]))$
+    ^[1-9][0-9]{3,3}-(?:0[1-9]|1[0-2])$
+    ^[1-9][0-9]{3,3}$
+    ```
+
+    There's a lower year bound of 1000, and an upper year bound of 9999. The regular
+    expressions also constrain month and date pairs appropriately, although it's possible
+    to have February 29 on a non-leap year. It's assumed that systems generating the DAT
+    file will generate valid dates to avoid this. The schema validation just enforces the
+    format to enable easier programmatic comparisons when determining if one release is
+    newer than another.
+    ///
 
 * **`serial`{ #serial .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
@@ -851,17 +978,19 @@ only.
 
     The subtype of the release. Must be paired with a valid [`type`](#type).
 
-    * `Add-on` - Valid with the `Game` and `Application` types.
+    * `Add-on` - Valid with the `Application` and `Game` types.
 
-    * `Audio` - Valid with the `Game` and `Application` types.
+    * `Audio` - Valid with the `Application` and `Game` types.
 
-    * `Demo` - Valid with the `Game` and `Application` types.
+    * `Children` - Valid with the `Application`, `Audio`, `Game`, `Multimedia`, and `Video` types.
 
-    * `Manual` - Valid with the `Device`, `Game`, and `Application` types.
+    * `Educational` - Valid with the `Application`, `Audio`, `Game`, `Multimedia`, and `Video` types.
 
-    * `Update` - Valid with the `Game`, and `Application` types.
+    * `Manual` - Valid with the `Application`, `Device`, and `Game` types.
 
-    * `Video` - Valid with the `Game` and `Application` types.
+    * `Update` - Valid with the `Application` and `Game` types.
+
+    * `Video` - Valid with the `Application` and `Game` types.
 
     For example:
 
@@ -869,4 +998,89 @@ only.
     "type": "Game",
     "subtype": "Add-on"
     ```
+
+* **`updates`{ #updates .toc-code }** `object array`{ .toc-def } `optional`{ .toc-opt }
+
+    The updates associated with the release.
+    [Read more about the `updates` array](updates.md).
+
+* **`version`{ #version .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
+
+    The version as reported by the title or media it came on. For example, `Rev 1`.
+
+* **`videoStandards`{ #videoStandards .toc-code }** `enum array`{ .toc-def } `optional`{ .toc-opt }
+
+    The video standard supported by the release. This describes a release's fixed output
+    in both color and resolution, as opposed to any monitor standard that might be
+    receiving the output.
+
+    Use `RGB` for any release that supports higher resolutions than SVGA, and allows for
+    flexible resolution output.
+
+    Valid standards are:
+
+    * `4K Ultra HD`
+
+    * `8K Ultra HD`
+
+    * `AX-VGA`
+
+    * `CGA`
+
+    * `EGA`
+
+    * `EVGA`
+
+    * `HGC`
+
+    * `HDTV (720i)`
+
+    * `HDTV (720p)`
+
+    * `Full HDTV (1080i)`
+
+    * `Full HDTV (1080p)`
+
+    * `JEGA`
+
+    * `MCGA`
+
+    * `MDA`
+
+    * `MPAL`
+
+    * `NTSC`
+
+    * `NTSC (DV) (480i)`
+
+    * `NTSC (DV) (480p)`
+
+    * `PAL`
+
+    * `PAL (DV) (576i)`
+
+    * `PAL (DV) (576p)`
+
+    * `PAL 60Hz`
+
+    * `PGC`
+
+    * `Plantronics`
+
+    * `Quadcolor`
+
+    * `RGB`
+
+    * `SECAM`
+
+    * `SVGA`
+
+    * `Tandy`
+
+    * `TIGA`
+
+    * `VGA`
+
+    * `XGA`
+
 </div>
