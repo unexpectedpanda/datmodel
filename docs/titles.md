@@ -3,16 +3,16 @@ hide:
   - footer
 ---
 
-# `releases`
+# `titles`
 
-The `releases` array contains objects that describe the details about each release that is
+The `titles` array contains objects that describe the details about each title that is
 associated with a group.
 
 In the following example, required properties are highlighted. The values are for example
 only.
 
-``` {.json .copy hl_lines="3 5 7 10 16-21 33-35" }
-"releases": [
+``` {.json .copy hl_lines="3 7 10 16-21 33-35" }
+"titles": [
   {
     "name": "Some Video Game (USA)",
     "id": "123456",
@@ -63,8 +63,8 @@ only.
 
 * **`name`{ #name .toc-code }** `pattern string`{ .toc-def } `required`{ .toc-req }
 
-    The name of the title, in UTF-8. This is used for the name of the archive or folder of
-    the contained [sets](#sets), under the following conditions:
+    The name of the title, in UTF-8. This is used for the name of the archive or folder
+    of the contained [sets](#sets), under the following conditions:
 
     * The [`container`](set.md#container) of the set isn't set to `null`.
 
@@ -105,38 +105,9 @@ only.
     ```
     ///
 
-* **`build`{ #build .toc-code }** `enum`{ .toc-def } `required`{ .toc-req }
-
-    When in the
-    [software release life cycle](https://en.wikipedia.org/wiki/Software_release_life_cycle)
-    the title was released. Must be one of the following values, in order of maturity and
-    specificity:
-
-    * `Production`: What reaches store shelves or internet distribution systems. This
-      includes release to manufacturing (RTM) releases.
-
-    * `Release candidate`: There are often multiple release candidates, of which one is
-      chosen to go to production. Release candidates are feature complete, and only
-      significant bugs force another release candidate to be issued.
-
-    * `Beta`: A largely feature-complete version of a title, that still has bugs and
-      performance issues to squash.
-
-    * `Alpha`: An in-development version of a title that isn't feature complete, and isn't
-      thoroughly tested. Likely to be highly buggy.
-
-    * `Pre-alpha`: This includes early development releases and prototypes.
-
-    * `Review`: A version of the title sent to reviewers. This can be production code,
-      preproduction code, or have code in it that's unique to the reviewer copy.
-
-    * `Preproduction`: A generic catch-all for a title that is at an unspecified
-      development stage, but isn't the production version. Wherever possible, don't use
-      this.
-
 * **`type`{ #type .toc-code }** `enum`{ .toc-def } `required`{ .toc-req }
 
-    The type of release. Must be one of the following:
+    The type of the title. Must be one of the following:
 
     * `Application`
 
@@ -165,9 +136,9 @@ only.
 * **`releaseOrder`{ #releaseOrder .toc-code }** `integer`{ .toc-def } `required`{ .toc-req }
 
     An integer-based version assigned internally by the DAT maintainer, where `1` is the
-    earliest release of the title, and higher numbers were released later. This helps apps
-    make easier 1G1R decisions by removing the need to compare multiple different
-    versioning systems, and can fill the gap when release dates are unknown.
+    earliest release, and higher numbers were released later. This helps apps make easier
+    1G1R decisions by removing the need to compare multiple different versioning systems,
+    and can fill the gap when release dates are unknown.
 
     The following rules apply:
 
@@ -219,14 +190,14 @@ only.
 
     The following general rules apply:
 
-    * If you don't know where a release is from, use an empty array:
+    * If you don't know where a title is from, use an empty array:
 
         ```json
         "regions": []
         ```
 
-    * If you do know where a release is from, prefer listing individual regions over
-      grouped regions where possible for better granularity.
+    * If you do know where a title is from, prefer listing individual regions over grouped
+      regions where possible for better granularity.
 
     * Region codes should always be listed in alphabetical order.
 
@@ -657,7 +628,7 @@ only.
 
 * **`sets`{ #sets .toc-code }** `object array`{ .toc-def } `required`{ .toc-req }
 
-    Defines the different file sets within the release.
+    Defines the different file sets within the title.
     [Read more about the `sets` array](sets.md).
 
 </div>
@@ -668,8 +639,39 @@ only.
 
 * **`addOns`{ #addOns .toc-code }** `object array`{ .toc-def } `optional`{ .toc-opt }
 
-    The add-ons associated with the release. This includes DLC.
+    The add-ons associated with the title. This includes DLC.
     [Read more about the `addOns` array](addOns.md).
+
+* **`build`{ #build .toc-code }** `enum`{ .toc-def } `optional`{ .toc-opt }
+
+    When in the
+    [software release life cycle](https://en.wikipedia.org/wiki/Software_release_life_cycle)
+    the title was released. Must be one of the following values, in order of maturity and
+    specificity:
+
+    * `Production`: What reaches store shelves or internet distribution systems. This
+      includes release to manufacturing (RTM) releases.
+
+    * `Release candidate`: There are often multiple release candidates, of which one is
+      chosen to go to production. Release candidates are feature complete, and only
+      significant bugs force another release candidate to be issued.
+
+    * `Beta`: A largely feature-complete version of a title, that still has bugs and
+      performance issues to squash.
+
+    * `Alpha`: An in-development version of a title that isn't feature complete, and isn't
+      thoroughly tested. Likely to be highly buggy.
+
+    * `Pre-alpha`: This includes early development titles and prototypes.
+
+    * `Review`: A version of the title sent to reviewers. This can be production code,
+      preproduction code, or have code in it that's unique to the reviewer copy.
+
+    * `Preproduction`: A generic catch-all for a title that is at an unspecified
+      development stage, but isn't the production version. Wherever possible, don't use
+      this.
+
+    If this property isn't present, the DAT manager assumes the value is `Production`.
 
 * **`developer`{ #developer .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
@@ -677,7 +679,7 @@ only.
 
 * **`id`{ #id .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
-    A unique ID for the release. Usually a database ID to ease lookups for DAT file
+    A unique ID for the title. Usually a database ID to ease lookups for DAT file
     maintainers.
 
 * **`localNames`{ #localNames .toc-code }** `object`{ .toc-def } `optional`{ .toc-opt }
@@ -703,10 +705,10 @@ only.
     Only use the title's name &mdash; don't include additional information like naming
     system tags.
 
-    If a title can show more than one name depending on the region, and the release
+    If a title can show more than one name depending on the region, and the title
     [`name`](#name) is in English, you should still include the English name in the
     `localNames` array. This is because client applications have no idea what language
-    the release name is in, and so can't safely select it as the English name if
+    the title name is in, and so can't safely select it as the English name if
     someone sets that as a preference.
 
 * **`isDemo`{ #isDemo .toc-code }** `boolean`{ .toc-def } `required`{ .toc-req }
@@ -724,7 +726,7 @@ only.
 
 * **`isSuperset`{ #isSuperset .toc-code }** `boolean`{ .toc-def } `required`{ .toc-req }
 
-    Whether the title contains more content than the original release, or for some reason
+    Whether the title contains more content than the original title, or for some reason
     is superior to another version. For example, game of the year editions, a regional
     variant with uncensored content, or a DVD version of a title previously released on
     multiple CDs.
@@ -913,18 +915,18 @@ only.
     expressions also constrain month and date pairs appropriately, although it's possible
     to have February 29 on a non-leap year. It's assumed that systems generating the DAT
     file will generate valid dates to avoid this. The schema validation just enforces the
-    format to enable easier programmatic comparisons when determining if one release is
+    format to enable easier programmatic comparisons when determining if one title is
     newer than another.
     ///
 
 * **`serial`{ #serial .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
-    A manufacturer identifier for the release. Might be a cartridge serial, disc ring
+    A manufacturer identifier for the title. Might be a cartridge serial, disc ring
     code, or otherwise.
 
 * **`source`{ #source .toc-code }** `enum array`{ .toc-def } `optional`{ .toc-opt }
 
-    The release's origin. Valid sources are:
+    The title's origin. Valid sources are:
 
     * `3.5\" floppy disk`
 
@@ -976,7 +978,7 @@ only.
 
 * **`subtype`{ #subtype .toc-code }** `enum`{ .toc-def } `optional`{ .toc-opt }
 
-    The subtype of the release. Must be paired with a valid [`type`](#type).
+    The subtype of the title. Must be paired with a valid [`type`](#type).
 
     * `Add-on` - Valid with the `Application` and `Game` types.
 
@@ -1001,7 +1003,7 @@ only.
 
 * **`updates`{ #updates .toc-code }** `object array`{ .toc-def } `optional`{ .toc-opt }
 
-    The updates associated with the release.
+    The updates associated with the title.
     [Read more about the `updates` array](updates.md).
 
 * **`version`{ #version .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
@@ -1010,11 +1012,11 @@ only.
 
 * **`videoStandards`{ #videoStandards .toc-code }** `enum array`{ .toc-def } `optional`{ .toc-opt }
 
-    The video standard supported by the release. This describes a release's fixed output
+    The video standard supported by the title. This describes a title's fixed output
     in both color and resolution, as opposed to any monitor standard that might be
     receiving the output.
 
-    Use `RGB` for any release that supports higher resolutions than SVGA, and allows for
+    Use `RGB` for any title that supports higher resolutions than SVGA, and allows for
     flexible resolution output.
 
     Valid standards are:

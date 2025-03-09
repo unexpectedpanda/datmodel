@@ -61,7 +61,7 @@ nav:
     - ● Top level: top_level.md
     - ├ datInfo: datInfo.md
     - └ collection: collection.md
-    -   └ releases: releases.md
+    -   └ titles: titles.md
     -     ├ sets: sets.md
     -     │ └ set: set.md
     -     │   └ files: files-set.md
@@ -73,6 +73,7 @@ nav:
     - basic_example.md
     - dir2dat.md
     - discs.md
+    - dense.md
   - Developers:
     - 1g1r.md
 plugins:

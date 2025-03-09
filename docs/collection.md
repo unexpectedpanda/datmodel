@@ -5,7 +5,7 @@ hide:
 
 # `collection`
 
-The `collection` array contains all of the releases in the DAT file.
+The `collection` array contains all of the titles in the DAT file.
 
 In the following example, required properties are highlighted. The values are for example
 only.
@@ -14,7 +14,7 @@ only.
 "collection": [
   {
     "group": "Some Video Game",
-    "releases": [
+    "titles": [
       {
         ...
       }
@@ -23,9 +23,9 @@ only.
 ]
 ```
 
-Related releases are grouped together in a single object by naming a `group` and listing
-its `releases`. For example, the group `Some Video Game` might contain the following
-releases:
+Related titles are grouped together in a single object by naming a `group` and listing
+its `titles`. For example, the group `Some Video Game` might contain the following
+titles:
 
 * `Some Video Game (USA)`
 * `Some Video Game (USA) (v1.1)`
@@ -40,10 +40,10 @@ relationships found in LogiqX DAT files.
 <div class="definition-list" markdown>
 * **`group`{ #group .toc-code }** `string`{ .toc-def } `required`{ .toc-req }
 
-    The name of the group of related releases.
+    The name of the group of related titles.
 
-* **`releases`{ #releases .toc-code }** `object array`{ .toc-def } `required`{ .toc-req }.
+* **`titles`{ #titles .toc-code }** `object array`{ .toc-def } `required`{ .toc-req }.
 
-    Contains objects that describe the details about each release that is associated with
-    a group. [Read more about the releases array](releases.md).
+    Contains objects that describe the details about each title that is associated with
+    a group. [Read more about the titles array](titles.md).
 </div>

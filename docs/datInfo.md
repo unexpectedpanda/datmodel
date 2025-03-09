@@ -26,7 +26,7 @@ only.
 
 /// note | ROM manager flags
 Unlike the LogiqX DAT standard, flags for specific ROM managers aren't required. Relevant
-metadata to implement that functionality is provided at the `releases` level.
+metadata to implement that functionality is provided at the `titles` level.
 ///
 
 ## Required properties

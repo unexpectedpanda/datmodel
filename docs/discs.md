@@ -6,17 +6,16 @@ hide:
 # Multiple discs in a single set
 
 The examples on this page show how to handle bundling together discs into a single set
-within a release. This is so DAT managers know to keep these files together when
-filtering.
+within a title. This is so DAT managers know to keep these files together when filtering.
 
 ## Bundle discs together
 
 The following example demonstrates how to keep together multiple discs in a single
-release.
+title.
 
 ``` {.json .copy}
 {
-  "dat_info": {
+  "datInfo": {
     "schema": "https://www.github.com/unexpectedpanda/datmodel",
     "name": "Multiple discs",
     "source": "Data model 2025",
@@ -25,13 +24,11 @@ release.
   "collection": [
     {
       "group": "Some Video Game",
-      "releases": [
+      "titles": [
         {
           "name": "Some Video Game (USA)",
-          "build": "Production",
-          "published": true,
           "type": "Game",
-          "release_date": "1993-10-12",
+          "releaseDate": "1993-10-12",
           "regions": ["US"],
           "languages": {
             "audio": [null],
@@ -43,7 +40,7 @@ release.
               "name": "bin",
               "set": [
                 {
-                  "container_name": "Some Video Game (USA) (Disc 1)",
+                  "name": "Some Video Game (USA) (Disc 1)",
                   "container": "auto",
                   "files": [
                     {
@@ -76,7 +73,7 @@ release.
                   ]
                 },
                 {
-                  "container_name": "Some Video Game (USA) (Disc 2)",
+                  "name": "Some Video Game (USA) (Disc 2)",
                   "container": "auto",
                   "files": [
                     {
@@ -120,11 +117,11 @@ release.
 
 ## Reference discs in other sets
 
-The following example shows how to reference a disc that is shared between sets in a release.
+The following example shows how to reference a disc that is shared between sets in a title.
 
 ``` {.json .copy}
 {
-  "dat_info": {
+  "datInfo": {
     "schema": "https://www.github.com/unexpectedpanda/datmodel",
     "name": "Multiple discs",
     "source": "Data model 2025",
@@ -133,13 +130,13 @@ The following example shows how to reference a disc that is shared between sets 
   "collection": [
     {
       "group": "Some Video Game",
-      "releases": [
+      "titles": [
         {
           "name": "Some Video Game (USA)",
           "build": "Production",
           "published": true,
           "type": "Game",
-          "release_date": "1993-10-12",
+          "releaseDate": "1993-10-12",
           "regions": ["US"],
           "languages": {
             "audio": [null],
@@ -151,7 +148,7 @@ The following example shows how to reference a disc that is shared between sets 
               "name": "bin",
               "set": [
                 {
-                  "container_name": "Some Video Game (USA) (Disc 1)",
+                  "name": "Some Video Game (USA) (Disc 1)",
                   "container": "auto",
                   "files": [
                     {
@@ -184,7 +181,7 @@ The following example shows how to reference a disc that is shared between sets 
                   ]
                 },
                 {
-                  "container_name": "Some Video Game (USA, Europe) (Disc 2)",
+                  "name": "Some Video Game (USA, Europe) (Disc 2)",
                   "container": "auto",
                   "files": [
                     {
@@ -225,7 +222,7 @@ The following example shows how to reference a disc that is shared between sets 
           "build": "Production",
           "published": true,
           "type": "Game",
-          "release_date": "1993-10-12",
+          "releaseDate": "1993-10-12",
           "regions": ["EUR"],
           "languages": {
             "audio": [null],
@@ -237,7 +234,7 @@ The following example shows how to reference a disc that is shared between sets 
               "name": "bin",
               "set": [
                 {
-                  "container_name": "Some Video Game (Europe) (Disc 1)",
+                  "name": "Some Video Game (Europe) (Disc 1)",
                   "container": "auto",
                   "files": [
                     {
@@ -270,7 +267,7 @@ The following example shows how to reference a disc that is shared between sets 
                   ]
                 },
                 {
-                  "container_name": "Some Video Game (USA, Europe) (Disc 2)",
+                  "name": "Some Video Game (USA, Europe) (Disc 2)",
                   "container": "auto",
                   "files": [
                     {

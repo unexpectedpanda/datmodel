@@ -5,54 +5,79 @@ hide:
 
 # Basic example
 
-The following example represents a valid DAT file.
+The following example represents a valid DAT file, with only the mandatory parameters
+supplied.
 
 It doesn't include all available keys or demonstrate all valid values. For that, see the
 DAT file structures section.
 
 ```json
 {
-  "dat_info": {
+  "datInfo": {
     "schema": "https://www.github.com/unexpectedpanda/datmodel",
     "name": "Company - Console",
     "source": "Release group",
-    "source_url": "https://www.example.com",
-    "version": "1.1.1",
-    "date": "2025-12-30 13:23:54",
-    "contributors": ["Contributor 1", "Contributor 2", "Contributor 3"]
+    "date": "2025-12-30"
   },
   "collection": [
     {
       "group": "Some Video Game",
-      "releases": [
+      "titles": [
         {
           "name": "Some Video Game (Japan)",
           "build": "Production",
-          "is_demo": false,
-          "regions": ["Japan"],
+          "regions": ["JP"],
           "languages": {
-            "audio": ["Ja", "En"],
-            "subtitles": ["En"]
+            "audio": ["ja", "en"],
+            "interface": ["ja", "en"],
+            "subtitles": ["en"]
           },
           "type": "Game",
-          "release_date": "1993-10-12",
-          "sets": {
-            "files": [
-              {
-                "container": "auto",
-                "files": [
-                  {
-                    "name" : "file.asd",
-                    "size": 98,
-                    "digests": {
-                      "xxh3_128": "1a2bf3bb0a4cd3aa94bf08b1c269423e",
-                      "blake3": "c32da642c108dd42bc169dbe4094b96d4f638d2c7388fb18132429347955c7ec"
+          "sets": [
+            {
+              "set": [
+                {
+                  "files": [
+                    {
+                      "name" : "file.asd",
+                      "size": 123,
+                      "digests": {
+                        "blake3": "c32da642c108dd42bc169dbe4094b96d4f638d2c7388fb18132429347955c7ec"
+                      }
                     }
-                  }
-                ]
-              }
-            ]
-          }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Some Video Game (USA)",
+          "build": "Production",
+          "regions": ["US"],
+          "languages": {
+            "audio": ["en"],
+            "interface": ["en"],
+            "subtitles": ["en"]
+          },
+          "type": "Game",
+          "sets": [
+            {
+              "set": [
+                {
+                  "files": [
+                    {
+                      "name" : "file.asd",
+                      "size": 98,
+                      "digests": {
+                        "blake3": "d6a38bd711fbfd1065c2f7907c631590ac56249613972199a19713d7c6f10b4d"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         }
       ]
     }

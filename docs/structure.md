@@ -24,3 +24,5 @@ When creating DAT files, keep the following rules in mind:
 * DAT files must be valid JSON.
 
 * String values can't have leading or trailing whitespace.
+
+* DAT files must pass the [schema](schema.md).

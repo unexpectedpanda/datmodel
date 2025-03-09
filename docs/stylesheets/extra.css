@@ -116,6 +116,11 @@ ul.filter {
 	overflow-y: auto;
 }
 
+/* Annotations */
+.md-tooltip__inner.md-typeset>code {
+	margin-right: 0;
+}
+
 /* Code definitions */
 div.definition-list > ul {
 	list-style-type: none;

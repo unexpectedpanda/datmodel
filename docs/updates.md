@@ -6,7 +6,7 @@ hide:
 # `updates`
 
 The `updates` array contains objects that represent different updates for a
-[`release`](releases.md). You can bundle updates that depend on each other together, and
+[`title`](titles.md). You can bundle updates and their dependent updates together, and
 assign updates to specific sets.
 
 In the following example, required properties are highlighted. The values are for example
@@ -128,16 +128,15 @@ only.
     * `auto`: Store the files in whatever container the user chooses in the
       application that's managing the DAT file. For example, a ZIP file, a 7Z file,
       a folder, or no container. The base file name of the container matches the
-      [release name](releases.md#name).
+      [title name](titles.md#name).
 
-    * `folder`: Store the files in a folder named after the
-      [release name](releases.md#name).
+    * `folder`: Store the files in a folder named after the [title name](titles.md#name).
 
     * `null`: Don't store the files in any container. Useful for keeping files by
       themselves, or for treating archives as files.
 
     {# * `archive`: Store the files in a specific archive type, named after the
-      [release name](releases.md#name). #}
+      [title name](titles.md#name). #}
 
     If this property isn't present, the DAT manager assumes the value is `auto`.
 

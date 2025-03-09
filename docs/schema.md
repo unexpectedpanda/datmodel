@@ -13,7 +13,7 @@ You can test validating against this schema with
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id":"https://www.github.com/unexpectedpanda/datmodel",
   "title": "DAT file specification",
-  "description": "2025-03-03 10:38",
+  "description": "2025-03-09 14:30",
   "type": "object",
   "required": ["datInfo", "collection"],
   "additionalProperties": false,
@@ -69,20 +69,20 @@ You can test validating against this schema with
       "minProperties": 1,
       "contains": {
         "type": "object",
-        "required": ["group", "releases"],
+        "required": ["group", "titles"],
         "additionalProperties": false,
         "properties": {
           "group": {
             "description": "The name for the group that contains related titles, in UTF-8. For example, the 'Some Video Game ' group might contain 'Some Video Game (USA)', 'Some Video Game (USA) (v1.1)', 'Some Video Game  (Europe)', and 'Some Video Game  (Japan)'.",
             "$ref": "#/$defs/nonEmptyString"
           },
-          "releases": {
+          "titles": {
             "description": "Contains objects that describe the details about each title that is associated with the group.",
             "type": "array",
             "minProperties": 1,
             "contains": {
               "type": "object",
-              "required": ["build", "languages", "name", "regions", "releaseOrder", "sets"],
+              "required": ["languages", "name", "regions", "releaseOrder", "sets"],
               "dependentRequired": {
                 "subtype": ["type"]
               },
@@ -158,7 +158,7 @@ You can test validating against this schema with
                   "$ref": "#/$defs/nonEmptyString"
                 },
                 "id": {
-                  "description": "A unique ID for the release. Usually a database ID.",
+                  "description": "A unique ID for the title. Usually a database ID.",
                   "$ref": "#/$defs/nonEmptyString"
                 },
                 "isDemo": {
@@ -170,7 +170,7 @@ You can test validating against this schema with
                   "type": "boolean"
                 },
                 "isSuperset": {
-                  "description": "Whether the title contains more content than the original release, or for some reason is superior to another version. For example, game of the year editions, a regional variant with uncensored content, or a DVD version of a title previously released on multiple CDs.",
+                  "description": "Whether the title contains more content than the original title, or for some reason is superior to another version. For example, game of the year editions, a regional variant with uncensored content, or a DVD version of a title previously released on multiple CDs.",
                   "type": "boolean"
                 },
                 "languages": {
@@ -285,16 +285,16 @@ You can test validating against this schema with
                   "type": "integer"
                 },
                 "serial": {
-                  "description": "A manufacturer identifier for the release. Might be a cartridge serial, disc ring code, or otherwise.",
+                  "description": "A manufacturer identifier for the title. Might be a cartridge serial, disc ring code, or otherwise.",
                   "$ref": "#/$defs/stringnull"
                 },
                 "sets": {
-                  "description": "Defines the different file sets within the release.",
+                  "description": "Defines the different file sets within the title.",
                   "type": "array",
                   "minProperties": 1,
                   "contains": {
                     "type": "object",
-                    "required": ["name", "set"],
+                    "required": ["set"],
                     "additionalProperties": false,
                     "properties": {
                       "name": {
@@ -326,7 +326,7 @@ You can test validating against this schema with
                               "$ref": "#/$defs/stringnull"
                             },
                             "name": {
-                              "description": "Overrides the release name key to become the archive or folder name used for the set.",
+                              "description": "Overrides the title name key to become the archive or folder name used for the set.",
                               "$ref": "#/$defs/stringFile"
                             },
                             "files": {
@@ -383,7 +383,7 @@ You can test validating against this schema with
                   }
                 },
                 "source": {
-                  "description": "The release's origin.",
+                  "description": "The title's origin.",
                   "type": "array",
                   "minItems": 1,
                   "items": {
@@ -391,7 +391,7 @@ You can test validating against this schema with
                   }
                 },
                 "subtype": {
-                  "description": "The subtype of the release. Must be paired with a valid type.",
+                  "description": "The subtype of the title. Must be paired with a valid type.",
                   "enum": [
                     "Add-on",
                     "Audio",
@@ -403,7 +403,7 @@ You can test validating against this schema with
                   ]
                 },
                 "type": {
-                  "description": "The type of release.",
+                  "description": "The type of title.",
                   "enum": [
                     "Application",
                     "Audio",
@@ -424,7 +424,7 @@ You can test validating against this schema with
                   "$ref": "#/$defs/stringnull"
                 },
                 "videoStandards": {
-                  "description": "The video standard supported by the release. This describes a release's fixed output in both color and resolution, as opposed to any monitor standard that might be receiving the output. Use RGB for any release that supports higher resolutions than SVGA, and allows for flexible resolution output.",
+                  "description": "The video standard supported by the title. This describes a title's fixed output in both color and resolution, as opposed to any monitor standard that might be receiving the output. Use RGB for any title that supports higher resolutions than SVGA, and allows for flexible resolution output.",
                   "$ref": "#/$defs/videoStandards"
                 }
               }

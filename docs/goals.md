@@ -14,12 +14,12 @@ hide:
       applications like [Retool](https://unexpectedpanda.github.io/retool) to match and
       rank titles.
 
-    * Grouping multiple discs together that belong to the same release, so that filtering
+    * Grouping multiple discs together that belong to the same title, so that filtering
       doesn't break sets apart.
 
-    * Linking common discs between different releases.
+    * Linking common discs between different titles.
 
-    * Grouping updates and addons (including DLC) with the releases they can be validly
+    * Grouping updates and addons (including DLC) with the titles they can be validly
       applied to.
 
 * A shift away from ROM nomenclature towards general file management language.

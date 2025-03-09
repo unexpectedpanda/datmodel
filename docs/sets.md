@@ -6,13 +6,13 @@ hide:
 # `sets`
 
 The `sets` array contains objects that represent different file sets within a
-[`release`](releases.md). For example, you might have a file set which describes both the
-BIN+CUE version of a release, _and_ the CHD version.
+[`title`](titles.md). For example, you might have a file set which describes both the
+BIN+CUE version of a title, _and_ the CHD version.
 
 In the following example, required properties are highlighted. The values are for example
 only.
 
-``` {.json .copy hl_lines="3-8"}
+``` {.json .copy hl_lines="4-8"}
 "sets": [
   {
     "name": "bin",
@@ -34,9 +34,9 @@ only.
 ```
 
 There must be a minimum of one file set in the `sets` array. If there is more than one
-file set, then applications that process DAT files should let the user choose which file
-set or file sets they want to keep, and let them assign different output paths per file
-set.
+file set, then DAT managers should let the user choose which file set or file sets they
+want to keep based on the [`name`](#name), and let them assign different output paths per
+file set.
 
 This capability means a single DAT file can cover multiple formats. For example, a disc
 image in ISO, CHD, _and_ RVZ formats. Or a ROM in encrypted _and_ decrypted formats. A
@@ -52,10 +52,22 @@ naming clashes.
 
 <div class="definition-list" markdown>
 
-* **`name`{ #name .toc-code }** `string`{ .toc-def } `required`{ .toc-req }
+* **`set`{ #set .toc-code }** `object array`{ .toc-def } `required`{ .toc-req }
 
-    The name of the set. Can be any non-empty string, although generally you should use
-    lowercase container format names. For example:
+    Describes an individual file set. [Read more about the `set` array](set.md).
+
+</div>
+
+## Optional properties
+
+<div class="definition-list" markdown>
+
+* **`name`{ #name .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
+
+    The name of the set. Only required if there is more than one set.
+
+    Can be any non-empty string, although generally you should use lowercase container
+    format names. For example:
 
     * `bin`
 
@@ -81,9 +93,4 @@ naming clashes.
 
     * `files`
 
-* **`set`{ #set .toc-code }** `object array`{ .toc-def } `required`{ .toc-req }
-
-    Describes an individual file set. [Read more about the `set` array](set.md).
-
 </div>
-
