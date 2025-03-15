@@ -61,19 +61,19 @@ nav:
     - ● Top level: top_level.md
     - ├ datInfo: datInfo.md
     - └ collection: collection.md
-    -   └ titles: titles.md
-    -     ├ sets: sets.md
-    -     │ └ set: set.md
-    -     │   └ files: files-set.md
-    -     ├ addOns: addOns.md
-    -     │ └ files: files-addOns.md
-    -     └ updates: updates.md
-    -       └ files: files-updates.md
+    -   ├ addOns: addOns.md
+    -   │ └ files: files-addOns.md
+    -   ├ titles: titles.md
+    -   │ └ sets: sets.md
+    -   │   ├ files: files-set.md
+    -   │   └ fileset: fileset.md
+    -   └ updates: updates.md
+    -     └ files: files-updates.md
   - Examples:
     - basic_example.md
-    - dir2dat.md
-    - discs.md
     - dense.md
+    - dir2dat.md
+    - reference.md
   - Developers:
     - 1g1r.md
 plugins:

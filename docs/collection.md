@@ -18,6 +18,16 @@ only.
       {
         ...
       }
+    ],
+    "addOns": [
+      {
+        ...
+      }
+    ],
+    "updates": [
+      {
+        ...
+      }
     ]
   }
 ]
@@ -46,4 +56,22 @@ relationships found in LogiqX DAT files.
 
     Contains objects that describe the details about each title that is associated with
     a group. [Read more about the titles array](titles.md).
+</div>
+
+## Optional properties
+
+<div class="definition-list" markdown>
+
+* **`addOns`{ #addOns .toc-code }** `object array`{ .toc-def } `optional`{ .toc-opt }
+
+    The add-ons associated with titles. This includes DLC. Add-ons are at this level of
+    the structure as they might be compatible with many variants of the `titles`.
+    [Read more about the `addOns` array](addOns.md).
+
+* **`updates`{ #updates .toc-code }** `object array`{ .toc-def } `optional`{ .toc-opt }
+
+    The updates associated with titles. Updates are at this level of the structure as they
+    might be compatible with many variants of the `titles`.
+    [Read more about the `updates` array](updates.md).
+
 </div>

@@ -234,8 +234,7 @@ only.
 
 * **`dateModified`{ #dateModified .toc-code }** `pattern string`{ .toc-def } `optional`{ .toc-opt }
 
-    The last modified date that should be applied by the client application that's parsing
-    the DAT file and operating on related files.
+    The last modified date that should be applied by the DAT application to the file.
 
     Only useful for old DOS titles that used timestamps as part of their copy protection.
 

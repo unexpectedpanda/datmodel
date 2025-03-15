@@ -12,14 +12,16 @@ of existing structures for unintended purposes, violating the standard, or the p
 of sidecar metadata or services to enrich the DAT files to enable new use cases.
 
 This site proposes a new datafile standard that's designed from the beginning to provide
-additional structure and metadata, so that ROM managers can implement extended
-functionality.
+additional structure and metadata, so that DAT applications can implement extended
+functionality. Because the structure has been created conceptually and is still
+work-in-progress, it's likely it will need to evolve as applications are built that parse
+it and test its capability.
 
 ## Proposal details
 
 * **Status**: WIP
 
-* **Last updated**: 2025-03-09
+* **Last updated**: 2025-03-15
 
 * **Contributors**: unexpectedpanda
 

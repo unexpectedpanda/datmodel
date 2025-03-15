@@ -27,12 +27,8 @@ it collapses select objects to move the data horizontally.
           "type": "Game",
           "sets": [
             {
-              "set": [
-                {
-                  "files": [
-                    {"name" : "file.asd", "size": 123, "digests": {"blake3": "c32da642c108dd42bc169dbe4094b96d4f638d2c7388fb18132429347955c7ec"}}
-                  ]
-                }
+              "files": [
+                {"name" : "file.asd", "size": 123, "digests": {"blake3": "c32da642c108dd42bc169dbe4094b96d4f638d2c7388fb18132429347955c7ec"}}
               ]
             }
           ]
@@ -44,12 +40,8 @@ it collapses select objects to move the data horizontally.
           "type": "Game",
           "sets": [
             {
-              "set": [
-                {
-                  "files": [
-                    {"name" : "file.asd", "size": 98, "digests": { "blake3": "d6a38bd711fbfd1065c2f7907c631590ac56249613972199a19713d7c6f10b4d"}}
-                  ]
-                }
+              "files": [
+                {"name" : "file.asd", "size": 98, "digests": { "blake3": "d6a38bd711fbfd1065c2f7907c631590ac56249613972199a19713d7c6f10b4d"}}
               ]
             }
           ]
@@ -66,12 +58,8 @@ it collapses select objects to move the data horizontally.
           "type": "Game",
           "sets": [
             {
-              "set": [
-                {
-                  "files": [
-                    {"name" : "file.asd", "size": 456, "digests": {"blake3": "9261749c950815ea3657f11b60c1388f5e021297c25de546001a632bdfad441d"}}
-                  ]
-                }
+              "files": [
+                {"name" : "file.asd", "size": 456, "digests": {"blake3": "9261749c950815ea3657f11b60c1388f5e021297c25de546001a632bdfad441d"}}
               ]
             }
           ]

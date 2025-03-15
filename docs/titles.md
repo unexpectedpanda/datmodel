@@ -11,7 +11,7 @@ associated with a group.
 In the following example, required properties are highlighted. The values are for example
 only.
 
-``` {.json .copy hl_lines="3 7 10 16-21 33-35" }
+``` {.json .copy hl_lines="3 7 18-23 35-37" }
 "titles": [
   {
     "name": "Some Video Game (USA)",
@@ -21,12 +21,14 @@ only.
     "type": "Game",
     "subtype": "Educational",
     "releaseDate": "1993-10-12",
-    "releaseOrder": "1",
     "version": "Rev 1",
+    "versionInternal": 1,
     "serial": "SLUS-000000",
     "isDemo": False,
     "isMIA": False,
+    "isCompilation": False,
     "isSuperset": False,
+    "containsId": [],
     "regions": ["US"],
     "languages": {
       "audio": ["en", "ja"],
@@ -46,12 +48,6 @@ only.
     "videoStandards": ["NTSC"],
     "sets": [
       ...
-    ],
-    "updates": [
-      ...
-    ],
-    "addOns": [
-      ...
     ]
   }
 ]
@@ -63,12 +59,12 @@ only.
 
 * **`name`{ #name .toc-code }** `pattern string`{ .toc-def } `required`{ .toc-req }
 
-    The name of the title, in UTF-8. This is used for the name of the archive or folder
-    of the contained [sets](#sets), under the following conditions:
+    The name of the title, in UTF-8. Must be globally unique. This is used for the name of
+    the archive or folder of the contained [sets](#sets), under the following conditions:
 
-    * The [`container`](set.md#container) of the set isn't set to `null`.
+    * The [`container`](sets.md#container) of the set isn't set to `null`.
 
-    * The [`name`](set.md#name) of the set isn't defined.
+    * The [`containerName`](sets.md#containerName) of the set isn't defined.
 
     Names can't end with a period or space, start with a path separator, or use the
     following invalid path characters:
@@ -132,54 +128,6 @@ only.
     * `Video`
 
     These can be paired with a [`subtype`](#subtype).
-
-* **`releaseOrder`{ #releaseOrder .toc-code }** `integer`{ .toc-def } `required`{ .toc-req }
-
-    An integer-based version assigned internally by the DAT maintainer, where `1` is the
-    earliest release, and higher numbers were released later. This helps apps make easier
-    1G1R decisions by removing the need to compare multiple different versioning systems,
-    and can fill the gap when release dates are unknown.
-
-    The following rules apply:
-
-    * Each region has its own order.
-
-    * Don't assign the same number to multiple releases within the one region.
-
-    * Numbering should start from the earliest available release, including preproduction.
-
-    * If you don't know the release order, make your best guess. It's not ideal, but it
-      means a 1G1R selection can actually happen.
-
-    For example:
-
-    ``` { .json .copy }
-    ...
-    "name": "Some Video Game (USA)",
-    "releaseOrder": 1,
-    ...
-    "name": "Some Video Game (USA) (v1.1)",
-    "releaseOrder": 2,
-    ...
-    "name": "Some Video Game (USA) (v1.2)",
-    "releaseOrder": 3,
-    ...
-    "name": "Some Video Game (Europe) (Beta)",
-    "releaseOrder": 1,
-    ...
-    "name": "Some Video Game (Europe)",
-    "releaseOrder": 2,
-    ...
-    "name": "Some Video Game - Game of the Year (Europe)",
-    "releaseOrder": 1,
-    ...
-    ```
-
-    /// details | Expand for developer details
-    This is an attempt to mirror how Retool sets up clone lists, while removing the need
-    for a lot of logic that figures out which titles are the oldest or newest. See
-    [Doing 1G1R calculations](1g1r.md).
-    ///
 
 * **`regions`{ #regions .toc-code }** `enum array`{ .toc-def } `required`{ .toc-req }
 
@@ -637,11 +585,6 @@ only.
 
 <div class="definition-list" markdown>
 
-* **`addOns`{ #addOns .toc-code }** `object array`{ .toc-def } `optional`{ .toc-opt }
-
-    The add-ons associated with the title. This includes DLC.
-    [Read more about the `addOns` array](addOns.md).
-
 * **`build`{ #build .toc-code }** `enum`{ .toc-def } `optional`{ .toc-opt }
 
     When in the
@@ -671,7 +614,25 @@ only.
       development stage, but isn't the production version. Wherever possible, don't use
       this.
 
-    If this property isn't present, the DAT manager assumes the value is `Production`.
+    If this property isn't present, the DAT application assumes the value is `Production`.
+
+* **`containsId`{ #containsId .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
+
+    Lists the globally unique IDs of the content that this title contains. Useful for
+    identifying the following:
+
+    * The individual titles that make up a compilation.
+    * The individual parts that go into game of the year or special editions.
+    * The multiple CDs that are superceded by a DVD rerelease of the same title.
+
+    For example, for a game of the year edition, you might include the following IDs:
+
+    * The ID of the original title.
+    * The IDs of [`addOns`](addOns.md) that have been bundled in.
+    * The IDs of [`updates`](updates.md) that have been bundled in.
+
+    Might be used together with the [`isSuperset`](titles.md#isSuperset) or
+    [`isCompilation`](titles.md#isCompilation) properties.
 
 * **`developer`{ #developer .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
@@ -679,8 +640,10 @@ only.
 
 * **`id`{ #id .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
-    A unique ID for the title. Usually a database ID to ease lookups for DAT file
-    maintainers.
+    A globally unique ID for the title. Usually a database ID to ease lookups for DAT file
+    maintainers. Might be referenced by a DAT application when finding dependencies for
+    add-ons or updates, or when present in a [`containsId`](titles.md#containsId)
+    property.
 
 * **`localNames`{ #localNames .toc-code }** `object`{ .toc-def } `optional`{ .toc-opt }
 
@@ -711,27 +674,39 @@ only.
     the title name is in, and so can't safely select it as the English name if
     someone sets that as a preference.
 
-* **`isDemo`{ #isDemo .toc-code }** `boolean`{ .toc-def } `required`{ .toc-req }
+* **`isDemo`{ #isDemo .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
 
     Whether the title is a demo.
 
-    If this property isn't present, the DAT manager assumes the value is `false`.
+    If this property isn't present, the DAT application assumes the value is `false`.
+
+* **`isCompilation`{ #isCompilation .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
+
+    Whether the title is a compilation. When used in combination with
+    [`containsId`](titles.md#containsId), can be used by DAT applications to follow user
+    preferences around keeping individual titles in preference of compilations, unless
+    the compilation contains a unique title.
+
+    Compilations live in their own groups, and shouldn't be grouped with their consituent
+    titles.
+
+    If this property isn't present, the DAT application assumes the value is `false`.
 
 * **`isMIA`{ #isMIA .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
 
     Whether the title's digests have been verified by more than one person. If not, set
     the value to `true`.
 
-    If this property isn't present, the DAT manager assumes the value is `false`.
+    If this property isn't present, the DAT application assumes the value is `false`.
 
-* **`isSuperset`{ #isSuperset .toc-code }** `boolean`{ .toc-def } `required`{ .toc-req }
+* **`isSuperset`{ #isSuperset .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
 
     Whether the title contains more content than the original title, or for some reason
     is superior to another version. For example, game of the year editions, a regional
     variant with uncensored content, or a DVD version of a title previously released on
     multiple CDs.
 
-    If this property isn't present, the DAT manager assumes the value is `false`.
+    If this property isn't present, the DAT application assumes the value is `false`.
 
 * **`peripherals`{ #peripherals .toc-code }** `enum array`{ .toc-def } `optional`{ .toc-opt }
 
@@ -878,7 +853,7 @@ only.
     Whether the title was published. Unpublished titles that didn't have an official
     release should be set to `false`.
 
-    If this property isn't present, the DAT manager assumes the value is `true`.
+    If this property isn't present, the DAT application assumes the value is `true`.
 
 * **`publisher`{ #publisher .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
@@ -1001,14 +976,61 @@ only.
     "subtype": "Add-on"
     ```
 
-* **`updates`{ #updates .toc-code }** `object array`{ .toc-def } `optional`{ .toc-opt }
-
-    The updates associated with the title.
-    [Read more about the `updates` array](updates.md).
-
 * **`version`{ #version .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
     The version as reported by the title or media it came on. For example, `Rev 1`.
+
+* **`versionInternal`{ #versionInternal .toc-code }** `int`{ .toc-def } `optional`{ .toc-opt }
+
+    An integer-based version assigned by the DAT maintainer, so DAT applications don't
+    have to parse multiple different versioning systems when making 1G1R decisions. This
+    can also help fill the gap in 1G1R selection when the title's
+    [`releaseDate`](titles.md#releaseDate) is unknown.
+
+    The earliest release is set to `1`, with later releases increasing in value.
+
+    The following rules apply:
+
+    * The `versionInternal` is regional. That is, it only applies to, and is only compared
+      against titles in the same region.
+
+    * Don't assign the same number to multiple releases within the one region.
+
+    * Numbering should start from the earliest available release, including preproduction.
+
+    * If you don't know the release order, make your best guess. It's not ideal, but it
+      means a 1G1R selection can actually happen.
+
+    For example:
+
+    ``` { .json .copy }
+    ...
+    "name": "Some Video Game (USA)",
+    "versionInternal": 1,
+    ...
+    "name": "Some Video Game (USA) (v1.1)",
+    "versionInternal": 2,
+    ...
+    "name": "Some Video Game (USA) (v1.2)",
+    "versionInternal": 3,
+    ...
+    "name": "Some Video Game (Europe) (Beta)",
+    "versionInternal": 1,
+    ...
+    "name": "Some Video Game (Europe)",
+    "versionInternal": 2,
+    ...
+    "name": "Some Video Game - Game of the Year (Europe)",
+    "versionInternal": 3,
+    ...
+    ```
+
+    /// details | Expand for developer details
+    This is an attempt to partially recreate how
+    [Retool](https://unexpectedpanda.github.io/retool) sets up clone lists, while removing
+    the need for a lot of logic that figures out which titles are the oldest or newest.
+    See [Doing 1G1R calculations](1g1r.md). ///
+
 
 * **`videoStandards`{ #videoStandards .toc-code }** `enum array`{ .toc-def } `optional`{ .toc-opt }
 

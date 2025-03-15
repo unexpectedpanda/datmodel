@@ -6,48 +6,42 @@ hide:
 # `updates`
 
 The `updates` array contains objects that represent different updates for a
-[`title`](titles.md). You can bundle updates and their dependent updates together, and
-assign updates to specific sets.
+[`title`](titles.md). You can link updates to their dependent updates and titles.
 
 In the following example, required properties are highlighted. The values are for example
 only.
 
-``` {.json .copy hl_lines="3 5 10-12"}
+``` {.json .copy hl_lines="3 8-10"}
 "updates": [
   {
-    "latest": [
-      {
-        "name": "Some Video Game (USA) (Update v1.2)",
-        "container": "auto",
-        "matchSet": "bin",
-        "id": "321654",
-        "comments": "Something relevant about the update",
-        "files": [
-          ...
-        ]
-      },
-      {
-        "name": "Some Video Game (USA) (Update v1.1)",
-        "container": "auto",
-        "matchSet": "bin",
-        "id": "321654",
-        "comments": "Something relevant about the update",
-        "files": [
-          ...
-        ]
-      }
-    ],
-    "archived": [
-      {
-        "name": "Some Video Game (USA) (Update v1.01)",
-        "container": "auto",
-        "matchSet": "bin",
-        "id": "321654",
-        "comments": "Something relevant about the update",
-        "files": [
-          ...
-        ]
-      }
+    "name": "Some Video Game (USA) (Update v1.2)",
+    "container": "auto",
+    "requiresId": ["123456", "321653"]
+    "id": "321654",
+    "comments": "Something relevant about the update",
+    "files": [
+      ...
+    ]
+  },
+  {
+    "name": "Some Video Game (USA) (Update v1.1)",
+    "container": "auto",
+    "requiresId": ["123456"],
+    "id": "321653",
+    "comments": "Something relevant about the update",
+    "files": [
+      ...
+    ]
+  },
+  {
+    "name": "Some Video Game (USA) (Update v1.01)",
+    "container": "auto",
+    "requiresId": ["123456"],
+    "superseded": true,
+    "id": "321652",
+    "comments": "Something relevant about the update",
+    "files": [
+      ...
     ]
   }
 ]
@@ -56,10 +50,6 @@ only.
 ## Required properties
 
 <div class="definition-list" markdown>
-
-* **`latest`{ #latest .toc-code }** `object array`{ .toc-def } `required`{ .toc-req }
-
-    Contains the latest update for the title, and its dependency updates.
 
 * **`name`{ #name .toc-code }** `pattern string`{ .toc-def } `required`{ .toc-req }
 
@@ -112,50 +102,57 @@ only.
 
 <div class="definition-list" markdown>
 
-* **`archived`{ #comments .toc-code }** `object array`{ .toc-def } `optional`{ .toc-opt }
-
-    Updates that are no longer required to update a title to its latest version.
-
 * **`comments`{ #comments .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
     Comments related to the update.
 
 * **`container`{ #container .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
-    The container that the DAT manager should use for the file set. Must be one of the
+    The container that the DAT application should use for the file set. Must be one of the
     following values:
 
-    * `auto`: Store the files in whatever container the user chooses in the
-      application that's managing the DAT file. For example, a ZIP file, a 7Z file,
-      a folder, or no container. The base file name of the container matches the
-      [title name](titles.md#name).
+    * `auto`: Store the files in whatever container the user chooses in the DAT
+      application. For example, a ZIP file, a 7Z file, a folder, or no container. The base
+      file name of the container matches the update [`name`](updates.md#name).
 
-    * `folder`: Store the files in a folder named after the [title name](titles.md#name).
+    * `folder`: Store the files in a folder named after the update
+      [`name`](updates.md#name).
 
     * `null`: Don't store the files in any container. Useful for keeping files by
       themselves, or for treating archives as files.
 
     {# * `archive`: Store the files in a specific archive type, named after the
-      [title name](titles.md#name). #}
+      update [`name`](updates.md#name). #}
 
-    If this property isn't present, the DAT manager assumes the value is `auto`.
+    If this property isn't present, the DAT application assumes the value is `auto`.
 
 * **`id`{ #id .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
-    A unique ID for the update. Usually a database ID to ease lookups for DAT file
-    maintainers.
+    A globally unique ID for the update. Usually a database ID to ease lookups for DAT
+    file maintainers. Might be referenced by a DAT application when finding dependencies
+    for add-ons or other updates, or when present in a
+    [`containsId`](titles.md#containsId) property.
 
-* **`matchSet`{ #id .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
+* **`requiresId`{ #requiresId .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
-    Updates are considered to be valid for all [`sets`](sets.md) by default.
+    Which titles and updates the specific update requires to function, as identified by
+    their globally unique IDs.
 
-    If the update only works with a particular set, add its [`name`](sets.md#name) here.
-    For example:
+    This way if a title gets selected during filtering, its relevant updates can be
+    selected too. Conversely, if a title gets filtered out, there's an opportunity to
+    remove its updates as well.
 
-    ``` {.json .copy}
-    "matchset": "bin"
-    ```
+    Updates are considered to be valid for all [`sets`](sets.md).
 
-    This way if a title gets filtered out by a user, its updates do too.
+    /// details | Expand for developer details
+    The most optimal behavior here is likely first walking the `updates` array for the
+    required ID, and then on a miss going up one level to `collections`, and walking the
+    `titles` array for the required ID.
+    ///
+
+* **`superceded`{ #superseded .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
+
+    Updates kept for archival purposes, that are no longer required to update a title to
+    its latest version.
 
 </div>

@@ -19,6 +19,7 @@ only.
   "sourceUrl": "https://www.example.com",
   "version": "1.1.1",
   "date": "2025-12-30 13:23:54",
+  "platformEol": "2013-01-04",
   "contributors": ["Contributor 1", "Contributor 2", "Contributor 3"],
   "comments": "Created with magic DAT generator 2.3.1"
 }
@@ -58,6 +59,7 @@ metadata to implement that functionality is provided at the `titles` level.
       * Time uses 24-hour syntax.
       * Hours, minutes, and seconds are always double digit, and use leading zeros where
         appropiate.
+      * Seconds are optional.
 
     /// details | Expand for developer details
     Validated with the following regular expression:
@@ -82,13 +84,22 @@ metadata to implement that functionality is provided at the `titles` level.
 
 * **`comments`{ #comments .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
-    Relevant comments about the DAT file. For example, compression settings used, or other
+    Comments related to the DAT file. For example, compression settings used, or other
     things users should know about.
 
 * **`contributors`{ #contributors .toc-code }** `string array`{ .toc-def } `optional`{ .toc-opt }
 
-  When multiple individuals or groups have contributed to the data contained in the DAT
-  file, they are listed here.
+    When multiple individuals or groups have contributed to the data contained in the DAT
+    file, they are listed here.
+
+* **`platformEol`{ #platformEol .toc-code }** `pattern string`{ .toc-def } `optional`{ .toc-opt }
+
+    The end of life date for a platform that the DAT file describes. For example, the Sony
+    Playstation 2 ceased production on 2013-01-04.
+
+    DAT applications can use this to filter out titles that were released after the
+    lifespan of the platform whose titles the DAT describes, using the
+    [`releaseDate`](titles.md#releaseDate) property.
 
 * **`sourceUrl`{ #sourceUrl .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 

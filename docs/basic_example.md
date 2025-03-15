@@ -25,7 +25,6 @@ DAT file structures section.
       "titles": [
         {
           "name": "Some Video Game (Japan)",
-          "build": "Production",
           "regions": ["JP"],
           "languages": {
             "audio": ["ja", "en"],
@@ -35,17 +34,13 @@ DAT file structures section.
           "type": "Game",
           "sets": [
             {
-              "set": [
+              "files": [
                 {
-                  "files": [
-                    {
-                      "name" : "file.asd",
-                      "size": 123,
-                      "digests": {
-                        "blake3": "c32da642c108dd42bc169dbe4094b96d4f638d2c7388fb18132429347955c7ec"
-                      }
-                    }
-                  ]
+                  "name" : "file.asd",
+                  "size": 123,
+                  "digests": {
+                    "blake3": "c32da642c108dd42bc169dbe4094b96d4f638d2c7388fb18132429347955c7ec"
+                  }
                 }
               ]
             }
@@ -53,7 +48,6 @@ DAT file structures section.
         },
         {
           "name": "Some Video Game (USA)",
-          "build": "Production",
           "regions": ["US"],
           "languages": {
             "audio": ["en"],
@@ -63,17 +57,13 @@ DAT file structures section.
           "type": "Game",
           "sets": [
             {
-              "set": [
+              "files": [
                 {
-                  "files": [
-                    {
-                      "name" : "file.asd",
-                      "size": 98,
-                      "digests": {
-                        "blake3": "d6a38bd711fbfd1065c2f7907c631590ac56249613972199a19713d7c6f10b4d"
-                      }
-                    }
-                  ]
+                  "name" : "file.asd",
+                  "size": 98,
+                  "digests": {
+                    "blake3": "d6a38bd711fbfd1065c2f7907c631590ac56249613972199a19713d7c6f10b4d"
+                  }
                 }
               ]
             }

@@ -13,7 +13,7 @@ You can test validating against this schema with
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id":"https://www.github.com/unexpectedpanda/datmodel",
   "title": "DAT file specification",
-  "description": "2025-03-09 14:30",
+  "description": "2025-03-15 14:30",
   "type": "object",
   "required": ["datInfo", "collection"],
   "additionalProperties": false,
@@ -25,7 +25,7 @@ You can test validating against this schema with
       "additionalProperties": false,
       "properties": {
         "comments": {
-          "description": "Relevant comments about the DAT file. For example, compression settings used, or other things users should know about.",
+          "description": "Comments related to the DAT file. For example, compression settings used, or other things users should know about.",
           "$ref": "#/$defs/nonEmptyString"
         },
         "contributors": {
@@ -36,13 +36,30 @@ You can test validating against this schema with
           }
         },
         "date": {
-          "description": "When the DAT file was created, in extended ISO 8601 format, without the time zone. For example: YYYY-MM-DD hh:mm:ss",
+          "description": "When the DAT file was created, in extended ISO 8601 format, without the time zone. For example: YYYY-MM-DD hh:mm:ss. Seconds are optional.",
           "$ref": "#/$defs/nonEmptyString",
           "pattern": "^[2-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9]:?){1,2}(?<!:)$"
         },
         "name": {
           "description": "The scope of content covered by the DAT file. This might be a platform, curated collection, a theme, or otherwise.",
           "$ref": "#/$defs/nonEmptyString"
+        },
+        "platformEol": {
+          "description": "The end of life date for a platform that the DAT file describes. For example, the Sony Playstation 2 ceased production on 2013-01-04. Valid formats are YYYY-MM-DD, YYYY-MM, and YYYY.",
+          "anyOf": [
+            {
+              "description": "YYYY-MM-DD",
+              "pattern": "^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01]))$"
+            },
+            {
+              "description": "YYYY-MM",
+              "pattern": "^[1-9][0-9]{3,3}-(?:0[1-9]|1[0-2])$"
+            },
+            {
+              "description": "YYYY",
+              "pattern": "^[1-9][0-9]{3,3}$"
+            }
+          ]
         },
         "schema": {
           "description": "A link to the DAT schema used for the file.",
@@ -72,6 +89,48 @@ You can test validating against this schema with
         "required": ["group", "titles"],
         "additionalProperties": false,
         "properties": {
+          "addOns": {
+            "description": "The add-ons associated with the set. This includes DLC.",
+            "type": "array",
+            "contains": {
+              "type": "object",
+              "required": ["name", "files"],
+              "additionalProperties": false,
+              "properties": {
+                "comments": {
+                  "description": "Commented related to the add-on.",
+                  "$ref": "#/$defs/nonEmptyString"
+                },
+                "container": {
+                  "description": "The container that the DAT application should use for the file set. Must be one of the following values: auto, folder, or null.",
+                  "$ref": "#/$defs/stringnull"
+                },
+                "files": {
+                  "$ref": "#/$defs/files"
+                },
+                "id": {
+                  "description": "A globally unique ID for the add-on. Usually a database ID. Might be referenced by a DAT application when finding dependencies for other add-ons, or when present in a containsId property.",
+                  "$ref": "#/$defs/nonEmptyString"
+                },
+                "name": {
+                  "description": "The name of the add-on, in UTF-8. This is used for the name of the archive or folder. Must use / for path separators. Names can't end with a period or space.",
+                  "$ref": "#/$defs/stringFile"
+                },
+                "requiresId": {
+                  "description": "Which titles and updates the specific add-on requires to function, as identified by their globally unique IDs.",
+                  "type": "array",
+                  "minProperties": 1,
+                  "contains": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  }
+                },
+                "superseded": {
+                  "description": "Add-ons kept for archival purposes, that are no longer required to update a title to its latest version.",
+                  "type": "boolean"
+                }
+              }
+            }
+          },
           "group": {
             "description": "The name for the group that contains related titles, in UTF-8. For example, the 'Some Video Game ' group might contain 'Some Video Game (USA)', 'Some Video Game (USA) (v1.1)', 'Some Video Game  (Europe)', and 'Some Video Game  (Japan)'.",
             "$ref": "#/$defs/nonEmptyString"
@@ -82,7 +141,7 @@ You can test validating against this schema with
             "minProperties": 1,
             "contains": {
               "type": "object",
-              "required": ["languages", "name", "regions", "releaseOrder", "sets"],
+              "required": ["languages", "name", "regions", "sets"],
               "dependentRequired": {
                 "subtype": ["type"]
               },
@@ -153,13 +212,25 @@ You can test validating against this schema with
                     "Review"
                   ]
                 },
+                "containsId": {
+                  "description": "Lists the globally unique IDs of the content that this title contains. For example, the individual titles in a compilation; the original release, updates, and add-ons included in a game of the year edition, or the multiple CDs that are superceded by a DVD rerelease.",
+                  "type": "array",
+                  "minProperties": 1,
+                  "contains": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  }
+                },
                 "developer": {
                   "description": "The developer of the title.",
                   "$ref": "#/$defs/nonEmptyString"
                 },
                 "id": {
-                  "description": "A unique ID for the title. Usually a database ID.",
+                  "description": "A globally unique ID for the title. Usually a database ID. Might be referenced by a DAT application when finding dependencies for add-ons or updates, or when present in a containsId property.",
                   "$ref": "#/$defs/nonEmptyString"
+                },
+                "isCompilation": {
+                  "description": "Whether the title is a compilation.",
+                  "type": "boolean"
                 },
                 "isDemo": {
                   "description": "Whether the title is a demo.",
@@ -256,7 +327,7 @@ You can test validating against this schema with
                   }
                 },
                 "releaseDate": {
-                  "description": "The date the title was released, in extended ISO 8601 format, without the time zone. Valid formats are YYYY-MM-DD hh:mm:ss, YYYY-MM-DD hh:mm, YYYY-MM-DD, YYYY-MM, YYYY, and null for an unknown date.",
+                  "description": "The date the title was released, in extended ISO 8601 format, without the time zone. Valid formats are YYYY-MM-DD hh:mm:ss, YYYY-MM-DD hh:mm, YYYY-MM-DD, YYYY-MM, and YYYY.",
                   "anyOf": [
                     {
                       "description": "YYYY-MM-DD hh:mm:ss",
@@ -280,10 +351,6 @@ You can test validating against this schema with
                     }
                   ]
                 },
-                "releaseOrder": {
-                  "description": "An integer-based version assigned internally by the DAT maintainer, where 1 is the earliest release of the title, and higher numbers were released later. This helps with 1G1R decisions by removing the need to compare multiple different versioning systems, and can stand in for when release dates are unknown.",
-                  "type": "integer"
-                },
                 "serial": {
                   "description": "A manufacturer identifier for the title. Might be a cartridge serial, disc ring code, or otherwise.",
                   "$ref": "#/$defs/stringnull"
@@ -294,90 +361,41 @@ You can test validating against this schema with
                   "minProperties": 1,
                   "contains": {
                     "type": "object",
-                    "required": ["set"],
+                    "oneOf": [
+                      {
+                        "required": ["files"]
+                      },
+                      {
+                        "required": ["fileset"]
+                      }
+                    ],
                     "additionalProperties": false,
                     "properties": {
-                      "name": {
-                        "description": "The name of the file set, in UTF-8. Can be any non-empty string, although generally you should use lowercase container format names. For example: bin, chd, iso. Use a null value for raw files without a container.",
+                      "comments": {
+                        "description": "Comments related to the set.",
+                        "$ref": "#/$defs/nonEmptyString"
+                      },
+                      "container": {
+                        "description": "The container that the DAT application should use for the file set. Must be one of the following values: auto, folder, or null.",
                         "$ref": "#/$defs/stringnull"
                       },
-                      "set": {
-                        "description": "Describes an individual file set.",
-                        "type": "array",
-                        "minProperties": 1,
-                        "contains": {
-                          "type": "object",
-                          "required": ["files"],
-                          "additionalProperties": false,
-                          "properties": {
-                            "addOns": {
-                              "description": "The add-ons associated with the set. This includes DLC.",
-                              "type": "array",
-                              "contains": {
-                                "type": "object"
-                              }
-                            },
-                            "comments": {
-                              "description": "A description of the set.",
-                              "$ref": "#/$defs/nonEmptyString"
-                            },
-                            "container": {
-                              "description": "The container that the application managing the DAT file should use for the file set. Must be one of the following values: auto, folder, or null.",
-                              "$ref": "#/$defs/stringnull"
-                            },
-                            "name": {
-                              "description": "Overrides the title name key to become the archive or folder name used for the set.",
-                              "$ref": "#/$defs/stringFile"
-                            },
-                            "files": {
-                              "description": "The files in the set and their properties.",
-                              "type": "array",
-                              "contains": {
-                                "type": "object",
-                                "required": ["digests", "name", "size"],
-                                "additionalProperties": false,
-                                "properties": {
-                                  "dateModified": {
-                                    "description": "The last modified date that should be applied by the client application that's parsing the DAT file and operating on related files. Because FAT file systems have a time resolution of 2 seconds on last modified dates, you can only use even numbers for the seconds.",
-                                    "type": "string",
-                                    "pattern": "^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][02468])(?<!:)$"
-                                  },
-                                  "digests": {
-                                    "description": "The digests of different hash functions. The following hash functions are preferred: crc32, sha256, xxh3_128, blake3.",
-                                    "$ref": "#/$defs/digests"
-                                  },
-                                  "header": {
-                                    "description": " The header for a ROM, in hex. Aids with addition of the header to a headerless ROM, or removal from a headered ROM.",
-                                    "$ref": "#/$defs/stringnull"
-                                  },
-                                  "name": {
-                                    "description": "The name of the file, in UTF-8. Must use / for path separators. Names can't end with a period or space.",
-                                    "$ref": "#/$defs/stringnull"
-                                  },
-                                  "size": {
-                                    "description": "The size of the file, in bytes.",
-                                    "type": "integer"
-                                  }
-                                }
-                              }
-                            },
-                            "id": {
-                              "description": "A unique ID for the set. Usually a database ID.",
-                              "$ref": "#/$defs/nonEmptyString"
-                            },
-                            "retroachievements": {
-                              "description": "Whether retroachievements are support on the title.",
-                              "type": "boolean"
-                            },
-                            "updates": {
-                              "description": "The updates associated with the set.",
-                              "type": "array",
-                              "contains": {
-                                "type": "object"
-                              }
-                            }
-                          }
-                        }
+                      "files": {
+                        "$ref": "#/$defs/files"
+                      },
+                      "fileset": {
+                        "$ref": "#/$defs/fileset"
+                      },
+                      "id": {
+                        "description": "A globally unique ID for the set. Usually a database ID.",
+                        "$ref": "#/$defs/nonEmptyString"
+                      },
+                      "name": {
+                        "description": "The name of the set. Only required if there is more than one set. Can be any non-empty string, although generally you should use lowercase container format names. For example: bin, chd, iso, files, decrypted, encrypted.",
+                        "$ref": "#/$defs/stringnull"
+                      },
+                      "retroachievements": {
+                        "description": "Whether retroachievements are support on the title.",
+                        "type": "boolean"
                       }
                     }
                   }
@@ -423,9 +441,55 @@ You can test validating against this schema with
                   "description": "The version as reported by the title or media it came on. For example, Rev 1.",
                   "$ref": "#/$defs/stringnull"
                 },
+                "versionInternal": {
+                  "description": "An integer-based version assigned by the DAT maintainer, so DAT applications don't have to parse multiple different versioning systems when making 1G1R decisions. This can also help fill the gap in 1G1R selection when the title's releaseDate is unknown. The earliest release is set to 1, with later releases increasing in value. Pre-production titles are included in this version order. Internal versions are only comparable within the same region.",
+                  "type": "integer"
+                },
                 "videoStandards": {
                   "description": "The video standard supported by the title. This describes a title's fixed output in both color and resolution, as opposed to any monitor standard that might be receiving the output. Use RGB for any title that supports higher resolutions than SVGA, and allows for flexible resolution output.",
                   "$ref": "#/$defs/videoStandards"
+                }
+              }
+            }
+          },
+          "updates": {
+            "description": "The updates associated with the set.",
+            "type": "array",
+            "contains": {
+              "type": "object",
+              "required": ["name", "files"],
+              "additionalProperties": false,
+              "properties": {
+                "comments": {
+                  "description": "Commented related to the update.",
+                  "$ref": "#/$defs/nonEmptyString"
+                },
+                "container": {
+                  "description": "The container that the DAT application should use for the file set. Must be one of the following values: auto, folder, or null.",
+                  "$ref": "#/$defs/stringnull"
+                },
+                "files": {
+                  "$ref": "#/$defs/files"
+                },
+                "id": {
+                  "description": "A globally unique ID for the update. Usually a database ID. Might be referenced by a DAT application when finding dependencies for add-ons or other updates, or when present in a containsId property.",
+                  "$ref": "#/$defs/nonEmptyString"
+                },
+                "name": {
+                  "description": "The name of the update, in UTF-8. This is used for the name of the archive or folder. Must use / for path separators. Names can't end with a period or space.",
+                  "$ref": "#/$defs/stringFile"
+                },
+                "requiresId": {
+                  "description": "Which titles and updates the specific update requires to function, as identified by their globally unique IDs.",
+                  "type": "array",
+                  "minProperties": 1,
+                  "contains": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  }
+                },
+                "superseded": {
+                  "description": "Updates kept for archival purposes, that are no longer required to update a title to its latest version.",
+                  "type": "boolean"
                 }
               }
             }
@@ -544,6 +608,68 @@ You can test validating against this schema with
         "blake3": {
           "type": "string",
           "pattern": "^[a-fA-F0-9]{64,64}$"
+        }
+      }
+    },
+    "files": {
+      "description": "The files in the set and their properties.",
+      "type": "array",
+      "contains": {
+        "type": "object",
+        "required": ["digests", "name", "size"],
+        "additionalProperties": false,
+        "properties": {
+          "dateModified": {
+            "description": "The last modified date that should be applied by the DAT application to the file. Because FAT file systems have a time resolution of 2 seconds on last modified dates, you can only use even numbers for the seconds.",
+            "type": "string",
+            "pattern": "^[1-9][0-9]{3,3}-(?:(?:0[469]|11)-(?:0[1-9]|1[0-9]|2[0-9]|30)|02-(?:0[1-9]|1[0-9]|2[0-9])|(?:0[13578]|10|12)-(?:0[1-9]|1[0-9]|2[0-9]|3[01])) (?:0[0-9]|1[0-9]|2[0-3]):(?:[0-5][0-9]):(?:[0-5][02468])(?<!:)$"
+          },
+          "digests": {
+            "description": "The digests of different hash functions. The following hash functions are preferred: crc32, sha256, xxh3_128, blake3.",
+            "$ref": "#/$defs/digests"
+          },
+          "header": {
+            "description": " The header for a ROM, in hex. Aids with addition of the header to a headerless ROM, or removal from a headered ROM.",
+            "$ref": "#/$defs/stringnull"
+          },
+          "name": {
+            "description": "The name of the file, in UTF-8. Must use / for path separators. Names can't end with a period or space.",
+            "$ref": "#/$defs/stringnull"
+          },
+          "size": {
+            "description": "The size of the file, in bytes.",
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "fileset": {
+      "description": "Multiple groups of files and their properties. Useful for bundling together separate parts of a title. For example, multiple discs in a single release.",
+      "type": "array",
+      "contains": {
+        "type": "object",
+        "required": ["files"],
+        "additionalProperties": false,
+        "properties": {
+          "comments": {
+            "description": "Comments related to the fileset.",
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "container": {
+            "description": "The container that the DAT application should use for the file set. Must be one of the following values: auto, folder, or null.",
+            "$ref": "#/$defs/stringnull"
+          },
+          "containerName": {
+            "description": "Overrides the title name key to become the archive or folder name used for the set.",
+            "$ref": "#/$defs/stringFile"
+          },
+          "files": {
+            "$ref": "#/$defs/files"
+          },
+          "id": {
+            "description": "A globally unique ID for the title. Usually a database ID.",
+            "$ref": "#/$defs/nonEmptyString"
+          }
         }
       }
     },
