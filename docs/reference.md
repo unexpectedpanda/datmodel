@@ -3,7 +3,7 @@ hide:
   - footer
 ---
 
-# Reference file sets in other titles
+# Reference other file sets
 
 Sometimes there are file sets that are shared between titles. For example, you might have
 the following set of discs that make up the USA variant of a title:
@@ -16,26 +16,21 @@ And the following set of discs that make up the Europe variant of a title:
 * `Some Video Game (Europe) (Disc 1)`
 * `Some Video Game (USA, Europe) (Disc 2)`
 
-Where `Some Video Game (USA, Europe) (Disc 2)` is identical between the two variants. You
-can link those two file sets together in a DAT file via a reference, and the DAT
-application can choose the following behavior for those filesets:
+Where `Some Video Game (USA, Europe) (Disc 2)` is identical between the two variants.
 
-* If the file set is stored in the same folder, ignore the reference, the file is already
-  available.
-* If the file set is stored in different folders:
+Instead of listing both entries, you can list the USA variant as the source, and then
+_reference_ it inside the Europe variant. A DAT application can then treat the referenced
+file set differently to the source to save disk space,
+[depending on the situation and user preference](reference.md#file-storage-behavior).
 
-    * Create a symbolic link to the reference file set.
+The following example shows creating a reference using the `refId` property. The parts of
+the code that represent the reference are highlighted.
 
-    * Create a copy of the file.
-
-The following example shows how to reference the files that are in another title. This
-only links to a specific `files` array, it doesn't link to individual files.
-
-``` {.json .copy}
+``` {.json .copy hl_lines="39 71-85"}
 {
   "datInfo": {
     "schema": "https://www.github.com/unexpectedpanda/datmodel",
-    "name": "Multiple discs",
+    "name": "Reference ID example",
     "source": "Data model 2025",
     "date": "2025-12-30 13:23:54"
   },
@@ -44,90 +39,7 @@ only links to a specific `files` array, it doesn't link to individual files.
       "group": "Some Video Game",
       "titles": [
         {
-          "name": "Some Video Game (USA)",
-          "type": "Game",
-          "regions": ["US"],
-          "languages": {
-            "audio": [null],
-            "interface": ["en"],
-            "subtitles": [null]
-          },
-          "sets": [
-            {
-              "fileset": [
-                {
-                  "name": "Some Video Game (USA) (Disc 1)",
-                  "container": "auto",
-                  "files": [
-                    {
-                      "name": "Some Video Game (USA) (Disc 1) (Track 1).bin",
-                      "size": 10000,
-                      "digests": {
-                        "crc32": "29edd0e3",
-                        "xxh3_128": "1a2bf3bb0a4cd3aa94bf08b1c269423e",
-                        "blake3": "c32da642c108dd42bc169dbe4094b96d4f638d2c7388fb18132429347955c7ec"
-                      }
-                    },
-                    {
-                      "name": "Some Video Game (USA) (Disc 1) (Track 2).bin",
-                      "size": 1000,
-                      "digests": {
-                        "crc32": "872f5343",
-                        "xxh3_128": "b993a0619f896a101e786850967b3d90",
-                        "blake3": "74277af46089c2b15aea5b193bdecdd58a2992e47b00956c678a6c070225cb18"
-                      }
-                    },
-                    {
-                      "name": "Some Video Game (USA) (Disc 1).cue",
-                      "size": 100,
-                      "digests": {
-                        "crc32": "987150b7",
-                        "xxh3_128": "b7bb3254808cfc06d899854a1b58bab0",
-                        "blake3": "fcbc02c56a9a5157255febeac2009a988ccd08863ff648d290fe973dffe7f88c"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "name": "Some Video Game (USA, Europe) (Disc 2)",
-                  "container": "auto",
-                  "files": [
-                    {
-                      "name": "Some Video Game (USA, Europe) (Disc 2) (Track 1).bin",
-                      "size": 10000,
-                      "digests": {
-                        "crc32": "150cc86c",
-                        "xxh3_128": "562ab7b9c5d8c3697d0b7641f389e946",
-                        "blake3": "aa70c31c05bd6a4c5200599b2ee211005f5ce5fe67a3d1ac14e1f7f02bb8553a"
-                      }
-                    },
-                    {
-                      "name": "Some Video Game (USA, Europe) (Disc 2) (Track 2).bin",
-                      "size": 1000,
-                      "digests": {
-                        "crc32": "da785795",
-                        "xxh3_128": "301fc055404b959b28c3d197eba6b1bb",
-                        "blake3": "37987e3bafd8e0a1f1436d2f9c25b2e79cf0337f7f0ce8b3f6c85c37dd5fa6ad"
-                      }
-                    },
-                    {
-                      "name": "Some Video Game (USA, Europe) (Disc 2).cue",
-                      "size": 100,
-                      "digests": {
-                        "crc32": "0a8850bc",
-                        "xxh3_128": "8272cdb90bf9197105edec3ee8956844",
-                        "blake3": "e685486d29de13f3215c969764b462b3f479e1873fab8f995fb083900fb58406"
-                      }
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        },
-        {
           "name": "Some Video Game (Europe)",
-          "type": "Game",
           "regions": ["EUR"],
           "languages": {
             "audio": [null],
@@ -139,49 +51,64 @@ only links to a specific `files` array, it doesn't link to individual files.
               "fileset": [
                 {
                   "name": "Some Video Game (Europe) (Disc 1)",
-                  "container": "auto",
+                  "id": "123458",
                   "files": [
                     {
-                      "name": "Some Video Game (Europe) (Disc 1) (Track 1).bin",
+                      "name": "Some Video Game (Europe) (Disc 1).iso",
                       "size": 10000,
                       "digests": {
                         "crc32": "29edd0e3",
                         "xxh3_128": "1a2bf3bb0a4cd3aa94bf08b1c269423e",
                         "blake3": "c32da642c108dd42bc169dbe4094b96d4f638d2c7388fb18132429347955c7ec"
                       }
-                    },
+                    }
+                  ]
+                },
+                {
+                  "refId": "123457"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Some Video Game (USA)",
+          "regions": ["US"],
+          "languages": {
+            "audio": [null],
+            "interface": ["en"],
+            "subtitles": [null]
+          },
+          "sets": [
+            {
+              "fileset": [
+                {
+                  "name": "Some Video Game (USA) (Disc 1)",
+                  "id": "123456",
+                  "files": [
                     {
-                      "name": "Some Video Game (Europe) (Disc 1) (Track 2).bin",
-                      "size": 1000,
+                      "name": "Some Video Game (USA) (Disc 1).iso",
+                      "size": 10000,
                       "digests": {
-                        "crc32": "872f5343",
-                        "xxh3_128": "b993a0619f896a101e786850967b3d90",
-                        "blake3": "74277af46089c2b15aea5b193bdecdd58a2992e47b00956c678a6c070225cb18"
-                      }
-                    },
-                    {
-                      "name": "Some Video Game (Europe) (Disc 1).cue",
-                      "size": 100,
-                      "digests": {
-                        "crc32": "987150b7",
-                        "xxh3_128": "b7bb3254808cfc06d899854a1b58bab0",
-                        "blake3": "fcbc02c56a9a5157255febeac2009a988ccd08863ff648d290fe973dffe7f88c"
+                        "crc32": "29edd0e3",
+                        "xxh3_128": "1a2bf3bb0a4cd3aa94bf08b1c269423e",
+                        "blake3": "c32da642c108dd42bc169dbe4094b96d4f638d2c7388fb18132429347955c7ec"
                       }
                     }
                   ]
                 },
                 {
                   "name": "Some Video Game (USA, Europe) (Disc 2)",
-                  "container": "auto",
+                  "id": "123457",
                   "files": [
                     {
-                      "$ref": "#/collection/Some Video Game/Some Video Game (USA)/Some Video Game (USA) (Disc 2) (Track 1).bin"
-                    },
-                    {
-                      "$ref": "#/collection/Some Video Game/Some Video Game (USA)/Some Video Game (USA) (Disc 2) (Track 2).bin"
-                    },
-                    {
-                      "$ref": "#/collection/Some Video Game/Some Video Game (USA)/Some Video Game (USA) (Disc 2).cue"
+                      "name": "Some Video Game (USA, Europe) (Disc 2).iso",
+                      "size": 10000,
+                      "digests": {
+                        "crc32": "150cc86c",
+                        "xxh3_128": "562ab7b9c5d8c3697d0b7641f389e946",
+                        "blake3": "aa70c31c05bd6a4c5200599b2ee211005f5ce5fe67a3d1ac14e1f7f02bb8553a"
+                      }
                     }
                   ]
                 }
@@ -194,3 +121,95 @@ only links to a specific `files` array, it doesn't link to individual files.
   ]
 }
 ```
+
+In the previous example, a DAT application sees the `refId` to the unique global
+identifier `123457`. It then scours the DAT file at the `sets` and `fileset` level for a
+matching `id`, and imports any properties that aren't defined locally &mdash; in this case
+`name`, `files`, and all the `files` subproperties. The `id` property is not imported.
+
+Therefore the following code sample:
+
+``` {.json .copy}
+{
+  "refId": "123457"
+}
+```
+
+Is effectively interpreted as follows:
+
+``` {.json .copy}
+{
+  "refId": "123457",
+  "name": "Some Video Game (USA, Europe) (Disc 2)",
+  "files": [
+    {
+      "name": "Some Video Game (USA, Europe) (Disc 2).iso",
+      "size": 10000,
+      "digests": {
+        "crc32": "150cc86c",
+        "xxh3_128": "562ab7b9c5d8c3697d0b7641f389e946",
+        "blake3": "aa70c31c05bd6a4c5200599b2ee211005f5ce5fe67a3d1ac14e1f7f02bb8553a"
+      }
+    }
+  ]
+}
+```
+
+Properties that are defined locally are treated as overrides, and are preferenced over
+imported properties. For example, the following code sample:
+
+``` {.json .copy}
+{
+  "name": "Some Video Game (Europe) (Disc 2)",
+  "refId": "123457"
+}
+```
+
+Is effectively interpreted as follows:
+
+``` {.json .copy}
+{
+  "refId": "123457",
+  "name": "Some Video Game (Europe) (Disc 2)",
+  "files": [
+    {
+      "name": "Some Video Game (USA, Europe) (Disc 2).iso",
+      "size": 10000,
+      "digests": {
+        "crc32": "150cc86c",
+        "xxh3_128": "562ab7b9c5d8c3697d0b7641f389e946",
+        "blake3": "aa70c31c05bd6a4c5200599b2ee211005f5ce5fe67a3d1ac14e1f7f02bb8553a"
+      }
+    }
+  ]
+}
+```
+
+You can only reference an entire top-levl object in the `sets` or `fileset` arrays. This
+means you can't reference individual files, or set a local `name` for individual files.
+
+## File storage behavior
+
+A DAT application can then choose the following behavior for referenced filesets, based on
+situation and user preference:
+
+* If the container is stored in the same destination folder and imports the `name`
+  property, ignore the reference, the file is already available.
+
+  * If the container is stored in a different destination folder than the original, do
+  one of the following:
+
+    * Create a symbolic link to the reference container.
+
+    * Create a copy of the reference container.
+
+* If the container sets a local `name` property, do one of the following:
+
+    * Create a symbolic link to the reference container, but use the local `name`
+      property as the file name.
+
+    * Create a copy of the reference container, renaming it with the local `name`
+      property.
+
+The following example shows how to reference the files that are in another title. This
+only links to a specific `files` array, it doesn't link to individual files.

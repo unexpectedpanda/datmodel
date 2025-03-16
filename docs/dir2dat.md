@@ -19,7 +19,8 @@ You could generate a DIR2DAT with groups using the following folder structure:
 ```
 
 1.  Top level folder names get populated as the `group`.
-2.  This can be an archive of the title, or a folder containing files.
+2.  Lower levels are the titles within a group. This can be an archive of the title, or a
+    folder containing files.
 
 This would produce the following output:
 
@@ -132,12 +133,14 @@ This would produce the following output:
 Alternatively, you could pass a `--nogroups` flag to a DIR2DAT program, and use the
 following folder structure to not use groups at all:
 
-```txt
+```json
 ● DAT root folder
-  ├ Some Video Game (Japan).zip
+  ├ Some Video Game (Japan).zip // (1)!
   ├ Some Video Game (USA).zip
   └ Some Video Game, Other (USA).zip
 ```
+
+1. This can be an archive of the title, or a folder containing files.
 
 This results in the following DAT file:
 

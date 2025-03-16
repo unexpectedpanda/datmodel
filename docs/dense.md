@@ -5,8 +5,12 @@ hide:
 
 # Dense format
 
-The following example represents a more dense way of presenting the DAT file JSON. Mostly
-it collapses select objects to move the data horizontally.
+While JSON tends to be smaller in file size than XML due to lower character use, the data
+is often a lot more vertical than it is horizontal, which can at times be fatiguing for a
+human to browse.
+
+To offset this, the following example represents a more dense way of presenting the DAT
+file JSON. Mostly it collapses select objects to move the data horizontally.
 
 ```json
 {

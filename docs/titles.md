@@ -8,10 +8,13 @@ hide:
 The `titles` array contains objects that describe the details about each title that is
 associated with a group.
 
+While many of the properties in the `titles` array are optional, the more that are
+included, the more that a DAT application is able to filter on.
+
 In the following example, required properties are highlighted. The values are for example
 only.
 
-``` {.json .copy hl_lines="3 7 18-23 35-37" }
+``` {.json .copy hl_lines="3 21-26 38-40" }
 "titles": [
   {
     "name": "Some Video Game (USA)",
@@ -24,11 +27,14 @@ only.
     "version": "Rev 1",
     "versionInternal": 1,
     "serial": "SLUS-000000",
-    "isDemo": False,
-    "isMIA": False,
-    "isCompilation": False,
-    "isSuperset": False,
-    "containsId": [],
+    "isAlternate": false,
+    "isCompilation": false,
+    "isDemo": false,
+    "isMIA": false,
+    "isPirate": false,
+    "isSuperset": false,
+    "isUnlicensed": false,
+    "contains": [],
     "regions": ["US"],
     "languages": {
       "audio": ["en", "ja"],
@@ -100,34 +106,6 @@ only.
     (?<=[\xF0-\xF4][\x80-\xBF])[\x80-\xBF](?![\x80-\xBF])
     ```
     ///
-
-* **`type`{ #type .toc-code }** `enum`{ .toc-def } `required`{ .toc-req }
-
-    The type of the title. Must be one of the following:
-
-    * `Application`
-
-    * `Audio`
-
-    * `BIOS`
-
-    * `Chip`
-
-    * `Coverdisc`
-
-    * `Device`
-
-    * `Firmware`
-
-    * `Game`
-
-    * `Magazine`
-
-    * `Multimedia`
-
-    * `Video`
-
-    These can be paired with a [`subtype`](#subtype).
 
 * **`regions`{ #regions .toc-code }** `enum array`{ .toc-def } `required`{ .toc-req }
 
@@ -616,23 +594,105 @@ only.
 
     If this property isn't present, the DAT application assumes the value is `Production`.
 
-* **`containsId`{ #containsId .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
+* **`contains`{ #contains .toc-code }** `string array`{ .toc-def } `optional`{ .toc-opt }
 
-    Lists the globally unique IDs of the content that this title contains. Useful for
-    identifying the following:
+    Lists the content that this title contains. Useful for identifying the following:
 
     * The individual titles that make up a compilation.
     * The individual parts that go into game of the year or special editions.
     * The multiple CDs that are superceded by a DVD rerelease of the same title.
 
-    For example, for a game of the year edition, you might include the following IDs:
+    <h4>Compilations</h4>
+
+    The `contains` property must be paired with
+    [`isCompilation: true`](titles.md#isCompilation) when describing compilations.
+
+    Given the following compilation:
+
+    ```text
+    Some Video Game A + Some Video Game B + Some Video Game C (USA)
+    ```
+
+    The `contains` array might look like this:
+
+    ``` {.json .copy}
+    "contains": [
+      {
+        "name": "Some Video Game A (USA)",
+        "languages": {
+          "audio": ["en"],
+          "interface": ["en"],
+          "subtitles": ["en"]
+        },
+        "version": "",
+        "internalVersion": "",
+        "individualIds": ["123456", "654321"]
+      },
+      {
+        "name": "Some Video Game B (USA)",
+        "languages": {
+          "audio": ["en"],
+          "interface": ["en"],
+          "subtitles": ["en"]
+        },
+        "version": "",
+        "internalVersion": "",
+        "individualIds": ["321654", "456123"]
+      },
+      {
+        "name": "Some Video Game C (USA)",
+        "languages": {
+          "audio": ["en"],
+          "interface": ["en"],
+          "subtitles": ["en"]
+        },
+        "version": "",
+        "internalVersion": ""
+      }
+    ]
+    ```
+
+    Each `contains` title has its own [`languages`](titles.md#languages) object, as
+    individual titles within a compilation often have different language support.
+
+    The `individualIds` array links to globally unique `id`s at the [`sets`](sets.md#id)
+    or [`fileset`](fileset.md#id) level in the DAT file, identifying the individual
+    constituent titles that make up the compilation. When adding these IDs, include all
+    versions of a title from the same region. For example, for the previously mentioned
+    compilation, you might link to the IDs of the following individual titles for
+    `Some Video Game A (USA)`:
+
+    ```
+    Some Video Game A (USA)
+    Some Video Game A (USA) (Rev 1)
+    Some Video Game A (USA) (Rev 2)
+    ```
+
+    This is required for 1G1R management when prioritizing compilations or their
+    constituent individual titles.
+
+    The lack of `individualIds` array for `Some Video Game C (USA)` indicates that this
+    title is only found in the compilation. It's important to include these titles in
+    the `contains` array, as it helps DAT applications to determine whether they should
+    keep a compilation for its unique titles.
+
+    <h4>Supersets</h4>
+
+    The `contains` property must be paired with [`isSuperset: true`](titles.md#isSuperset)
+    when describing supersets.
+
+    <h4>DVD releases</h4>
+
+
+    ---
+
+    for a game of the year edition, you might include the following IDs:
 
     * The ID of the original title.
     * The IDs of [`addOns`](addOns.md) that have been bundled in.
     * The IDs of [`updates`](updates.md) that have been bundled in.
 
-    Might be used together with the [`isSuperset`](titles.md#isSuperset) or
-    [`isCompilation`](titles.md#isCompilation) properties.
+
 
 * **`developer`{ #developer .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
@@ -645,12 +705,95 @@ only.
     add-ons or updates, or when present in a [`containsId`](titles.md#containsId)
     property.
 
+* **`isAlternate`{ #isAlternate .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
+
+    Whether the title is an alternate variant of a release.
+
+    Where possible, don't use this. This is a generic property that doesn't tell the user
+    what's different about a title compared to the original. Instead, classify the title
+    with a property that provides more detail.
+
+    If this property isn't present, the DAT application assumes the value is `false`.
+
+* **`isCompilation`{ #isCompilation .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
+
+    Whether the title is a compilation. When used in combination with
+    [`contains`](titles.md#contains), can be used by DAT applications to follow user
+    preferences around keeping individual titles in preference of compilations, unless the
+    compilation contains a unique title.
+
+    Compilations live in their own groups, and shouldn't be grouped with their consituent
+    titles.
+
+    If this property isn't present, the DAT application assumes the value is `false`.
+
+* **`isDemo`{ #isDemo .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
+
+    Whether the title is a demo.
+
+    If this property isn't present, the DAT application assumes the value is `false`.
+
+* **`isLicensed`{ #isLicensed .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
+
+    Whether the title was sanctioned for release by a platform manufacturer, assuming
+    there was an approval process in place.
+
+    If this property isn't present, the DAT application assumes the value is `true`.
+
+* **`isMIA`{ #isMIA .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
+
+    Whether the title's digests have been verified by more than one person. If not, set
+    the value to `true`.
+
+    If this property isn't present, the DAT application assumes the value is `false`.
+
+* **`isPirate`{ #isPirate .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
+
+    Whether the title contains stolen assets. Often a hack of an existing game that uses
+    intellectual property from other games.
+
+    If the value is `true`, [`islicensed`](titles.md#isUnlicensed) is considered `false`,
+    regardless of its value in the DAT file.
+
+    If this property isn't present, the DAT application assumes the value is `false`.
+
+* **`isSuperset`{ #isSuperset .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
+
+    Whether the title contains more content than the original title, or for some reason
+    is superior to another version. For example, game of the year editions, a regional
+    variant with uncensored content, or a DVD version of a title previously released on
+    multiple CDs.
+
+    In 1G1R choices, supersets are selected above normal titles, so long as they fit the
+    user's language priorities. Superset selection is _cross-regional_, meaning the
+    following situation can arise:
+
+    * The user preferences USA over Europe, and wants English only titles.
+
+    * There are three titles available to choose from:
+
+        * `Some Video Game (USA)`
+
+        * `Some Video Game (Europe)`
+
+        * `Some Video Game - Game of the Year Edition (Europe)`
+
+    * Because `Some Video Game - Game of the Year Edition (Europe)` is in English, and is
+      a superset, it gets selected even though the user preferenced USA titles over
+      Europe.
+
+    If this property isn't present, the DAT application assumes the value is `false`.
+
 * **`localNames`{ #localNames .toc-code }** `object`{ .toc-def } `optional`{ .toc-opt }
 
     Local names given to the title, defined by language. Often titles are recorded in
-    databases using their romanized form to aid with searching for the title. Here's where
-    their titles can be kept in their original form. Client applications that manage DAT
-    files can use this data to rename files using local names.
+    databases using their romanized form instead of their original name to aid with
+    searching for the title. Other times a title can have multiple names, and what is
+    displayed depends on the region of the machine on which it's running.
+
+    The `localNames` object is where these names can be kept in their original form. DAT
+    applications can then use this data to rename files according to a user's regional
+    preferences.
 
     Keys should follow the language codes found in the
     [IANA language subtag registry](https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry).
@@ -665,48 +808,14 @@ only.
     }
     ```
 
-    Only use the title's name &mdash; don't include additional information like naming
-    system tags.
+    Only use the title's name &mdash; don't include additional information like tags found
+    in naming systems.
 
     If a title can show more than one name depending on the region, and the title
-    [`name`](#name) is in English, you should still include the English name in the
-    `localNames` array. This is because client applications have no idea what language
-    the title name is in, and so can't safely select it as the English name if
-    someone sets that as a preference.
-
-* **`isDemo`{ #isDemo .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
-
-    Whether the title is a demo.
-
-    If this property isn't present, the DAT application assumes the value is `false`.
-
-* **`isCompilation`{ #isCompilation .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
-
-    Whether the title is a compilation. When used in combination with
-    [`containsId`](titles.md#containsId), can be used by DAT applications to follow user
-    preferences around keeping individual titles in preference of compilations, unless
-    the compilation contains a unique title.
-
-    Compilations live in their own groups, and shouldn't be grouped with their consituent
-    titles.
-
-    If this property isn't present, the DAT application assumes the value is `false`.
-
-* **`isMIA`{ #isMIA .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
-
-    Whether the title's digests have been verified by more than one person. If not, set
-    the value to `true`.
-
-    If this property isn't present, the DAT application assumes the value is `false`.
-
-* **`isSuperset`{ #isSuperset .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
-
-    Whether the title contains more content than the original title, or for some reason
-    is superior to another version. For example, game of the year editions, a regional
-    variant with uncensored content, or a DVD version of a title previously released on
-    multiple CDs.
-
-    If this property isn't present, the DAT application assumes the value is `false`.
+    [`name`](#name) is already in English, you should still include the English name in
+    the `localNames` array. This is because client applications have no idea what language
+    the title `name` is in, and so can't safely select it as the English name if someone
+    sets that as a preference.
 
 * **`peripherals`{ #peripherals .toc-code }** `enum array`{ .toc-def } `optional`{ .toc-opt }
 
@@ -822,7 +931,8 @@ only.
 
 * **`players`{ #players .toc-code }** `int`{ .toc-def } `optional`{ .toc-opt }
 
-    The number of players the title supports. See also: [play modes](#playModes).
+    The number of players the title supports. Might be paired with
+    [`playModes`](#playModes).
 
 * **`playModes`{ #playModes .toc-code }** `enum array`{ .toc-def } `optional`{ .toc-opt }
 
@@ -976,6 +1086,34 @@ only.
     "subtype": "Add-on"
     ```
 
+* **`type`{ #type .toc-code }** `enum`{ .toc-def } `optional`{ .toc-opt }
+
+    The type of the title. Must be one of the following:
+
+    * `Application`
+
+    * `Audio`
+
+    * `BIOS`
+
+    * `Chip`
+
+    * `Coverdisc`
+
+    * `Device`
+
+    * `Firmware`
+
+    * `Game`
+
+    * `Magazine`
+
+    * `Multimedia`
+
+    * `Video`
+
+    These can be paired with a [`subtype`](#subtype).
+
 * **`version`{ #version .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
     The version as reported by the title or media it came on. For example, `Rev 1`.
@@ -1028,9 +1166,9 @@ only.
     /// details | Expand for developer details
     This is an attempt to partially recreate how
     [Retool](https://unexpectedpanda.github.io/retool) sets up clone lists, while removing
-    the need for a lot of logic that figures out which titles are the oldest or newest.
-    See [Doing 1G1R calculations](1g1r.md). ///
-
+    the need to write logic that figures out which titles are the oldest or newest. See
+    [1G1R calculations](1g1r.md).
+    ///
 
 * **`videoStandards`{ #videoStandards .toc-code }** `enum array`{ .toc-def } `optional`{ .toc-opt }
 

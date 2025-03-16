@@ -73,7 +73,7 @@ nav:
     - basic_example.md
     - dense.md
     - dir2dat.md
-    - reference.md
+    # - reference.md
   - Developers:
     - 1g1r.md
 plugins:

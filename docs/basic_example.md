@@ -5,7 +5,7 @@ hide:
 
 # Basic example
 
-The following example represents a valid DAT file, with only the mandatory parameters
+The following example represents a valid DAT file, with only the mandatory properties
 supplied.
 
 It doesn't include all available keys or demonstrate all valid values. For that, see the
@@ -31,7 +31,6 @@ DAT file structures section.
             "interface": ["ja", "en"],
             "subtitles": ["en"]
           },
-          "type": "Game",
           "sets": [
             {
               "files": [
@@ -54,7 +53,6 @@ DAT file structures section.
             "interface": ["en"],
             "subtitles": ["en"]
           },
-          "type": "Game",
           "sets": [
             {
               "files": [

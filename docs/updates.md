@@ -155,4 +155,6 @@ only.
     Updates kept for archival purposes, that are no longer required to update a title to
     its latest version.
 
+    If this property isn't present, the DAT application assumes the value is `false`.
+
 </div>

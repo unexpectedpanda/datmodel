@@ -13,7 +13,7 @@ You can test validating against this schema with
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id":"https://www.github.com/unexpectedpanda/datmodel",
   "title": "DAT file specification",
-  "description": "2025-03-15 14:30",
+  "description": "2025-03-16 14:30",
   "type": "object",
   "required": ["datInfo", "collection"],
   "additionalProperties": false,
@@ -648,7 +648,19 @@ You can test validating against this schema with
       "type": "array",
       "contains": {
         "type": "object",
-        "required": ["files"],
+        "if": {
+          "properties": {
+            "container": {
+              "type": "null"
+            }
+          }
+        },
+        "then": {
+          "required": ["files"]
+        },
+        "else": {
+          "required": ["files", "name"]
+        },
         "additionalProperties": false,
         "properties": {
           "comments": {
@@ -659,16 +671,16 @@ You can test validating against this schema with
             "description": "The container that the DAT application should use for the file set. Must be one of the following values: auto, folder, or null.",
             "$ref": "#/$defs/stringnull"
           },
-          "containerName": {
-            "description": "Overrides the title name key to become the archive or folder name used for the set.",
-            "$ref": "#/$defs/stringFile"
-          },
           "files": {
             "$ref": "#/$defs/files"
           },
           "id": {
             "description": "A globally unique ID for the title. Usually a database ID.",
             "$ref": "#/$defs/nonEmptyString"
+          },
+          "name": {
+            "description": "Overrides the title name key to become the archive or folder name used for the set.",
+            "$ref": "#/$defs/stringFile"
           }
         }
       }

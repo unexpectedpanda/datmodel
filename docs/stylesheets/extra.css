@@ -151,8 +151,7 @@ div.definition-list ul li pre,
 div.definition-list ul li details,
 div.definition-list ul li div.tabbed-set,
 div.definition-list ul li div.admonition,
-div.definition-list ul li input,
-div.definition-list ul li h4 {
+div.definition-list ul li input {
 	margin-left: 1em;
 	margin-right: 1em;
 }

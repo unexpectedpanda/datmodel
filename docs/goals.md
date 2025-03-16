@@ -17,7 +17,7 @@ hide:
     * Grouping multiple discs together that belong to the same title, so that filtering
       doesn't break sets apart.
 
-    * Linking common discs between different titles.
+    {# * Linking common discs between different titles. #}
 
     * Grouping updates and addons (including DLC) with the titles they can be validly
       applied to.

@@ -9,11 +9,11 @@ The `fileset` array is a way to bundle together multiple groups of files and the
 properties. For example, you might want to bundle multiple discs from a single title
 together, so DAT applications know to keep those files together when filtering.
 
-``` {.json .copy hl_lines="4 7-9"}
+``` {.json .copy hl_lines="3 7-9 21"}
 "fileset": [
   {
-    "container": "auto",
     "name": "Some Video Game (USA) (Disc 1)",
+    "container": "auto",
     "id": "654319",
     "comments": "Something relevant about the set",
     "files": [
@@ -21,13 +21,16 @@ together, so DAT applications know to keep those files together when filtering.
     ]
   },
   {
-    "container": "auto",
     "name": "Some Video Game (USA) (Disc 2)",
+    "container": "auto",
     "id": "654320",
     "comments": "Something relevant about the set",
     "files": [
       ...
     ]
+  },
+  {
+    "refId": "123456"
   }
 ]
 ```
@@ -41,9 +44,10 @@ together, so DAT applications know to keep those files together when filtering.
     The files in the set and their properties.
     [Read more about the `files` array](files-set.md).
 
-* **`name`{ #name .toc-code }** `pattern string`{ .toc-def } `condtionally required`{ .toc-req }
+    {# Condition: Required when [`refId`](fileset.md#refId) isn't used. Not compatible with
+    `refId`. #}
 
-    Required if the [`container`](#container) property isn't set to `null`.
+* **`name`{ #name .toc-code }** `pattern string`{ .toc-def } `condtionally required`{ .toc-req }
 
     Overrides the title [`name`](titles.md#name) key to become the archive or folder
     name used for the set.
@@ -57,6 +61,9 @@ together, so DAT applications know to keep those files together when filtering.
 
     Path separators are represented Linux-style, with `/` instead of `\`. Don't use
     absolute paths, paths are relative to a path the user sets.
+
+    Condition: Required when the [`container`](#container) property isn't set to `null`.
+    Optional when it is.
 
     /// details | Expand for developer details
     Invalid path characters are found with the following regular expression:
@@ -83,6 +90,16 @@ together, so DAT applications know to keep those files together when filtering.
     ```
     ///
 
+{#
+* **`refId`{ #refId .toc-code }** `string`{ .toc-def } `conditonally required`{ .toc-req }
+
+    Any properties not specified in the fileset are imported from the referenced
+    [`sets`](sets.md) or `fileset` object, except for `id`. For more details, see
+    [Reference other file sets](reference.md).
+
+    Condition: Because it imports properties from other sets, an object with `refId` in it
+    requires no other properties. Not compatible with `files`.
+#}
 </div>
 
 ## Optional properties
@@ -118,6 +135,5 @@ together, so DAT applications know to keep those files together when filtering.
 
     A globally unique ID for the fileset item. Usually a database ID to ease lookups for
     DAT file maintainers.
-
 
 </div>

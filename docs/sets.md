@@ -52,20 +52,22 @@ naming clashes.
 
 <div class="definition-list" markdown>
 
-* **`files`{ #files .toc-code }** `object array`{ .toc-def } `required`{ .toc-req }
+* **`files`{ #files .toc-code }** `object array`{ .toc-def } `conditionally required`{ .toc-req }
 
     The files in the set and their properties.
 
-    You must use either the `files` array at this level, or the `fileset` array, not both.
+    Condition: You must use either the `files` array at this level, or the `fileset`
+    array, not both.
 
     [Read more about the `files` array](files-set.md).
 
-* **`fileset`{ #fileset .toc-code }** `object array`{ .toc-def } `required`{ .toc-req }
+* **`fileset`{ #fileset .toc-code }** `object array`{ .toc-def } `conditionally required`{ .toc-req }
 
     Multiple groups of `files` and their properties. Useful for bundling together separate
     parts of a title. For example, multiple discs in a single release.
 
-    You must use either the `files` array at this level, or the `fileset` array, not both.
+    Condition: You must use either the `files` array at this level, or the `fileset`
+    array, not both.
 
     [Read more about the `fileset` array](fileset.md).
 

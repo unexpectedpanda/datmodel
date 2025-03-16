@@ -98,8 +98,7 @@ metadata to implement that functionality is provided at the `titles` level.
     Playstation 2 ceased production on 2013-01-04.
 
     DAT applications can use this to filter out titles that were released after the
-    lifespan of the platform whose titles the DAT describes, using the
-    [`releaseDate`](titles.md#releaseDate) property.
+    lifespan of a platform, using the [`releaseDate`](titles.md#releaseDate) property.
 
 * **`sourceUrl`{ #sourceUrl .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
