@@ -135,6 +135,10 @@ You can test validating against this schema with
             "description": "The name for the group that contains related titles, in UTF-8. For example, the 'Some Video Game ' group might contain 'Some Video Game (USA)', 'Some Video Game (USA) (v1.1)', 'Some Video Game  (Europe)', and 'Some Video Game  (Japan)'.",
             "$ref": "#/$defs/nonEmptyString"
           },
+          "id": {
+            "description": "A globally unique ID for the group. Usually a database ID. Might be referenced by a DAT application when matching compilations against individual titles using the contains array.",
+            "$ref": "#/$defs/nonEmptyString"
+          },
           "titles": {
             "description": "Contains objects that describe the details about each title that is associated with the group.",
             "type": "array",

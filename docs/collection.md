@@ -10,10 +10,11 @@ The `collection` array contains all of the titles in the DAT file.
 In the following example, required properties are highlighted. The values are for example
 only.
 
-``` {.json .copy hl_lines="3-7"}
+``` {.json .copy hl_lines="3 5-8"}
 "collection": [
   {
     "group": "Some Video Game",
+    "id": "654321",
     "titles": [
       {
         ...
@@ -86,6 +87,12 @@ relationships found in LogiqX DAT files.
     The add-ons associated with titles. This includes DLC. Add-ons are at this level of
     the structure as they might be compatible with many variants of the `titles`.
     [Read more about the `addOns` array](addOns.md).
+
+* **`id`{ #id .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
+
+    A globally unique ID for the group. Usually a database ID to ease lookups for DAT file
+    maintainers. Might be referenced by a DAT application when matching compilations
+    against individual titles using the [`contains`](titles.md#contains) array.
 
 * **`supersets`{ #updates .toc-code }** `object array`{ .toc-def } `optional`{ .toc-opt }
 

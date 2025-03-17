@@ -594,7 +594,7 @@ only.
 
     If this property isn't present, the DAT application assumes the value is `Production`.
 
-* **`contains`{ #contains .toc-code }** `string array`{ .toc-def } `optional`{ .toc-opt }
+* **`contains`{ #contains .toc-code }** `object array`{ .toc-def } `optional`{ .toc-opt }
 
     Lists the content that this title contains. Useful for identifying the following:
 
@@ -604,7 +604,7 @@ only.
 
     <h4>Compilations</h4>
 
-    The `contains` property must be paired with
+    The `contains` array must be paired with
     [`isCompilation: true`](titles.md#isCompilation) when describing compilations.
 
     Given the following compilation:
@@ -619,25 +619,25 @@ only.
     "contains": [
       {
         "name": "Some Video Game A (USA)",
+        "groupId": "654321",
         "languages": {
           "audio": ["en"],
           "interface": ["en"],
           "subtitles": ["en"]
         },
-        "version": "",
-        "internalVersion": "",
-        "individualIds": ["123456", "654321"]
+        "version": "1.1",
+        "versionInternal": "1"
       },
       {
         "name": "Some Video Game B (USA)",
+        "groupId": "654322",
         "languages": {
           "audio": ["en"],
           "interface": ["en"],
           "subtitles": ["en"]
         },
-        "version": "",
-        "internalVersion": "",
-        "individualIds": ["321654", "456123"]
+        "version": "1.3",
+        "versionInternal": "1"
       },
       {
         "name": "Some Video Game C (USA)",
@@ -646,8 +646,8 @@ only.
           "interface": ["en"],
           "subtitles": ["en"]
         },
-        "version": "",
-        "internalVersion": ""
+        "version": "1.0",
+        "versionInternal": "1"
       }
     ]
     ```
@@ -655,43 +655,109 @@ only.
     Each `contains` title has its own [`languages`](titles.md#languages) object, as
     individual titles within a compilation often have different language support.
 
-    The `individualIds` array links to globally unique `id`s at the [`sets`](sets.md#id)
-    or [`fileset`](fileset.md#id) level in the DAT file, identifying the individual
-    constituent titles that make up the compilation. When adding these IDs, include all
-    versions of a title from the same region. For example, for the previously mentioned
-    compilation, you might link to the IDs of the following individual titles for
-    `Some Video Game A (USA)`:
+    The `groupId` property links the constituent title in a compilation to the relevant
+    group of standalone titles it belongs to, via its globally unique
+    [`id`](collection.md#id). At comparison time during a 1G1R operation, a compilation is
+    broken down into its constituent titles and compared against standalone titles. The
+    title that's ultimately selected is up to user preference, whether that be to always
+    keep the most recent version of a title, only keep compilations if they have unique
+    titles, or otherwise.
 
+    Where possible, the `version` and `internalVersion` properties should be consistent
+    with the versioning of standalone titles. In this circumstance, it is okay to reuse a
+    `versionInternal` value that has been used by an standalone title. For example, here's
+    the `Some Video Game A (USA)` part of the `contains` array:
+
+    ``` {.json .copy hl_lines="3"}
+    {
+      "name": "Some Video Game A (USA)",
+      "groupId": "654321",
+      "languages": {
+        "audio": ["en"],
+        "interface": ["en"],
+        "subtitles": ["en"]
+      },
+      "version": "1.1",
+      "versionInternal": "1"
+    }
     ```
-    Some Video Game A (USA)
-    Some Video Game A (USA) (Rev 1)
-    Some Video Game A (USA) (Rev 2)
+
+    And here's the relevant part of the standalone `Some Video Game A (USA)` entry in the
+    DAT file:
+
+    ``` {.json .copy hl_lines="3"}
+    {
+      "group": "Some Video Game",
+      "id": "654321",
+      "titles": [
+        {
+          "name": "Some Video Game A (USA)",
+          "regions": ["US"],
+          "languages": {
+            "audio": ["en"],
+            "interface": ["en"],
+            "subtitles": ["en"]
+          },
+          "version": "1.1",
+          "versionInternal": "1",
+          ...
+        }
+      ]
+    }
     ```
 
-    This is required for 1G1R management when prioritizing compilations or their
-    constituent individual titles.
+    Notice how the `version` and `versionInternal` fields match &mdash; this way we know
+    the variant inside the compilation is exactly the same as the standalone title, and
+    the DAT application will need to do more work to figure out what title to select
+    during a 1G1R operation.
 
-    The lack of `individualIds` array for `Some Video Game C (USA)` indicates that this
+    The lack of `groupId` property for `Some Video Game C (USA)` indicates that this
     title is only found in the compilation. It's important to include these titles in
     the `contains` array, as it helps DAT applications to determine whether they should
-    keep a compilation for its unique titles.
+    keep a compilation for its unique titles during 1G1R operations.
 
     <h4>Supersets</h4>
 
-    The `contains` property must be paired with [`isSuperset: true`](titles.md#isSuperset)
+    The `contains` array must be paired with [`isSuperset: true`](titles.md#isSuperset)
     when describing supersets.
 
+    Given the following superset:
+
+    ```
+    Some Video Game - Game of the Year Edition (USA)
+    ```
+
+    The `contains` array might look like this:
+
+    ``` {.json .copy}
+    "contains": [
+      {
+        "name": "Some Video Game (USA)",
+        "includesIds": ["123456", "234567"]
+      },
+      {
+        "name": "Add-ons",
+        "includesIds": ["345678", "456789", "987654"],
+      },
+      {
+        "name": "Updates",
+        "includesIds": ["012345", "543210"]
+      },
+      {
+        "name": "Extra content",
+        "comments": ""
+      }
+    ]
+    ```
+
+    Where the original title, its DLC, and its updates are listed. Content that isn't
+    found in an individual title is added as a `comment` to the `Extra content` object.
+
+    The `includesIds` array lists the individual IDs of the titles, add-ons, and updates
+    that are included in the superset. This includes all older versions of the title,
+    add-ons, and updates that are no longer required because of this version.
+
     <h4>DVD releases</h4>
-
-
-    ---
-
-    for a game of the year edition, you might include the following IDs:
-
-    * The ID of the original title.
-    * The IDs of [`addOns`](addOns.md) that have been bundled in.
-    * The IDs of [`updates`](updates.md) that have been bundled in.
-
 
 
 * **`developer`{ #developer .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
@@ -1116,7 +1182,11 @@ only.
 
 * **`version`{ #version .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
-    The version as reported by the title or media it came on. For example, `Rev 1`.
+    The version as reported by the title or media it came on. Don't include prefixes like
+    `v`, or `Rev`, only include the version string itself.
+
+    For example, don't use `Rev 1`, instead use `1`. Don't use `v1.1a`, instead use
+    `1.1a`.
 
 * **`versionInternal`{ #versionInternal .toc-code }** `int`{ .toc-def } `optional`{ .toc-opt }
 
