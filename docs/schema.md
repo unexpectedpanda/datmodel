@@ -542,7 +542,7 @@ You can test validating against this schema with
         ]
       }
     },
-    "stringnull": {
+    "stringNull": {
       "anyOf": [
         {
           "$ref": "#/$defs/nonEmptyString"
@@ -727,19 +727,19 @@ You can test validating against this schema with
         "audio": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/stringNull"
           }
         },
         "interface": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/stringNull"
           }
         },
         "subtitles": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/$defs/stringNull"
           }
         }
       }
