@@ -131,7 +131,7 @@ only.
 
     A gobally unique ID for the add-on. Usually a database ID to ease lookups for DAT file
     maintainers. Might be referenced by a DAT application when finding dependencies for
-    other add-ons, or when present in a [`containsId`](titles.md#containsId) property.
+    other add-ons, or when present in a [`contains`](titles.md#contains) array.
 
 * **`requiresId`{ #requiresId .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
@@ -150,7 +150,7 @@ only.
     `titles` array for the required ID.
     ///
 
-* **`superceded`{ #superseded .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
+* **`superseded`{ #superseded .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
 
     Add-ons kept for archival purposes, that are no longer required to update a title to
     its latest version.

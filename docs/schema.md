@@ -13,7 +13,7 @@ You can test validating against this schema with
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id":"https://www.github.com/unexpectedpanda/datmodel",
   "title": "DAT file specification",
-  "description": "2025-03-16 14:30",
+  "description": "2025-03-18 19:41",
   "type": "object",
   "required": ["datInfo", "collection"],
   "additionalProperties": false,
@@ -103,7 +103,7 @@ You can test validating against this schema with
                 },
                 "container": {
                   "description": "The container that the DAT application should use for the file set. Must be one of the following values: auto, folder, or null.",
-                  "$ref": "#/$defs/stringnull"
+                  "$ref": "#/$defs/container"
                 },
                 "files": {
                   "$ref": "#/$defs/files"
@@ -120,7 +120,7 @@ You can test validating against this schema with
                   "description": "Which titles and updates the specific add-on requires to function, as identified by their globally unique IDs.",
                   "type": "array",
                   "minProperties": 1,
-                  "contains": {
+                  "items": {
                     "$ref": "#/$defs/nonEmptyString"
                   }
                 },
@@ -216,12 +216,41 @@ You can test validating against this schema with
                     "Review"
                   ]
                 },
-                "containsId": {
-                  "description": "Lists the globally unique IDs of the content that this title contains. For example, the individual titles in a compilation; the original release, updates, and add-ons included in a game of the year edition, or the multiple CDs that are superceded by a DVD rerelease.",
+                "contains": {
+                  "description": "Lists the content that this title contains. Useful for compilations, supersets, and when multiple CDs have been superseded by a DVD release.",
                   "type": "array",
                   "minProperties": 1,
                   "contains": {
-                    "$ref": "#/$defs/nonEmptyString"
+                    "type": "object",
+                    "required": ["name"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "name": {
+                        "$ref": "#/$defs/stringFile"
+                      },
+                      "groupId": {
+                        "$ref": "#/$defs/nonEmptyString"
+                      },
+                      "includesIds": {
+                        "description": "The individual titles contained in this release.",
+                        "type": "array",
+                        "minProperties": 1,
+                        "contains": {
+                          "$ref": "#/$defs/nonEmptyString"
+                        }
+                      },
+                      "languages": {
+                        "$ref": "#/$defs/languages"
+                      },
+                      "version": {
+                        "description": "The version as reported by the title or media it came on. For example, Rev 1.",
+                        "$ref": "#/$defs/nonEmptyString"
+                      },
+                      "versionInternal": {
+                        "description": "An integer-based version assigned by the DAT maintainer, so DAT applications don't have to parse multiple different versioning systems when making 1G1R decisions. This can also help fill the gap in 1G1R selection when the title's releaseDate is unknown. The earliest release is set to 1, with later releases increasing in value. Pre-production titles are included in this version order. Internal versions are only comparable within the same region.",
+                        "type": "integer"
+                      }
+                    }
                   }
                 },
                 "developer": {
@@ -232,6 +261,10 @@ You can test validating against this schema with
                   "description": "A globally unique ID for the title. Usually a database ID. Might be referenced by a DAT application when finding dependencies for add-ons or updates, or when present in a containsId property.",
                   "$ref": "#/$defs/nonEmptyString"
                 },
+                "isAlternate": {
+                  "description": "Whether the title is an alternate variant of a release.",
+                  "type": "boolean"
+                },
                 "isCompilation": {
                   "description": "Whether the title is a compilation.",
                   "type": "boolean"
@@ -240,8 +273,16 @@ You can test validating against this schema with
                   "description": "Whether the title is a demo.",
                   "type": "boolean"
                 },
+                "isLicensed": {
+                  "description": "Whether the title was sanctioned for release by a platform manufacturer, assuming there was an approval process in place.",
+                  "type": "boolean"
+                },
                 "isMIA": {
                   "description": "Whether the title's digests have been verified by more than one person. If not, set the value to true.",
+                  "type": "boolean"
+                },
+                "isPirate": {
+                  "description": "hether the title contains stolen assets. Often a hack of an existing game that uses intellectual property from other games.",
                   "type": "boolean"
                 },
                 "isSuperset": {
@@ -249,30 +290,7 @@ You can test validating against this schema with
                   "type": "boolean"
                 },
                 "languages": {
-                  "description": "The languages the title supports.",
-                  "type": "object",
-                  "required": ["audio", "interface", "subtitles"],
-                  "additionalProperties": false,
-                  "properties": {
-                    "audio": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    "interface": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    "subtitles": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    }
-                  }
+                  "$ref": "#/$defs/languages",
                 },
                 "localNames": {
                   "description": "Local names given to the title, defined by language.",
@@ -357,7 +375,7 @@ You can test validating against this schema with
                 },
                 "serial": {
                   "description": "A manufacturer identifier for the title. Might be a cartridge serial, disc ring code, or otherwise.",
-                  "$ref": "#/$defs/stringnull"
+                  "$ref": "#/$defs/nonEmptyString"
                 },
                 "sets": {
                   "description": "Defines the different file sets within the title.",
@@ -381,7 +399,7 @@ You can test validating against this schema with
                       },
                       "container": {
                         "description": "The container that the DAT application should use for the file set. Must be one of the following values: auto, folder, or null.",
-                        "$ref": "#/$defs/stringnull"
+                        "$ref": "#/$defs/container"
                       },
                       "files": {
                         "$ref": "#/$defs/files"
@@ -395,7 +413,7 @@ You can test validating against this schema with
                       },
                       "name": {
                         "description": "The name of the set. Only required if there is more than one set. Can be any non-empty string, although generally you should use lowercase container format names. For example: bin, chd, iso, files, decrypted, encrypted.",
-                        "$ref": "#/$defs/stringnull"
+                        "$ref": "#/$defs/nonEmptyString"
                       },
                       "retroachievements": {
                         "description": "Whether retroachievements are support on the title.",
@@ -443,7 +461,7 @@ You can test validating against this schema with
                 },
                 "version": {
                   "description": "The version as reported by the title or media it came on. For example, Rev 1.",
-                  "$ref": "#/$defs/stringnull"
+                  "$ref": "#/$defs/nonEmptyString"
                 },
                 "versionInternal": {
                   "description": "An integer-based version assigned by the DAT maintainer, so DAT applications don't have to parse multiple different versioning systems when making 1G1R decisions. This can also help fill the gap in 1G1R selection when the title's releaseDate is unknown. The earliest release is set to 1, with later releases increasing in value. Pre-production titles are included in this version order. Internal versions are only comparable within the same region.",
@@ -451,7 +469,11 @@ You can test validating against this schema with
                 },
                 "videoStandards": {
                   "description": "The video standard supported by the title. This describes a title's fixed output in both color and resolution, as opposed to any monitor standard that might be receiving the output. Use RGB for any title that supports higher resolutions than SVGA, and allows for flexible resolution output.",
-                  "$ref": "#/$defs/videoStandards"
+                  "type": "array",
+                  "minProperties": 1,
+                  "items": {
+                    "$ref": "#/$defs/videoStandards"
+                  }
                 }
               }
             }
@@ -470,7 +492,7 @@ You can test validating against this schema with
                 },
                 "container": {
                   "description": "The container that the DAT application should use for the file set. Must be one of the following values: auto, folder, or null.",
-                  "$ref": "#/$defs/stringnull"
+                  "$ref": "#/$defs/container"
                 },
                 "files": {
                   "$ref": "#/$defs/files"
@@ -487,7 +509,7 @@ You can test validating against this schema with
                   "description": "Which titles and updates the specific update requires to function, as identified by their globally unique IDs.",
                   "type": "array",
                   "minProperties": 1,
-                  "contains": {
+                  "items": {
                     "$ref": "#/$defs/nonEmptyString"
                   }
                 },
@@ -581,6 +603,13 @@ You can test validating against this schema with
         }
       ]
     },
+    "container": {
+      "enum": [
+        "auto",
+        "folder",
+        null
+      ]
+    },
     "digests": {
       "type": "object",
       "minProperties": 1,
@@ -634,11 +663,11 @@ You can test validating against this schema with
           },
           "header": {
             "description": " The header for a ROM, in hex. Aids with addition of the header to a headerless ROM, or removal from a headered ROM.",
-            "$ref": "#/$defs/stringnull"
+            "$ref": "#/$defs/nonEmptyString"
           },
           "name": {
             "description": "The name of the file, in UTF-8. Must use / for path separators. Names can't end with a period or space.",
-            "$ref": "#/$defs/stringnull"
+            "$ref": "#/$defs/nonEmptyString"
           },
           "size": {
             "description": "The size of the file, in bytes.",
@@ -673,7 +702,7 @@ You can test validating against this schema with
           },
           "container": {
             "description": "The container that the DAT application should use for the file set. Must be one of the following values: auto, folder, or null.",
-            "$ref": "#/$defs/stringnull"
+            "$ref": "#/$defs/container"
           },
           "files": {
             "$ref": "#/$defs/files"
@@ -685,6 +714,32 @@ You can test validating against this schema with
           "name": {
             "description": "Overrides the title name key to become the archive or folder name used for the set.",
             "$ref": "#/$defs/stringFile"
+          }
+        }
+      }
+    },
+    "languages": {
+      "description": "The languages the title supports.",
+      "type": "object",
+      "required": ["audio", "interface", "subtitles"],
+      "additionalProperties": false,
+      "properties": {
+        "audio": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "interface": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "subtitles": {
+          "type": "array",
+          "items": {
+            "type": "string"
           }
         }
       }

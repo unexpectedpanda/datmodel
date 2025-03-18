@@ -25,11 +25,6 @@ only.
         ...
       }
     ],
-    "supersets": [
-      {
-        ...
-      }
-    ],
     "updates": [
       {
         ...
@@ -47,20 +42,17 @@ titles:
 * `Some Video Game (Japan)`
 * `Some Video Game (USA)`
 * `Some Video Game (USA) (v1.1)`
+* `Some Video Game - Game of the Year Edition (Europe)`
 
 The following updates:
 
 * `Some Video Game (Europe) (Update v1.2)`
 * `Some Video Game (Japan) (Update v1.1)`
 
-The following add-ons:
+And the following add-ons:
 
 * `Some Video Game - Expansion Pack (USA, Europe)`
 * `Some Video Game - Expansion Pack (Japan)`
-
-And the following superset:
-
-* `Some Video Game - Game of the Year Edition (USA)`
 
 Grouping in this way helps with 1G1R calculations, and replaces the parent/clone
 relationships found in LogiqX DAT files.
@@ -93,16 +85,6 @@ relationships found in LogiqX DAT files.
     A globally unique ID for the group. Usually a database ID to ease lookups for DAT file
     maintainers. Might be referenced by a DAT application when matching compilations
     against individual titles using the [`contains`](titles.md#contains) array.
-
-* **`supersets`{ #updates .toc-code }** `object array`{ .toc-def } `optional`{ .toc-opt }
-
-    Contains objects that describe the details about supersets in the group. Supersets are
-    variants of titles that contain more content, or for some reason are superior to
-    another version. This might include, for example, a Game of the Year edition, an
-    all-in-one pack that bundles a game and all its DLC, or a DVD version of a title
-    previously released on multiple CDs.
-
-    [Read more about the `supersets` array](supersets.md).
 
 * **`updates`{ #updates .toc-code }** `object array`{ .toc-def } `optional`{ .toc-opt }
 

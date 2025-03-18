@@ -30,10 +30,10 @@ only.
     "isAlternate": false,
     "isCompilation": false,
     "isDemo": false,
+    "isLicensed": false,
     "isMIA": false,
     "isPirate": false,
     "isSuperset": false,
-    "isUnlicensed": false,
     "contains": [],
     "regions": ["US"],
     "languages": {
@@ -70,7 +70,7 @@ only.
 
     * The [`container`](sets.md#container) of the set isn't set to `null`.
 
-    * The [`containerName`](sets.md#containerName) of the set isn't defined.
+    * The [`name`](sets.md#name) of the set isn't defined.
 
     Names can't end with a period or space, start with a path separator, or use the
     following invalid path characters:
@@ -658,10 +658,10 @@ only.
     The `groupId` property links the constituent title in a compilation to the relevant
     group of standalone titles it belongs to, via its globally unique
     [`id`](collection.md#id). At comparison time during a 1G1R operation, a compilation is
-    broken down into its constituent titles and compared against standalone titles. The
-    title that's ultimately selected is up to user preference, whether that be to always
-    keep the most recent version of a title, only keep compilations if they have unique
-    titles, or otherwise.
+    broken down into its constituent titles and compared against the equivalent standalone
+    titles. The title that's ultimately selected is up to user preference, whether that be
+    to always keep the most recent version of a title, only keep compilations if they have
+    unique titles, or otherwise.
 
     Where possible, the `version` and `internalVersion` properties should be consistent
     with the versioning of standalone titles. In this circumstance, it is okay to reuse a
@@ -745,20 +745,48 @@ only.
       },
       {
         "name": "Extra content",
-        "comments": ""
+        "extraContent": ["Attack of the Bad Sequel expansion", "Horse armor"]
       }
     ]
     ```
 
     Where the original title, its DLC, and its updates are listed. Content that isn't
-    found in an individual title is added as a `comment` to the `Extra content` object.
+    found in a individual title is added as a `extraContent`.
 
-    The `includesIds` array lists the individual IDs of the titles, add-ons, and updates
-    that are included in the superset. This includes all older versions of the title,
-    add-ons, and updates that are no longer required because of this version.
+    The `includesIds` array lists the IDs of the individual titles, add-ons, and updates
+    that are included in the superset. The included titles must be from the same region as
+    the superset (or include the superset's region among its regions), and the array
+    should contain all versions of the title that are the same version or older.
+
+    For example, the `includesIds` array for the title `Some Video Game (USA)` might
+    include both `Some Video Game (USA)` and `Some Video Game (v1.1) (USA)`, as
+    `Some Video Game - Game of the Year Edition (USA)` supersedes both.
 
     <h4>DVD releases</h4>
 
+    The `contains` array for a DVD that has superceded a set of CDs might look like this:
+
+    ``` {.json .copy}
+    "contains": [
+      {
+        "name": "Some Video Game (Disc 1) (USA)",
+        "includesIds": ["123456"]
+      },
+      {
+        "name": "Some Video Game (Disc 2) (USA)",
+        "includesIds": ["345678", "456789"]
+      },
+      {
+        "name": "Some Video Game (Disc 3) (USA)",
+        "includesIds": ["012345", "543210"]
+      }
+    ]
+    ```
+
+    The `includesIds` array lists the IDs of the individual titles associated with each
+    disc in the set. The CDs listed in the `contains` array should come from the same
+    region as the DVD release. All versions of the relevant CDs should be included that
+    were released before the DVD was.
 
 * **`developer`{ #developer .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
@@ -768,8 +796,8 @@ only.
 
     A globally unique ID for the title. Usually a database ID to ease lookups for DAT file
     maintainers. Might be referenced by a DAT application when finding dependencies for
-    add-ons or updates, or when present in a [`containsId`](titles.md#containsId)
-    property.
+    add-ons or updates, or when present in a [`contains`](titles.md#contains)
+    array.
 
 * **`isAlternate`{ #isAlternate .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
 
@@ -818,7 +846,7 @@ only.
     Whether the title contains stolen assets. Often a hack of an existing game that uses
     intellectual property from other games.
 
-    If the value is `true`, [`islicensed`](titles.md#isUnlicensed) is considered `false`,
+    If the value is `true`, [`islicensed`](titles.md#isLicensed) is considered `false`,
     regardless of its value in the DAT file.
 
     If this property isn't present, the DAT application assumes the value is `false`.
@@ -846,7 +874,21 @@ only.
 
     * Because `Some Video Game - Game of the Year Edition (Europe)` is in English, and is
       a superset, it gets selected even though the user preferenced USA titles over
-      Europe.
+      Europe. This gives the user the most recent version of the title with the most
+      content.
+
+    The following are some real world examples of where you'd want to select a title from
+    a region that's different from user preference, due to it being a superset. For
+    example, `Sonic the Hedgehog (Japan)` on the MegaDrive is a superset of
+    `Sonic the Hedgehog (USA)` on the Genesis, as it features extra parallax effects and
+    is in English. `Fahrenheit (Europe)` is a superset of `Indigo Prophecy (USA)` because
+    it's uncensored. And there are quite a few special edition games that were only ever
+    released in Europe, despite the base game being released in the USA.
+
+    While most people are happy with these choices after the reasons for the selection has
+    been explained to them, sometimes people have other use cases than just having the
+    "best" variant of a title. DAT applications might choose to implement additional
+    options for 1G1R selection like following strict region priority instead.
 
     If this property isn't present, the DAT application assumes the value is `false`.
 

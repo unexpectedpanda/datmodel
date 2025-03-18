@@ -130,8 +130,8 @@ only.
 
     A globally unique ID for the update. Usually a database ID to ease lookups for DAT
     file maintainers. Might be referenced by a DAT application when finding dependencies
-    for add-ons or other updates, or when present in a
-    [`containsId`](titles.md#containsId) property.
+    for add-ons or other updates, or when present in a [`contains`](titles.md#contains)
+    array.
 
 * **`requiresId`{ #requiresId .toc-code }** `string`{ .toc-def } `optional`{ .toc-opt }
 
@@ -150,7 +150,7 @@ only.
     `titles` array for the required ID.
     ///
 
-* **`superceded`{ #superseded .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
+* **`superseded`{ #superseded .toc-code }** `boolean`{ .toc-def } `optional`{ .toc-opt }
 
     Updates kept for archival purposes, that are no longer required to update a title to
     its latest version.
