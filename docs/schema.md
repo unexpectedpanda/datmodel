@@ -290,7 +290,7 @@ You can test validating against this schema with
                   "type": "boolean"
                 },
                 "languages": {
-                  "$ref": "#/$defs/languages",
+                  "$ref": "#/$defs/languages"
                 },
                 "localNames": {
                   "description": "Local names given to the title, defined by language.",
